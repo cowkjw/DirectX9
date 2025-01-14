@@ -14,6 +14,7 @@ public:
     void	Set_Player(CObject* pPlayer) { m_pPlayer = pPlayer; }
 private:
     CObject* m_pPlayer;
-
+    D3DXVECTOR3 m_tPosin;
+    float m_fAngle;
 };
 
