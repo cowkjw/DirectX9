@@ -1,5 +1,7 @@
 #pragma once
 #include "Define.h"
+#include "CPlayer.h"
+#include "CMonster.h"
 
 class CMainGame
 {
@@ -13,5 +15,8 @@ public:
 	void Release();
 private:
 	HDC m_hDC;
+
+	CObject* m_pPlayer;
+	CObject* m_pMonster;
 };
 
