@@ -16,6 +16,7 @@ typedef struct tagInfo
 
 	D3DXVECTOR3		vPos;
 
+	D3DXMATRIX		matWorld;
 }INFO;
 
 

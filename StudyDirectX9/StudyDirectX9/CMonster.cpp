@@ -29,8 +29,8 @@ void CMonster::Update()
 	float a = D3DXVec3Length(&m_tInfo.vDir); // 절대값 a
 	float b = D3DXVec3Length(&m_tInfo.vLook); //절대값 b
 
-	float cos = aaa / (a * b); //cos세타 
-	m_fAngle = acosf(cos) * (180.f / PI); 
+	//float cos = aaa / (a * b); //cos세타 
+	m_fAngle = acosf(aaa) * (180.f / PI); 
 
 	float k = m_tInfo.vDir.x * m_tInfo.vLook.y - m_tInfo.vDir.y * m_tInfo.vLook.x;
 	if (k > 0) {

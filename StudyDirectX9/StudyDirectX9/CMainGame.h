@@ -17,6 +17,5 @@ private:
 	HDC m_hDC;
 
 	CObject* m_pPlayer;
-	CObject* m_pMonster;
 };
 
