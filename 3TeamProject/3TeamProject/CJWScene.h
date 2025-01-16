@@ -8,7 +8,7 @@ public:
 public:
 	void Initialize() override;
 	int Update() override;
-	void LateUpdate() override;
+	void Late_Update() override;
 	void Render(HDC hDC) override;
 	void Release() override;
 	void Key_Input() override;

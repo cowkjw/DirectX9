@@ -17,12 +17,13 @@ int CMenuScene::Update()
     return 0;
 }
 
-void CMenuScene::LateUpdate()
+void CMenuScene::Late_Update()
 {
 }
 
 void CMenuScene::Render(HDC hDC)
 {
+
 }
 
 void CMenuScene::Release()
@@ -40,7 +41,7 @@ void CMenuScene::Key_Input()
     }
 
     if (CKeyManager::Get_Instance()->Key_Down(VK_F3)) {
-        CSceneManager::Get_Instance()->Set_Scene(SC_DH);
+        CSceneManager::Get_Instance()->Set_Scene(SC_DW);
     }
 
     if (CKeyManager::Get_Instance()->Key_Down(VK_F4)) {

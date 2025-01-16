@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CUiManager.h"
 
+CUiManager* CUiManager::m_pInstance = nullptr;
 CUiManager::CUiManager():m_eCurUi(UI_END)
 {
 }
@@ -19,8 +20,8 @@ void CUiManager::Render(HDC hDC)
 	case UI_CY:
 		RenderUi_CY(hDC);
 		break;
-	case UI_DH:
-		RenderUi_DH(hDC);
+	case UI_DW:
+		RenderUi_DW(hDC);
 		break;
 	case UI_JW:
 		RenderUi_JW(hDC);
@@ -40,7 +41,7 @@ void CUiManager::RenderUi_CY(HDC hDC)
 {
 }
 
-void CUiManager::RenderUi_DH(HDC hDC)
+void CUiManager::RenderUi_DW(HDC hDC)
 {
 }
 

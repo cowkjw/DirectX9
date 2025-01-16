@@ -9,7 +9,6 @@ CObject::CObject():m_fSpeed(0)
 
 CObject::~CObject()
 {
-	Release();
 }
 
 void CObject::Update_Rect()

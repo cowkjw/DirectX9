@@ -1,44 +1,44 @@
 #include "pch.h"
-#include "CCYScene.h"
+#include "CDWScene.h"
 #include "CKeyManager.h"
 #include "CSceneManager.h"
 
-CCYScene::CCYScene()
+CDWScene::CDWScene()
 {
 }
 
-void CCYScene::Initialize()
+void CDWScene::Initialize()
 {
 }
 
-int CCYScene::Update()
+int CDWScene::Update()
 {
 	Key_Input();
     return 0;
 }
 
-void CCYScene::Late_Update()
+void CDWScene::Late_Update()
 {
 }
 
-void CCYScene::Render(HDC hDC)
+void CDWScene::Render(HDC hDC)
 {
 	Rectangle(hDC, -100, -100, 900, 700);
 
 	if (g_bDevmode) {
 		TCHAR szWhoScene[64];
-		_stprintf_s(szWhoScene, _T("채영"));
+		_stprintf_s(szWhoScene, _T("동완"));
 		SetTextColor(hDC, RGB(0, 0, 0));
 		//SetBkMode(hDC, TRANSPARENT);
 		TextOut(hDC, 300, 10, szWhoScene, _tcslen(szWhoScene));
 	}
 }
 
-void CCYScene::Release()
+void CDWScene::Release()
 {
 }
 
-void CCYScene::Key_Input()
+void CDWScene::Key_Input()
 {
 	if (CKeyManager::Get_Instance()->Key_Down(VK_F1)) {
 		g_bDevmode = !g_bDevmode;
@@ -49,10 +49,10 @@ void CCYScene::Key_Input()
 	}
 }
 
-void CCYScene::Create_MapObj()
+void CDWScene::Create_MapObj()
 {
 }
 
-void CCYScene::Offset()
+void CDWScene::Offset()
 {
 }

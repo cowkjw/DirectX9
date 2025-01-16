@@ -61,6 +61,24 @@
     <Filter Include="01_Scene\04_JW">
       <UniqueIdentifier>{8aeb4eab-76c6-4848-81d1-fb7423a20c17}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99_Managers\BitManager">
+      <UniqueIdentifier>{d7a194f8-2485-49cd-b268-fd21fbbec103}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99_Managers\BitManager\Bmp">
+      <UniqueIdentifier>{2ce6ae04-b2db-424f-94d5-e9a32677c83a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Object\01_YG">
+      <UniqueIdentifier>{0e2493d3-18cb-484f-b988-455ada59394c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Object\02_CY">
+      <UniqueIdentifier>{186e3db1-6332-444a-b45a-2b42b0ee66c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Object\03_DH">
+      <UniqueIdentifier>{11f5bfa8-64ff-4b86-a5e0-fe1db7784731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Object\04_JW">
+      <UniqueIdentifier>{ba1e5e64-befc-43fa-8f38-cb8ff77249b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -120,11 +138,20 @@
     <ClInclude Include="CCYScene.h">
       <Filter>01_Scene\02_CY</Filter>
     </ClInclude>
-    <ClInclude Include="CDHScene.h">
+    <ClInclude Include="CDWScene.h">
       <Filter>01_Scene\03_DH</Filter>
     </ClInclude>
     <ClInclude Include="CJWScene.h">
       <Filter>01_Scene\04_JW</Filter>
+    </ClInclude>
+    <ClInclude Include="CMyBmp.h">
+      <Filter>99_Managers\BitManager\Bmp</Filter>
+    </ClInclude>
+    <ClInclude Include="CBitManager.h">
+      <Filter>99_Managers\BitManager</Filter>
+    </ClInclude>
+    <ClInclude Include="CYGPlayer.h">
+      <Filter>02_Object\01_YG</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -170,11 +197,20 @@
     <ClCompile Include="CCYScene.cpp">
       <Filter>01_Scene\02_CY</Filter>
     </ClCompile>
-    <ClCompile Include="CDHScene.cpp">
+    <ClCompile Include="CDWScene.cpp">
       <Filter>01_Scene\03_DH</Filter>
     </ClCompile>
     <ClCompile Include="CJWScene.cpp">
       <Filter>01_Scene\04_JW</Filter>
+    </ClCompile>
+    <ClCompile Include="CMyBmp.cpp">
+      <Filter>99_Managers\BitManager\Bmp</Filter>
+    </ClCompile>
+    <ClCompile Include="CBitManager.cpp">
+      <Filter>99_Managers\BitManager</Filter>
+    </ClCompile>
+    <ClCompile Include="CYGPlayer.cpp">
+      <Filter>02_Object\01_YG</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

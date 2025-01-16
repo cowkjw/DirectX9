@@ -6,7 +6,7 @@ class CSceneManager
 {
 private:
 	CSceneManager();
-	~CSceneManager() { Release(); }
+	~CSceneManager();
 public:
 	void		Set_Scene(SCENEID eID);
 	int			Update();

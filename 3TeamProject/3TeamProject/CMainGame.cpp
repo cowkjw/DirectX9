@@ -7,6 +7,7 @@
 #include "CScrollManager.h"
 #include "CSceneManager.h"
 #include "CObjectManager.h"
+#include "CBitManager.h"
 
 bool g_bDevmode = false;
 
@@ -21,6 +22,8 @@ CMainGame::~CMainGame()
 
 void CMainGame::Initialize()
 {
+	CBitManager::Get_Instance()->Insert_Bmp(L"../Assets/Back/Back.bmp", L"Back");
+
 	m_hDC = GetDC(g_hWnd);
 	CSceneManager::Get_Instance()->Set_Scene(SC_MENU);
 }
@@ -38,7 +41,9 @@ void CMainGame::Late_Update()
 
 void CMainGame::Render()
 {
-	Rectangle(m_hDC, 0, 0, WINCX, WINCY);
+	HDC		hMemDC = CBitManager::Get_Instance()->Find_Image(L"Back");
+	CSceneManager::Get_Instance()->Render(hMemDC);
+	GdiTransparentBlt(m_hDC, 0, 0, WINCX, WINCY, hMemDC, 0, 0, 800, 600, SRCCOPY);
 }
 
 void CMainGame::Release()
@@ -48,5 +53,6 @@ void CMainGame::Release()
 	CScrollManager::Destroy_Instance();
 	CSceneManager::Destroy_Instance();
 	CObjectManager::Destroy_Instance();
+	CBitManager::Destroy_Instance();
 	ReleaseDC(g_hWnd, m_hDC);
 }

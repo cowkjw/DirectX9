@@ -147,19 +147,22 @@
   <ItemGroup>
     <ClInclude Include="3TeamProject.h" />
     <ClInclude Include="CAbstractFactory.h" />
+    <ClInclude Include="CBitManager.h" />
     <ClInclude Include="CCollisionManager.h" />
     <ClInclude Include="CCYScene.h" />
-    <ClInclude Include="CDHScene.h" />
+    <ClInclude Include="CDWScene.h" />
     <ClInclude Include="CJWScene.h" />
     <ClInclude Include="CKeyManager.h" />
     <ClInclude Include="CMainGame.h" />
     <ClInclude Include="CMenuScene.h" />
+    <ClInclude Include="CMyBmp.h" />
     <ClInclude Include="CObjectManager.h" />
     <ClInclude Include="CObject.h" />
     <ClInclude Include="CScene.h" />
     <ClInclude Include="CSceneManager.h" />
     <ClInclude Include="CScrollManager.h" />
     <ClInclude Include="CUiManager.h" />
+    <ClInclude Include="CYGPlayer.h" />
     <ClInclude Include="CYGScene.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="framework.h" />
@@ -169,19 +172,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3TeamProject.cpp" />
+    <ClCompile Include="CBitManager.cpp" />
     <ClCompile Include="CCollisionManager.cpp" />
     <ClCompile Include="CCYScene.cpp" />
-    <ClCompile Include="CDHScene.cpp" />
+    <ClCompile Include="CDWScene.cpp" />
     <ClCompile Include="CJWScene.cpp" />
     <ClCompile Include="CKeyManager.cpp" />
     <ClCompile Include="CMainGame.cpp" />
     <ClCompile Include="CMenuScene.cpp" />
+    <ClCompile Include="CMyBmp.cpp" />
     <ClCompile Include="CObjectManager.cpp" />
     <ClCompile Include="CObject.cpp" />
     <ClCompile Include="CScene.cpp" />
     <ClCompile Include="CSceneManager.cpp" />
     <ClCompile Include="CScrollManager.cpp" />
     <ClCompile Include="CUiManager.cpp" />
+    <ClCompile Include="CYGPlayer.cpp" />
     <ClCompile Include="CYGScene.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

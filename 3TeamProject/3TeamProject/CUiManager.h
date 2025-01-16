@@ -27,7 +27,7 @@ public:
 private:
 	void RenderUi_YG(HDC hDC);
 	void RenderUi_CY(HDC hDC);
-	void RenderUi_DH(HDC hDC);
+	void RenderUi_DW(HDC hDC);
 	void RenderUi_JW(HDC hDC);
 
 private:

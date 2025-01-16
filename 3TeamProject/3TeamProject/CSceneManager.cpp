@@ -3,13 +3,18 @@
 #include "CMenuScene.h"
 #include "CYGScene.h"
 #include "CCYScene.h"
-#include "CDHScene.h"
+#include "CDWScene.h"
 #include "CJWScene.h"
 
 CSceneManager* CSceneManager::m_pInstance = nullptr;
 
-CSceneManager::CSceneManager() : m_pScene(nullptr), m_eCurScene(SC_START), m_ePreScene(SC_END)
+CSceneManager::CSceneManager() : m_pScene(nullptr), m_eCurScene(SC_MENU), m_ePreScene(SC_END)
 {
+}
+
+CSceneManager::~CSceneManager()
+{
+	Release();
 }
 
 void CSceneManager::Set_Scene(SCENEID eID)
@@ -31,8 +36,8 @@ void CSceneManager::Set_Scene(SCENEID eID)
 		case SC_CY:
 			m_pScene = new CCYScene;
 			break;
-		case SC_DH:
-			m_pScene = new CDHScene;
+		case SC_DW:
+			m_pScene = new CDWScene;
 			break;
 		case SC_JW:
 			m_pScene = new CJWScene;
@@ -57,7 +62,7 @@ int CSceneManager::Update()
 
 void CSceneManager::Late_Update()
 {
-	m_pScene->LateUpdate();
+	m_pScene->Late_Update();
 }
 
 void CSceneManager::Render(HDC hDC)

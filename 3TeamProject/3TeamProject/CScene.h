@@ -8,7 +8,7 @@ public:
 public:
 	virtual void		Initialize()	PURE;
 	virtual int			Update()		PURE;
-	virtual void		LateUpdate()	PURE;
+	virtual void		Late_Update()	PURE;
 	virtual void		Render(HDC hDC)	PURE;
 	virtual void		Release()		PURE;
 	virtual void Key_Input() PURE;
