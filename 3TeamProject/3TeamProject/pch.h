@@ -14,6 +14,8 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <queue>
+#include <unordered_map>
 
 #include <d3d9.h>
 #include <d3dx9.h>

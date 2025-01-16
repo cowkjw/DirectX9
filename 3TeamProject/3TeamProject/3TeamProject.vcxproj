@@ -156,6 +156,7 @@
     <ClInclude Include="CCYTail.h" />
     <ClInclude Include="CDWPlayer.h" />
     <ClInclude Include="CDWScene.h" />
+    <ClInclude Include="CFruit.h" />
     <ClInclude Include="CJWScene.h" />
     <ClInclude Include="CKeyManager.h" />
     <ClInclude Include="CMainGame.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="CMyBmp.h" />
     <ClInclude Include="CObjectManager.h" />
     <ClInclude Include="CObject.h" />
+    <ClInclude Include="CObjPool.h" />
     <ClInclude Include="CScene.h" />
     <ClInclude Include="CSceneManager.h" />
     <ClInclude Include="CScrollManager.h" />
@@ -187,6 +189,7 @@
     <ClCompile Include="CCYTail.cpp" />
     <ClCompile Include="CDWPlayer.cpp" />
     <ClCompile Include="CDWScene.cpp" />
+    <ClCompile Include="CFruit.cpp" />
     <ClCompile Include="CJWScene.cpp" />
     <ClCompile Include="CKeyManager.cpp" />
     <ClCompile Include="CMainGame.cpp" />

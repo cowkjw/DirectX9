@@ -15,6 +15,8 @@ public:
 	void		Delete_ID(OBJID eID);
 	void		Delete_ALL();
 	void		RenderList_Clear();
+public: //JW
+	auto& Get_ObjList_ByID(OBJID eID) { return m_ObjList[eID]; }
 public:
 	static CObjectManager* Get_Instance()
 	{
