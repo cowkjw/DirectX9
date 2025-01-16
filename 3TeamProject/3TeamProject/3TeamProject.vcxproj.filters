@@ -55,9 +55,6 @@
     <Filter Include="01_Scene\02_CY">
       <UniqueIdentifier>{1ddea9f9-4fdb-493a-ad5c-3f6779d09d8a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01_Scene\03_DH">
-      <UniqueIdentifier>{a72bae54-602c-4ac1-85d6-a5ba4607e608}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01_Scene\04_JW">
       <UniqueIdentifier>{8aeb4eab-76c6-4848-81d1-fb7423a20c17}</UniqueIdentifier>
     </Filter>
@@ -73,9 +70,6 @@
     <Filter Include="02_Object\02_CY">
       <UniqueIdentifier>{186e3db1-6332-444a-b45a-2b42b0ee66c9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02_Object\03_DH">
-      <UniqueIdentifier>{11f5bfa8-64ff-4b86-a5e0-fe1db7784731}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02_Object\04_JW">
       <UniqueIdentifier>{ba1e5e64-befc-43fa-8f38-cb8ff77249b0}</UniqueIdentifier>
     </Filter>
@@ -87,6 +81,12 @@
     </Filter>
     <Filter Include="02_Object\02_CY\02_CYTail">
       <UniqueIdentifier>{ad80ce49-eb7c-45c9-b519-5ab264e4060c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Object\03_DW">
+      <UniqueIdentifier>{11f5bfa8-64ff-4b86-a5e0-fe1db7784731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Scene\03_DW">
+      <UniqueIdentifier>{a72bae54-602c-4ac1-85d6-a5ba4607e608}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -148,7 +148,7 @@
       <Filter>01_Scene\02_CY</Filter>
     </ClInclude>
     <ClInclude Include="CDWScene.h">
-      <Filter>01_Scene\03_DH</Filter>
+      <Filter>01_Scene\03_DW</Filter>
     </ClInclude>
     <ClInclude Include="CJWScene.h">
       <Filter>01_Scene\04_JW</Filter>
@@ -176,6 +176,9 @@
     </ClInclude>
     <ClInclude Include="CCYObject.h">
       <Filter>02_Object\02_CY</Filter>
+    </ClInclude>
+    <ClInclude Include="CDWPlayer.h">
+      <Filter>02_Object\03_DW</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -222,7 +225,7 @@
       <Filter>01_Scene\02_CY</Filter>
     </ClCompile>
     <ClCompile Include="CDWScene.cpp">
-      <Filter>01_Scene\03_DH</Filter>
+      <Filter>01_Scene\03_DW</Filter>
     </ClCompile>
     <ClCompile Include="CJWScene.cpp">
       <Filter>01_Scene\04_JW</Filter>
@@ -250,6 +253,9 @@
     </ClCompile>
     <ClCompile Include="CCYObject.cpp">
       <Filter>02_Object\02_CY</Filter>
+    </ClCompile>
+    <ClCompile Include="CDWPlayer.cpp">
+      <Filter>02_Object\03_DW</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
