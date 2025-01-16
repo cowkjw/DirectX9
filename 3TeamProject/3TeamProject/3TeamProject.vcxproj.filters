@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="00_MainGame">
+      <UniqueIdentifier>{d6997695-1554-423a-a3cd-c5836e0a1447}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99_Managers">
+      <UniqueIdentifier>{e9ad4e87-31ec-4269-8f76-a362d52ad053}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99_Managers\AbstractFactory">
+      <UniqueIdentifier>{4e180192-4da3-4441-a4fd-ac98a1ca3ba4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99_Managers\CollisionManager">
+      <UniqueIdentifier>{699a178d-3638-452c-a04a-b5524e40cc28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99_Managers\KeyManager">
+      <UniqueIdentifier>{df807215-963a-4204-9a80-d51adb7e5ca9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99_Managers\ObjectManger">
+      <UniqueIdentifier>{0c2a6fd0-7c9e-4d2c-9f1f-294417739d78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99_Managers\SceneManager">
+      <UniqueIdentifier>{2cca5ec9-3710-43cf-9509-ff34b77a9dd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99_Managers\ScrollManager">
+      <UniqueIdentifier>{13ac066d-6659-4940-8e51-2eaf51879533}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99_Managers\UiManager">
+      <UniqueIdentifier>{9819bd01-dd97-448d-befd-fe147fffe69f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Scene">
+      <UniqueIdentifier>{b0bcf5a6-862c-4a16-8fad-17145b48fdfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Object">
+      <UniqueIdentifier>{29093b9b-1737-4324-9c78-2a104bd8a2d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Scene\00_Menu">
+      <UniqueIdentifier>{65688d17-2947-489d-b9d5-36f82cb52923}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Scene\01_YG">
+      <UniqueIdentifier>{79602324-634a-4ec9-ad97-91a4b3891364}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Scene\02_CY">
+      <UniqueIdentifier>{1ddea9f9-4fdb-493a-ad5c-3f6779d09d8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Scene\03_DH">
+      <UniqueIdentifier>{a72bae54-602c-4ac1-85d6-a5ba4607e608}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Scene\04_JW">
+      <UniqueIdentifier>{8aeb4eab-76c6-4848-81d1-fb7423a20c17}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="3TeamProject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CMainGame.h">
+      <Filter>00_MainGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Define.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CObject.h">
+      <Filter>02_Object</Filter>
+    </ClInclude>
+    <ClInclude Include="CAbstractFactory.h">
+      <Filter>99_Managers\AbstractFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="CCollisionManager.h">
+      <Filter>99_Managers\CollisionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="CKeyManager.h">
+      <Filter>99_Managers\KeyManager</Filter>
+    </ClInclude>
+    <ClInclude Include="CUiManager.h">
+      <Filter>99_Managers\UiManager</Filter>
+    </ClInclude>
+    <ClInclude Include="CScrollManager.h">
+      <Filter>99_Managers\ScrollManager</Filter>
+    </ClInclude>
+    <ClInclude Include="CSceneManager.h">
+      <Filter>99_Managers\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="CScene.h">
+      <Filter>01_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CObjectManager.h">
+      <Filter>99_Managers\ObjectManger</Filter>
+    </ClInclude>
+    <ClInclude Include="CMenuScene.h">
+      <Filter>01_Scene\00_Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="CYGScene.h">
+      <Filter>01_Scene\01_YG</Filter>
+    </ClInclude>
+    <ClInclude Include="CCYScene.h">
+      <Filter>01_Scene\02_CY</Filter>
+    </ClInclude>
+    <ClInclude Include="CDHScene.h">
+      <Filter>01_Scene\03_DH</Filter>
+    </ClInclude>
+    <ClInclude Include="CJWScene.h">
+      <Filter>01_Scene\04_JW</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="3TeamProject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CMainGame.cpp">
+      <Filter>00_MainGame</Filter>
+    </ClCompile>
+    <ClCompile Include="CObject.cpp">
+      <Filter>02_Object</Filter>
+    </ClCompile>
+    <ClCompile Include="CCollisionManager.cpp">
+      <Filter>99_Managers\CollisionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="CKeyManager.cpp">
+      <Filter>99_Managers\KeyManager</Filter>
+    </ClCompile>
+    <ClCompile Include="CUiManager.cpp">
+      <Filter>99_Managers\UiManager</Filter>
+    </ClCompile>
+    <ClCompile Include="CScrollManager.cpp">
+      <Filter>99_Managers\ScrollManager</Filter>
+    </ClCompile>
+    <ClCompile Include="CSceneManager.cpp">
+      <Filter>99_Managers\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="CScene.cpp">
+      <Filter>01_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="CObjectManager.cpp">
+      <Filter>99_Managers\ObjectManger</Filter>
+    </ClCompile>
+    <ClCompile Include="CMenuScene.cpp">
+      <Filter>01_Scene\00_Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="CYGScene.cpp">
+      <Filter>01_Scene\01_YG</Filter>
+    </ClCompile>
+    <ClCompile Include="CCYScene.cpp">
+      <Filter>01_Scene\02_CY</Filter>
+    </ClCompile>
+    <ClCompile Include="CDHScene.cpp">
+      <Filter>01_Scene\03_DH</Filter>
+    </ClCompile>
+    <ClCompile Include="CJWScene.cpp">
+      <Filter>01_Scene\04_JW</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="3TeamProject.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="3TeamProject.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

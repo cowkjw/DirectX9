@@ -1,0 +1,47 @@
+#pragma once
+#include "Define.h"
+class CScrollManager
+{
+private:
+	CScrollManager();
+	~CScrollManager();
+public:
+	float			Get_ScrollX() { return m_fScrollX; }
+	float			Get_ScrollY() { return m_fScrollY; }
+
+	void			Set_Scroll(float _x, float _y) { m_fScrollX = _x; m_fScrollY = _y; }
+	void			Set_ScrollX(float _fX) { m_fScrollX += _fX; }
+	void			Set_ScrollY(float _fY) { m_fScrollY += _fY; }
+
+	void			Scroll_Lock();
+	//씬마다 맵의 크기가 다르면 씬 init에서 scrollLock으로 맵 크기를 다시 지정해줘야 함
+	void			Set_ScrollLock(float _x, float _y) { m_fMapXSize = _x, m_fMapYSize = _y; }
+
+public:
+	static CScrollManager* Get_Instance()
+	{
+		if (nullptr == m_pInstance)
+			m_pInstance = new CScrollManager;
+
+		return m_pInstance;
+	}
+
+	static void	Destroy_Instance()
+	{
+		if (m_pInstance)
+		{
+			delete m_pInstance;
+			m_pInstance = nullptr;
+		}
+	}
+
+private:
+	static CScrollManager* m_pInstance;
+
+	float			    m_fScrollX;
+	float			    m_fScrollY;
+
+	float m_fMapXSize;
+	float m_fMapYSize;
+};
+
