@@ -79,6 +79,15 @@
     <Filter Include="02_Object\04_JW">
       <UniqueIdentifier>{ba1e5e64-befc-43fa-8f38-cb8ff77249b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02_Object\02_CY\00_CYPlayer">
+      <UniqueIdentifier>{f63b5672-6c31-411c-81cc-4ea6c3a8b807}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Object\02_CY\01_CYMonster">
+      <UniqueIdentifier>{0dfee0d1-8ffd-44d0-a92d-cbd557cdc769}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Object\02_CY\02_CYTail">
+      <UniqueIdentifier>{ad80ce49-eb7c-45c9-b519-5ab264e4060c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -156,6 +165,18 @@
     <ClInclude Include="CYGObject.h">
       <Filter>02_Object\01_YG</Filter>
     </ClInclude>
+    <ClInclude Include="CCYPlayer.h">
+      <Filter>02_Object\02_CY\00_CYPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="CCYMonster.h">
+      <Filter>02_Object\02_CY\01_CYMonster</Filter>
+    </ClInclude>
+    <ClInclude Include="CCYTail.h">
+      <Filter>02_Object\02_CY\02_CYTail</Filter>
+    </ClInclude>
+    <ClInclude Include="CCYObject.h">
+      <Filter>02_Object\02_CY</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3TeamProject.cpp">
@@ -217,6 +238,18 @@
     </ClCompile>
     <ClCompile Include="CYGObject.cpp">
       <Filter>02_Object\01_YG</Filter>
+    </ClCompile>
+    <ClCompile Include="CCYPlayer.cpp">
+      <Filter>02_Object\02_CY\00_CYPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="CCYMonster.cpp">
+      <Filter>02_Object\02_CY\01_CYMonster</Filter>
+    </ClCompile>
+    <ClCompile Include="CCYTail.cpp">
+      <Filter>02_Object\02_CY\02_CYTail</Filter>
+    </ClCompile>
+    <ClCompile Include="CCYObject.cpp">
+      <Filter>02_Object\02_CY</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

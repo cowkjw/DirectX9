@@ -11,6 +11,7 @@
 #include "framework.h"
 
 #include <list>
+#include <vector>
 #include <algorithm>
 #include <map>
 
