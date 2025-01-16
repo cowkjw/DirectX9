@@ -11,10 +11,10 @@ void CPlayer::Initialize()
     rightTop = {450.f, 250.f, 0.f};
     leftBottom = {350.f, 350.f, 0.f};
     rightBottom = {450.f, 350.f, 0.f};
+
     m_tInfo.vPos = { 400.f, 300.f, 0.f };
 
 	m_fSpeed = 10.f;
-    m_tInfo.vDir = { 1.f, 0.f, 0.f };
 }
 
 void CPlayer::Update()
@@ -23,9 +23,8 @@ void CPlayer::Update()
     {
         m_tInfo.vDir = { 0.f, -1.f, 0.f };
 
-        D3DXMATRIX matMoveRot;
-        D3DXMatrixRotationZ(&matMoveRot, D3DXToRadian(m_fAngle+90));
-        D3DXVec3TransformNormal(&m_tInfo.vDir, &m_tInfo.vDir, &matMoveRot);
+        D3DXMatrixRotationZ(&m_tInfo.matWorld, D3DXToRadian(m_fAngle+90));
+        D3DXVec3TransformNormal(&m_tInfo.vDir, &m_tInfo.vDir, &m_tInfo.matWorld);
 
         m_tInfo.vPos += m_tInfo.vDir * m_fSpeed;
         leftTop += m_tInfo.vDir * m_fSpeed;
@@ -37,9 +36,8 @@ void CPlayer::Update()
     if (GetAsyncKeyState('S') & 0x8000) // S 키 (아래로)
     {
         m_tInfo.vDir = { 0.f, 1.f, 0.f };
-        D3DXMATRIX matMoveRot;
-        D3DXMatrixRotationZ(&matMoveRot, D3DXToRadian(m_fAngle + 90));
-        D3DXVec3TransformNormal(&m_tInfo.vDir, &m_tInfo.vDir, &matMoveRot);
+        D3DXMatrixRotationZ(&m_tInfo.matWorld, D3DXToRadian(m_fAngle + 90));
+        D3DXVec3TransformNormal(&m_tInfo.vDir, &m_tInfo.vDir, &m_tInfo.matWorld);
 
         m_tInfo.vPos += m_tInfo.vDir * m_fSpeed;
         leftTop += m_tInfo.vDir * m_fSpeed;
@@ -50,8 +48,7 @@ void CPlayer::Update()
     if (GetAsyncKeyState('A') & 0x8000) // A 키 (왼쪽으로)
     {
         m_fAngle--;
-        D3DXMATRIX matRot;
-        D3DXMatrixRotationZ(&matRot, D3DXToRadian(-1)); // 각도를 라디안으로 변환
+        D3DXMatrixRotationZ(&m_tInfo.matWorld, D3DXToRadian(-1)); // 각도를 라디안으로 변환
 
         // 사각형의 각 꼭짓점 좌표에 회전 행렬을 적용
         D3DXVECTOR3 vLeftTop = leftTop - m_tInfo.vPos;
@@ -59,10 +56,10 @@ void CPlayer::Update()
         D3DXVECTOR3 vLeftBottom = leftBottom - m_tInfo.vPos;
         D3DXVECTOR3 vRightBottom = rightBottom - m_tInfo.vPos;
 
-        D3DXVec3TransformCoord(&vLeftTop, &vLeftTop, &matRot);
-        D3DXVec3TransformCoord(&vRightTop, &vRightTop, &matRot);
-        D3DXVec3TransformCoord(&vLeftBottom, &vLeftBottom, &matRot);
-        D3DXVec3TransformCoord(&vRightBottom, &vRightBottom, &matRot);
+        D3DXVec3TransformCoord(&vLeftTop, &vLeftTop, &m_tInfo.matWorld);
+        D3DXVec3TransformCoord(&vRightTop, &vRightTop, &m_tInfo.matWorld);
+        D3DXVec3TransformCoord(&vLeftBottom, &vLeftBottom, &m_tInfo.matWorld);
+        D3DXVec3TransformCoord(&vRightBottom, &vRightBottom, &m_tInfo.matWorld);
 
         // 회전된 좌표에 원래의 위치를 더하여 최종 좌표 계산
         leftTop = vLeftTop + m_tInfo.vPos;
@@ -74,9 +71,7 @@ void CPlayer::Update()
     {
         m_fAngle++;
 
-
-        D3DXMATRIX matRot;
-        D3DXMatrixRotationZ(&matRot, D3DXToRadian(1)); // 각도를 라디안으로 변환
+        D3DXMatrixRotationZ(&m_tInfo.matWorld, D3DXToRadian(1)); // 각도를 라디안으로 변환
 
         // 사각형의 각 꼭짓점 좌표에 회전 행렬을 적용
         D3DXVECTOR3 vLeftTop = leftTop - m_tInfo.vPos;
@@ -84,10 +79,10 @@ void CPlayer::Update()
         D3DXVECTOR3 vLeftBottom = leftBottom - m_tInfo.vPos;
         D3DXVECTOR3 vRightBottom = rightBottom - m_tInfo.vPos;
 
-        D3DXVec3TransformCoord(&vLeftTop, &vLeftTop, &matRot);
-        D3DXVec3TransformCoord(&vRightTop, &vRightTop, &matRot);
-        D3DXVec3TransformCoord(&vLeftBottom, &vLeftBottom, &matRot);
-        D3DXVec3TransformCoord(&vRightBottom, &vRightBottom, &matRot);
+        D3DXVec3TransformCoord(&vLeftTop, &vLeftTop, &m_tInfo.matWorld);
+        D3DXVec3TransformCoord(&vRightTop, &vRightTop, &m_tInfo.matWorld);
+        D3DXVec3TransformCoord(&vLeftBottom, &vLeftBottom, &m_tInfo.matWorld);
+        D3DXVec3TransformCoord(&vRightBottom, &vRightBottom, &m_tInfo.matWorld);
 
         // 회전된 좌표에 원래의 위치를 더하여 최종 좌표 계산
         leftTop = vLeftTop + m_tInfo.vPos;
