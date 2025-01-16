@@ -153,6 +153,9 @@
     <ClInclude Include="CYGPlayer.h">
       <Filter>02_Object\01_YG</Filter>
     </ClInclude>
+    <ClInclude Include="CYGObject.h">
+      <Filter>02_Object\01_YG</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3TeamProject.cpp">
@@ -210,6 +213,9 @@
       <Filter>99_Managers\BitManager</Filter>
     </ClCompile>
     <ClCompile Include="CYGPlayer.cpp">
+      <Filter>02_Object\01_YG</Filter>
+    </ClCompile>
+    <ClCompile Include="CYGObject.cpp">
       <Filter>02_Object\01_YG</Filter>
     </ClCompile>
   </ItemGroup>

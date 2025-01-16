@@ -13,7 +13,7 @@ CYGScene::CYGScene()
 
 void CYGScene::Initialize()
 {
-	CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CYGPlayer>::Create(300, 400, 100, 100));
+	CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CYGPlayer>::Create(400, 300, 50, 50));
 	CUiManager::Get_Instance()->Set_UiType(UI_YG);
 }
 
@@ -35,6 +35,7 @@ void CYGScene::Render(HDC hDC)
 	Rectangle(hDC, -100, -100, 900, 700);
 
 	CObjectManager::Get_Instance()->Render(hDC);
+	CUiManager::Get_Instance()->Render(hDC);
 
 	if (g_bDevmode) {
 		TCHAR szWhoScene[64];

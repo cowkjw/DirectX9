@@ -1,10 +1,10 @@
 #pragma once
-#include "CYGObject.h"
-class CYGPlayer :public CYGObject
+#include "CObject.h"
+class CYGObject :public CObject
 {
 public:
-	CYGPlayer();
-	virtual ~CYGPlayer() { Release(); }
+	CYGObject();
+	virtual ~CYGObject() { Release(); }
 public:
 	void Initialize() override;
 	int Update() override;
@@ -12,10 +12,10 @@ public:
 	void Render(HDC hDC) override;
 	void Release() override;
 	void OnCollision(CObject* _obj) override;
-private:
-	void Key_Input();
-private:
-	D3DXVECTOR3 leftHandPos;
-	D3DXVECTOR3 rightHandPos;
+protected:
+	float m_fAngle;
+
+	int m_iHp;
+	int m_iMaxHp;
 };
 

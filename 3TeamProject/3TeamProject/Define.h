@@ -17,6 +17,16 @@ enum UITYPE{UI_YG, UI_CY,UI_DW, UI_JW, UI_END};
 enum OBJID {OBJ_PLAYER, OBJ_END};
 enum RENDERID { RENDER_BACKGROUND, RENDER_GAMEOBJECT, RENDER_END };
 
+static D3DXVECTOR3		Get_Mouse()
+{
+	POINT		pt{};
+
+	GetCursorPos(&pt);
+	ScreenToClient(g_hWnd, &pt);
+
+	return D3DXVECTOR3((float)pt.x, (float)pt.y, 0.f);
+}
+
 
 typedef struct tagInfo
 {
