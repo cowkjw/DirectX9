@@ -23,7 +23,7 @@ void CMenuScene::Late_Update()
 
 void CMenuScene::Render(HDC hDC)
 {
-
+    Rectangle(hDC, -100, -100, 900, 700);
 }
 
 void CMenuScene::Release()

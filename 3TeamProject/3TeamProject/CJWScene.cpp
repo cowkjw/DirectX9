@@ -36,18 +36,17 @@ void CJWScene::Initialize()
 
 int CJWScene::Update()
 {
-	Key_Input();
 	auto& fruitList = CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYER);
 	CCollisionManager::JW_Collision_Circle(fruitList, fruitList);
 	Create_MapObj();
 	CObjectManager::Get_Instance()->Update();
+
+	Key_Input();
 	return 0;
 }
 
 void CJWScene::Late_Update()
 {
-
-
 	CObjectManager::Get_Instance()->Late_Update();
 }
 
