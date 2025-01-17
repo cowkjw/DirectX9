@@ -16,9 +16,6 @@ void CCYPlayer::Initialize()
 	m_eOBJID = OBJ_PLAYER;
 	m_eRender = RENDER_GAMEOBJECT;
 
-
-
-
 	m_tInfo.vPos = { 400.f, 300.f, 0.f };
 	m_fSpeed = 2.f;
 	m_tInfo.vLook = { 1.f, 0.f, 0.f };
