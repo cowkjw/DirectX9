@@ -14,6 +14,7 @@ bool g_bDevmode = false;
 CMainGame::CMainGame() 
 {
 	// CY CCYCYCYCYCYCY
+	//¹Ý°©°í
 }
 
 CMainGame::~CMainGame()
