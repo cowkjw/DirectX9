@@ -93,6 +93,11 @@ void CJWScene::Render(HDC hDC)
 		SetTextColor(hDC, RGB(0, 0, 0));
 		TextOut(hDC, 50, 50, szDebugLevel, _tcslen(szDebugLevel));
 
+		TCHAR szDebugGameOver[64];
+		_stprintf_s(szDebugGameOver, _T("현재 게임 상태 : %d"), m_bGameOver);
+		SetTextColor(hDC, RGB(0, 0, 0));
+		TextOut(hDC, 50, 70, szDebugGameOver, _tcslen(szDebugGameOver));
+
 		HPEN hPen = CreatePen(PS_SOLID, 5, RGB(255, 0, 0));
 		HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
 		// 선 그리기

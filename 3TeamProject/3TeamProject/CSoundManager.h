@@ -38,5 +38,6 @@ public:
 private:
     System* m_System;
     unordered_map<string, Sound*> m_Sounds;
+    unordered_map<string, Channel*> m_EffectChannels;
     Channel* m_BGMChannel;
 };

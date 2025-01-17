@@ -42,21 +42,35 @@ void CSoundManager::LoadSound(const string& name, const string& filePath, bool i
 
 void CSoundManager::PlayEffect(const string& name, bool loop) 
 {
-    auto it = m_Sounds.find(name);
-    if (it == m_Sounds.end()) 
+
+    auto soundIt = m_Sounds.find(name);
+    if (soundIt == m_Sounds.end())
     {
         return;
     }
 
     Channel* channel = nullptr;
-    if (m_System->playSound(it->second, nullptr, false, &channel) != FMOD_OK) 
+
+    // 기존 채널 제거
+    auto channelIt = m_EffectChannels.find(name);
+    if (channelIt != m_EffectChannels.end())
     {
-        return;
+        channelIt->second->stop();
+        m_EffectChannels.erase(channelIt);
     }
 
-    if (loop)
+    // 새 채널 생성 및 재생
+    if (m_System->playSound(soundIt->second, nullptr, false, &channel) == FMOD_OK)
     {
-        channel->setMode(FMOD_LOOP_NORMAL);
+        if (loop)
+        {
+            channel->setMode(FMOD_LOOP_NORMAL);
+        }
+        else
+        {
+            channel->setMode(FMOD_LOOP_OFF);
+        }
+        m_EffectChannels[name] = channel;
     }
 }
 
