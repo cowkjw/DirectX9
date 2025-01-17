@@ -36,6 +36,13 @@ void CJWScene::Initialize()
 			m_FruitPoolMap[(FRUIT_TYPE)i] = new CObjPool<CFruit>(20);
 		}
 	}
+
+	FRUIT_TYPE eType = (FRUIT_TYPE)(rand() % m_iLevel);
+	CObject* pObj = m_FruitPoolMap[eType]->Get_Obj();
+	static_cast<CFruit*>(pObj)->Set_Type(eType);
+	static_cast<CFruit*>(pObj)->Reset();
+	CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, pObj);
+
 	CUiManager::Get_Instance()->Set_UiType(UI_JW);
 }
 

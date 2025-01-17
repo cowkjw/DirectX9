@@ -400,7 +400,7 @@ void CFruit::Set_Scale()
 		m_vScale = { 2.f,2.f,2.f };
 		break;
 	case FRUIT_TYPE::WATERMELON:
-		m_vScale = { 1.5f,1.5f,1.5f };
+		m_vScale = { 2.3f, 2.3f, 2.3f };
 		break;
 	case FRUIT_TYPE::FT_END:
 	default:
