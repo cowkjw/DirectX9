@@ -20,18 +20,26 @@ private:
 
 
 	D3DXMATRIX        matScale;  // 크기
-	D3DXMATRIX        matRotZ, matRevZ; // 자전
+	D3DXMATRIX        matRotZ; // 자전
 	D3DXMATRIX        matTrans; // 위치
 
 
+	D3DXMATRIX        matScale_Sosil;  // 크기
+	D3DXMATRIX        matRotZ_Sosil; // 자전
+	D3DXMATRIX        matTrans_Sosil; // 위치
+
 	D3DXMATRIX WorldMat;
-
-
+	D3DXMATRIX WorldMat_Sosil;
 
 	D3DXVECTOR3 transformedCorners[4]; // 행렬곱당해버릴 벡터
+
+	D3DXVECTOR3 transformedSosil[4];
+
+
 	D3DXVECTOR3 m_vCorner[4];
+	D3DXVECTOR3 Sosil[4];
 
 	float m_fNemoAngel;
 };
 
-void RenderBackground(HDC hDC, float playerSpeed);
+
