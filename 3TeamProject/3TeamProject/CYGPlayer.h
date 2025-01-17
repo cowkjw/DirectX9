@@ -33,6 +33,8 @@ private:
 	D3DXVECTOR3 m_vOriginLeftGunHand;
 	D3DXVECTOR3 m_vOriginRightGunHand;
 	D3DXVECTOR3 m_vOriginGunRectanglePoint[4];
+	D3DXVECTOR3 m_vBulletSpawn;
+	D3DXVECTOR3 m_vOriginBulletSpawn;
 
 	//플레이어 원본 중점
 	D3DXVECTOR3 m_vOriginPos;
@@ -42,5 +44,7 @@ private:
 
 	//무기 없을 때 손 내밀기
 	bool m_bLeftPush;
+
+	int m_iShootTick;
 };
 

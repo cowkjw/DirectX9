@@ -1,8 +1,11 @@
 #include "pch.h"
 #include "CYGPlayer.h"
 #include "CKeyManager.h"
+#include "CAbstractFactory.h"
+#include "CObjectManager.h"
+#include "CYGBullet.h"
 
-CYGPlayer::CYGPlayer():m_bLeftPush(false)
+CYGPlayer::CYGPlayer():m_bLeftPush(false), m_iShootTick(0)
 {
 }
 
@@ -31,6 +34,9 @@ void CYGPlayer::Initialize()
 	m_vGunRectanglePoint[2] = {405.f, 280.f, 0.f};
 	m_vGunRectanglePoint[3] = {395.f, 280.f, 0.f};
 
+	m_vBulletSpawn = { 400.f, 210.f, 0.f };
+	m_vOriginBulletSpawn = m_vBulletSpawn;
+
 	for (int i = 0; i < 4; ++i) {
 		m_vOriginGunRectanglePoint[i] = m_vGunRectanglePoint[i];
 	}
@@ -39,11 +45,14 @@ void CYGPlayer::Initialize()
 
 	m_iHp = 100;
 	m_iMaxHp = m_iHp;
+	m_iShootTick = 0;
 }
 
 int CYGPlayer::Update()
 {
+	m_iShootTick++;
 	m_tInfo.vLook = Get_Mouse() - m_tInfo.vPos;
+	D3DXVec3Normalize(&m_tInfo.vLook, &m_tInfo.vLook);
 	m_fAngle = D3DXToDegree(atan2f(m_tInfo.vLook.y, m_tInfo.vLook.x));
 
 	if (m_fAngle < 0) {
@@ -81,6 +90,10 @@ int CYGPlayer::Update()
 		m_vGunRectanglePoint[i] -= {400.f, 300.f, 0.f};
 		D3DXVec3TransformCoord(&m_vGunRectanglePoint[i], &m_vGunRectanglePoint[i], &m_tInfo.matWorld);
 	}
+
+	m_vBulletSpawn = m_vOriginBulletSpawn;
+	m_vBulletSpawn -= {400.f, 300.f, 0.f};
+	D3DXVec3TransformCoord(&m_vBulletSpawn, &m_vBulletSpawn, &m_tInfo.matWorld);
 
 
 	Key_Input();
@@ -165,7 +178,6 @@ void CYGPlayer::Key_Input()
 	if (CKeyManager::Get_Instance()->Key_Down(VK_LBUTTON)) {
 		if (m_PlayerState == PS_NOGUN) {
 			float radian = D3DXToRadian(m_fAngle);
-			D3DXVec3Normalize(&m_tInfo.vLook, &m_tInfo.vLook);
 			if (m_bLeftPush) {
 				m_vLeftNoGunHandPos += m_tInfo.vLook * 10;
 				m_bLeftPush = !m_bLeftPush;
@@ -174,6 +186,14 @@ void CYGPlayer::Key_Input()
 				m_vRightNoGunHandPos += m_tInfo.vLook * 10;
 				m_bLeftPush = !m_bLeftPush;
 			}
+		}
+		else {
+			if (m_iShootTick > 10) {
+				CObjectManager::Get_Instance()->Add_Object(OBJ_BULLET, CAbstractFactory<CYGBullet>::Create(m_vBulletSpawn.x, m_vBulletSpawn.y));
+				static_cast<CYGBullet*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_BULLET).back())->Set_Dir(m_tInfo.vLook);
+				m_iShootTick = 0;
+			}
+
 		}
 	}
 
