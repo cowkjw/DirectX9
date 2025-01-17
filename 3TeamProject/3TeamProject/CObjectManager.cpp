@@ -8,7 +8,7 @@ CObjectManager::CObjectManager()
 
 void CObjectManager::Add_Object(OBJID eID, CObject* pObj)
 {
-	if (OBJ_END <= eID || nullptr == pObj)
+	if (OBJ_END <= eID || nullptr == pObj || eID < OBJ_PLAYER)
 		return;
 
 	m_ObjList[eID].push_back(pObj);
