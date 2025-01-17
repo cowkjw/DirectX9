@@ -91,6 +91,9 @@
     <Filter Include="02_Object\02_CY\00. CCY">
       <UniqueIdentifier>{2f981760-cd01-4146-8716-782c00189ac8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02_Object\02_CY\03_CYFood">
+      <UniqueIdentifier>{6397a87a-0c59-4dcd-af28-8653f5b43644}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -195,6 +198,9 @@
     <ClInclude Include="CCYHead.h">
       <Filter>02_Object\02_CY</Filter>
     </ClInclude>
+    <ClInclude Include="CCYFood.h">
+      <Filter>02_Object\02_CY\03_CYFood</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3TeamProject.cpp">
@@ -280,6 +286,9 @@
     </ClCompile>
     <ClCompile Include="CCYHead.cpp">
       <Filter>02_Object\02_CY</Filter>
+    </ClCompile>
+    <ClCompile Include="CCYFood.cpp">
+      <Filter>02_Object\02_CY\03_CYFood</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

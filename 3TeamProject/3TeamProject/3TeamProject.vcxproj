@@ -158,6 +158,7 @@
     <ClInclude Include="CCYTail.h" />
     <ClInclude Include="CDWPlayer.h" />
     <ClInclude Include="CDWScene.h" />
+    <ClInclude Include="CCYFood.h" />
     <ClInclude Include="CFruit.h" />
     <ClInclude Include="CJWScene.h" />
     <ClInclude Include="CKeyManager.h" />
@@ -193,6 +194,7 @@
     <ClCompile Include="CCYTail.cpp" />
     <ClCompile Include="CDWPlayer.cpp" />
     <ClCompile Include="CDWScene.cpp" />
+    <ClCompile Include="CCYFood.cpp" />
     <ClCompile Include="CFruit.cpp" />
     <ClCompile Include="CJWScene.cpp" />
     <ClCompile Include="CKeyManager.cpp" />
