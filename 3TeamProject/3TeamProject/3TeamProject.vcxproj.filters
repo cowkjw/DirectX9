@@ -88,6 +88,11 @@
     <Filter Include="01_Scene\03_DW">
       <UniqueIdentifier>{a72bae54-602c-4ac1-85d6-a5ba4607e608}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02_Object\02_CY\00. CCY">
+      <UniqueIdentifier>{2f981760-cd01-4146-8716-782c00189ac8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Object\02_CY\03_CYFood">
+      <UniqueIdentifier>{6397a87a-0c59-4dcd-af28-8653f5b43644}</UniqueIdentifier>
     <Filter Include="02_Object\03_DW\Player">
       <UniqueIdentifier>{0d3222b4-2f14-4b7e-8af5-f05c3a925ebd}</UniqueIdentifier>
     </Filter>
@@ -189,6 +194,14 @@
     <ClInclude Include="CObjPool.h">
       <Filter>02_Object\04_JW</Filter>
     </ClInclude>
+    <ClInclude Include="CCYSegment.h">
+      <Filter>02_Object\02_CY\00. CCY</Filter>
+    </ClInclude>
+    <ClInclude Include="CCYHead.h">
+      <Filter>02_Object\02_CY</Filter>
+    </ClInclude>
+    <ClInclude Include="CCYFood.h">
+      <Filter>02_Object\02_CY\03_CYFood</Filter>
     <ClInclude Include="CRoad.h">
       <Filter>02_Object\03_DW\Road</Filter>
     </ClInclude>
@@ -275,6 +288,14 @@
     <ClCompile Include="CFruit.cpp">
       <Filter>02_Object\04_JW</Filter>
     </ClCompile>
+    <ClCompile Include="CCYSegment.cpp">
+      <Filter>02_Object\02_CY\00. CCY</Filter>
+    </ClCompile>
+    <ClCompile Include="CCYHead.cpp">
+      <Filter>02_Object\02_CY</Filter>
+    </ClCompile>
+    <ClCompile Include="CCYFood.cpp">
+      <Filter>02_Object\02_CY\03_CYFood</Filter>
     <ClCompile Include="CRoad.cpp">
       <Filter>02_Object\03_DW\Road</Filter>
     </ClCompile>
