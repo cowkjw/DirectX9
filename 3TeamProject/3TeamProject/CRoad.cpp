@@ -111,71 +111,71 @@ int CRoad::Update()
 void CRoad::Key_Input()
 {
 
-
 	if (GetAsyncKeyState('A'))
 	{
-		
-		D3DXVECTOR3 tmp = { 10.f,0.f,0.f };
-		D3DXVec3TransformNormal(&m_tInfo.vDir, &tmp, &WorldMat);
-		m_tInfo.vPos += m_tInfo.vDir;
+		// 통로를 왼쪽으로
+		D3DXVECTOR3 fixedLeftDir = { +10.f, 0.f, 0.f };
+		m_tInfo.vPos += fixedLeftDir; 
 
-		if (m_tInfo.vPos.x > 1050)
-		{
-			m_bRight_Rotation = !m_bRight_Rotation;
-			m_fTargetAngle -= D3DXToRadian(90.f); // 왼쪽 
-
-			m_tInfo.vPos = { 0.f,0.f,0.f };
-			m_bLeft_Rotation = true;
-		}
-	}
-	else if (GetAsyncKeyState('D'))
-	{
-		
-			D3DXVECTOR3 tmp = { -10.f,0.f,0.f };
-		D3DXVec3TransformNormal(&m_tInfo.vDir, &tmp, &WorldMat);
-		m_tInfo.vPos += m_tInfo.vDir;
-
-		if (m_tInfo.vPos.x < -240)
+		// 나중에 첫충돌만 270좌표로 바꾸든
+		// 처음 통로 위치좌표를 바꾸든 할 예정
+		if (m_pPlayer->Get_Info().vPos.x < 320)
 		{
 			m_bLeft_Rotation = !m_bLeft_Rotation;
-			m_fTargetAngle += D3DXToRadian(90.f); // 오른쪽
-
-			m_tInfo.vPos = { 0.f,0.f,0.f };
+			m_fTargetAngle += D3DXToRadian(90.f); 
+			m_tInfo.vPos = { 0.f, 0.f, 0.f };
 			m_bRight_Rotation = true;
 		}
 	}
+
+
+	else if (GetAsyncKeyState('D'))
+	{
+	     // 통로를 오른쪽으로
+		D3DXVECTOR3 fixedRightDir = { -10.f, 0.f, 0.f };
+		m_tInfo.vPos += fixedRightDir; 
+
+	
+	}
+
+	// W키: 화면 기준 위로(+Y) 이동
 	if (GetAsyncKeyState('W'))
 	{
-		D3DXVECTOR3 tmp = { 0.f,40.f,0.f };
-		D3DXVec3TransformNormal(&m_tInfo.vDir, &tmp, &WorldMat);
-		m_tInfo.vPos += m_tInfo.vDir;
+		D3DXVECTOR3 fixedUpDir = { 0.f, -20.f, 0.f };
+		m_tInfo.vPos += fixedUpDir;
 	}
+
+	// S키: 화면 기준 아래로(-Y) 이동
 	else if (GetAsyncKeyState('S'))
 	{
-		D3DXVECTOR3 tmp = { 0.f,-20.f,0.f };
-		D3DXVec3TransformNormal(&m_tInfo.vDir, &tmp, &WorldMat);
-		m_tInfo.vPos += m_tInfo.vDir;
+		D3DXVECTOR3 fixedDownDir = { 0.f, 20.f, 0.f };
+		m_tInfo.vPos += fixedDownDir;
 	}
+
+	// 왼쪽 방향으로 90도 회전
 	if (CKeyManager::Get_Instance()->Key_Down(VK_LEFT))
 	{
 		m_bRight_Rotation = !m_bRight_Rotation;
-		m_fTargetAngle -= D3DXToRadian(90.f); // 왼쪽 
-
-		m_tInfo.vPos = { 0.f,0.f,0.f };
+		m_fTargetAngle -= D3DXToRadian(90.f);
+		m_tInfo.vPos = { 0.f, 0.f, 0.f };
 		m_bLeft_Rotation = true;
 	}
+
+	// 오른쪽 방향으로 90도 회전
 	if (CKeyManager::Get_Instance()->Key_Down(VK_RIGHT))
 	{
 		m_bLeft_Rotation = !m_bLeft_Rotation;
-		m_fTargetAngle += D3DXToRadian(90.f); // 오른쪽
+		m_fTargetAngle += D3DXToRadian(90.f);
 	}
+
+
 	if (CKeyManager::Get_Instance()->Key_Pressing(VK_SPACE))
 	{
-		D3DXVECTOR3 tmp = { 0.f,40.f,0.f };
-		D3DXVec3TransformNormal(&m_tInfo.vDir, &tmp, &WorldMat);
-		m_tInfo.vPos += m_tInfo.vDir;
+		D3DXVECTOR3 fixedForwardDir = { 0.f, 40.f, 0.f };
+		m_tInfo.vPos += fixedForwardDir;
 	}
 }
+
 void CRoad::Late_Update()
 {
 }
@@ -220,6 +220,7 @@ void CRoad::Render(HDC hDC)
 
 void CRoad::Release()
 {
+
 }
 
 void CRoad::OnCollision(CObject* _obj)
