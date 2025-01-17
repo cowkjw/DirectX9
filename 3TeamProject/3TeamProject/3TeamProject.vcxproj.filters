@@ -91,14 +91,6 @@
     <Filter Include="02_Object\02_CY\00. CCY">
       <UniqueIdentifier>{2f981760-cd01-4146-8716-782c00189ac8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02_Object\02_CY\03_CYFood">
-      <UniqueIdentifier>{6397a87a-0c59-4dcd-af28-8653f5b43644}</UniqueIdentifier>
-    <Filter Include="02_Object\03_DW\Player">
-      <UniqueIdentifier>{0d3222b4-2f14-4b7e-8af5-f05c3a925ebd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02_Object\03_DW\Road">
-      <UniqueIdentifier>{c7d4fdb4-97bc-48c5-bb95-6a4870249238}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -200,16 +192,17 @@
     <ClInclude Include="CCYHead.h">
       <Filter>02_Object\02_CY</Filter>
     </ClInclude>
-    <ClInclude Include="CCYFood.h">
-      <Filter>02_Object\02_CY\03_CYFood</Filter>
     <ClInclude Include="CRoad.h">
-      <Filter>02_Object\03_DW\Road</Filter>
-    </ClInclude>
-    <ClInclude Include="CDWPlayer.h">
-      <Filter>02_Object\03_DW\Player</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="CDWObject.h">
       <Filter>02_Object\03_DW</Filter>
+    </ClInclude>
+    <ClInclude Include="CDWPlayer.h">
+      <Filter>02_Object\03_DW</Filter>
+    </ClInclude>
+    <ClInclude Include="CCYFood.h">
+      <Filter>02_Object\02_CY</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -294,16 +287,17 @@
     <ClCompile Include="CCYHead.cpp">
       <Filter>02_Object\02_CY</Filter>
     </ClCompile>
-    <ClCompile Include="CCYFood.cpp">
-      <Filter>02_Object\02_CY\03_CYFood</Filter>
     <ClCompile Include="CRoad.cpp">
-      <Filter>02_Object\03_DW\Road</Filter>
-    </ClCompile>
-    <ClCompile Include="CDWPlayer.cpp">
-      <Filter>02_Object\03_DW\Player</Filter>
+      <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="CDWObject.cpp">
       <Filter>02_Object\03_DW</Filter>
+    </ClCompile>
+    <ClCompile Include="CDWPlayer.cpp">
+      <Filter>02_Object\03_DW</Filter>
+    </ClCompile>
+    <ClCompile Include="CCYFood.cpp">
+      <Filter>02_Object\02_CY</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

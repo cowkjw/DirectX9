@@ -4,6 +4,7 @@
 #include "CCYTail.h"
 #include "Define.h"
 #include "CCYFood.h"
+#include "CKeyManager.h"
 
 CCYPlayer::CCYPlayer() :m_fAngle(0.f)
 {
@@ -124,13 +125,9 @@ void CCYPlayer::Render(HDC hDC)
 	HBRUSH OldBrush = (HBRUSH)SelectObject(hDC, PinkBrush);
 
 	Polygon(hDC, m_pRenderPoint, m_vOriginPointvec.size());
+
 	SelectObject(hDC, OldBrush); DeleteObject(PinkBrush);
 	SelectObject(hDC, hOldPen); DeleteObject(hPen);
-
-	Ellipse(hDC, m_pRenderPoint[3].x - 3.f, m_pRenderPoint[3].y - 3.f,
-				 m_pRenderPoint[3].x + 3.f, m_pRenderPoint[3].y + 3.f);
-	Ellipse(hDC, m_pRenderPoint[4].x - 3.f, m_pRenderPoint[4].y - 3.f,
-				 m_pRenderPoint[4].x + 3.f, m_pRenderPoint[4].y + 3.f);
 
 }
 
@@ -172,7 +169,7 @@ void CCYPlayer::Key_Input()
 		D3DXVec3TransformNormal(&m_tInfo.vDir, &m_tInfo.vDir, &m_tInfo.matWorld);
 		m_tInfo.vPos += m_tInfo.vDir;
 	}
-	if (GetAsyncKeyState(VK_SPACE))
+	if (CKeyManager::Get_Instance()->Key_Down(VK_SPACE))
 	{
 		Increase_TailSegment();
 	}
