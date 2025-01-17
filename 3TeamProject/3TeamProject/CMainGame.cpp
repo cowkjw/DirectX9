@@ -13,7 +13,8 @@ bool g_bDevmode = false;
 
 CMainGame::CMainGame() 
 {
-	//¹İ°©°í
+	// CY CCYCYCYCYCYCY
+	//Â¹ÃÂ°Â©Â°Ã­
 }
 
 CMainGame::~CMainGame()
