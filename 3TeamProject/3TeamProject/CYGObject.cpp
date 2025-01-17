@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CYGObject.h"
 
-CYGObject::CYGObject()
+CYGObject::CYGObject():m_fAngle(0)
 {
 }
 

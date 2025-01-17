@@ -17,5 +17,9 @@ private:
 private:
 	D3DXVECTOR3 leftHandPos;
 	D3DXVECTOR3 rightHandPos;
+
+	D3DXVECTOR3 m_vOriginPos;
+	D3DXVECTOR3 m_vOriginLeftHand;
+	D3DXVECTOR3 m_vOriginRightHand;
 };
 
