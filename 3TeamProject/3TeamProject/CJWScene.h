@@ -17,7 +17,9 @@ public:
 	void Create_MapObj() override;
 	void Offset() override;
 private:
-	unordered_map<FRUIT_TYPE, CObjPool<CFruit>*> m_FruitPoolMap;
+	void Render_Box(HDC hDC);
+private:
+	unordered_map<FRUIT_TYPE,CObjPool<CFruit>*> m_FruitPoolMap;
 	vector<CObject*> m_vecFruit;
 	CObject* m_pFruit;
 	list<CObject*> m_FruitList;
