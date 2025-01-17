@@ -9,6 +9,7 @@
 
 CCYScene::CCYScene()
 {
+	// testtest
 }
 
 void CCYScene::Initialize()
