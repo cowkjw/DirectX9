@@ -15,14 +15,10 @@ public:
 
 private:
 	void Key_Input();
-
-
 private:
 	D3DXMATRIX	matScale;
 	D3DXMATRIX	matRotZ;
 	D3DXMATRIX	matTrans;
 	float       m_fAngle;
-
-
 };
 
