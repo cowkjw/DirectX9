@@ -1,9 +1,10 @@
 #pragma once
 #include "CObject.h"
+
 class CCYObject : public CObject
 {
 public:
-	CCYObject(): m_pRenderPoint(nullptr), m_fRadius(0.f) {}
+	CCYObject(): m_pRenderPoint(nullptr), m_fRadius(0.f), m_fTargetAngle(0.f), m_fAngle(0.f) {}
 	virtual ~CCYObject();
 public:
 	void Initialize() PURE;
@@ -28,5 +29,15 @@ protected:
 	D3DXMATRIX			matRotZ;
 	D3DXMATRIX			matTrans;
 	float				m_fAngle;
+	float				m_fTargetAngle;
 };
 
+//static D3DXVECTOR3		Get_Mouse()
+//{
+//	POINT		pt{};
+//
+//	GetCursorPos(&pt);
+//	ScreenToClient(g_hWnd, &pt);
+//
+//	return D3DXVECTOR3((float)pt.x, (float)pt.y, 0.f);
+//}
