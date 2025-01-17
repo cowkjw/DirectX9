@@ -6,6 +6,7 @@
 #include "CUiManager.h"
 #include "CAbstractFactory.h"
 #include "CDWPlayer.h"
+#include "CRoad.h"
 
 CDWScene::CDWScene()
 {
@@ -14,6 +15,8 @@ CDWScene::CDWScene()
 void CDWScene::Initialize()
 {
 	CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CDWPlayer>::Create(300, 400, 100, 100));
+	CObjectManager::Get_Instance()->Add_Object(OBJ_DW_ROAD, CAbstractFactory<CRoad>::Create(300, 400, 100, 100));
+
 	CUiManager::Get_Instance()->Set_UiType(UI_DW);
 }
 
@@ -34,7 +37,8 @@ void CDWScene::Render(HDC hDC)
 	Rectangle(hDC, -100, -100, 900, 700);
 
 	CObjectManager::Get_Instance()->Render(hDC);
-	if (g_bDevmode) {
+	if (g_bDevmode) 
+	{
 		TCHAR szWhoScene[64];
 		_stprintf_s(szWhoScene, _T("µ¿¿Ï"));
 		SetTextColor(hDC, RGB(0, 0, 0));
