@@ -14,6 +14,9 @@ public:
 	void Render(HDC hDC) override;
 	void Release() override;
 	void OnCollision(CObject* _obj) override;
+public:
+	int Get_MaxHp() { return m_iMaxHp; }
+	int Get_Hp() { return m_iHp; }
 private:
 	void Key_Input();
 private:

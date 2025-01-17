@@ -32,7 +32,19 @@ void CYGScene::Late_Update()
 
 void CYGScene::Render(HDC hDC)
 {
+	COLORREF color = RGB(128, 175, 73);
+
+	HBRUSH hBrush = CreateSolidBrush(color);
+	HPEN hPen = CreatePen(PS_NULL, 0, RGB(0, 0, 0));
+	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
 	Rectangle(hDC, -100, -100, 900, 700);
+
+	SelectObject(hDC, hOldBrush);
+	SelectObject(hDC, hOldPen);
+	DeleteObject(hBrush);
+	DeleteObject(hPen);
+	
 
 	CObjectManager::Get_Instance()->Render(hDC);
 	CUiManager::Get_Instance()->Render(hDC);
