@@ -421,6 +421,14 @@ FodyWeavers.xsd
 # Local History for Visual Studio Code
 .history/
 
+*.dll
+!fmod.dll
+!fmodL.dll
+
+*.lib
+!fmod_vc.lib
+!fmodL_vc.lib
+
 # Windows Installer files from build outputs
 *.cab
 *.msi

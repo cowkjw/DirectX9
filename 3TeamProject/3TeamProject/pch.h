@@ -14,16 +14,23 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <iostream>
 #include <queue>
+#include <string>
 #include <unordered_map>
-
+#include "fmod.h"
+#include "fmod.hpp"
 #include <d3d9.h>
 #include <d3dx9.h>
-
+using namespace FMOD;
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 
-
+#ifdef _DEBUG
+#pragma comment(lib, "fmodL_vc.lib")  // Debug 모드
+#else
+#pragma comment(lib, "fmod_vc.lib")   // Release 모드
+#endif
 #ifdef _DEBUG
 
 #define _CRTDBG_MAP_ALLOC

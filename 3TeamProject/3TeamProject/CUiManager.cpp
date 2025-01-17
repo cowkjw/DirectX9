@@ -47,4 +47,5 @@ void CUiManager::RenderUi_DW(HDC hDC)
 
 void CUiManager::RenderUi_JW(HDC hDC)
 {
+
 }
