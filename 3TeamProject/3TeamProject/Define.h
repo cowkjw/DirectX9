@@ -9,6 +9,8 @@
 #define OBJ_NOEVENT			0
 #define OBJ_DEAD			1	
 
+#define OBJMGR CObjectManager::Get_Instance()
+
 extern HWND		g_hWnd;
 extern bool		g_bDevmode;
 
