@@ -2,10 +2,9 @@
 #include "CMainGame.h"
 #include "CSceneManager.h"
 #include "CKeyManager.h"
-#include "CKeyManager.h"
 #include "CUiManager.h"
 #include "CScrollManager.h"
-#include "CSceneManager.h"
+#include "CSoundManager.h"
 #include "CObjectManager.h"
 #include "CBitManager.h"
 
@@ -55,5 +54,6 @@ void CMainGame::Release()
 	CSceneManager::Destroy_Instance();
 	CObjectManager::Destroy_Instance();
 	CBitManager::Destroy_Instance();
+	CSoundManager::Destroy_Instance();
 	ReleaseDC(g_hWnd, m_hDC);
 }

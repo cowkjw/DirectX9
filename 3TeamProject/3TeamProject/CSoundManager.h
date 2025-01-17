@@ -16,7 +16,7 @@ public:
         return m_pInstance;
     }
 
-    static void DestroyInstance()
+    static void Destroy_Instance()
     {
         if (m_pInstance)
         {
