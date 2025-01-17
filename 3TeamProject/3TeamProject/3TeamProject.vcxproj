@@ -156,6 +156,7 @@
     <ClInclude Include="CCYScene.h" />
     <ClInclude Include="CCYSegment.h" />
     <ClInclude Include="CCYTail.h" />
+    <ClInclude Include="CDWObject.h" />
     <ClInclude Include="CDWPlayer.h" />
     <ClInclude Include="CDWScene.h" />
     <ClInclude Include="CCYFood.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="CObjectManager.h" />
     <ClInclude Include="CObject.h" />
     <ClInclude Include="CObjPool.h" />
+    <ClInclude Include="CRoad.h" />
     <ClInclude Include="CScene.h" />
     <ClInclude Include="CSceneManager.h" />
     <ClInclude Include="CScrollManager.h" />
@@ -192,6 +194,7 @@
     <ClCompile Include="CCYScene.cpp" />
     <ClCompile Include="CCYSegment.cpp" />
     <ClCompile Include="CCYTail.cpp" />
+    <ClCompile Include="CDWObject.cpp" />
     <ClCompile Include="CDWPlayer.cpp" />
     <ClCompile Include="CDWScene.cpp" />
     <ClCompile Include="CCYFood.cpp" />
@@ -203,6 +206,7 @@
     <ClCompile Include="CMyBmp.cpp" />
     <ClCompile Include="CObjectManager.cpp" />
     <ClCompile Include="CObject.cpp" />
+    <ClCompile Include="CRoad.cpp" />
     <ClCompile Include="CScene.cpp" />
     <ClCompile Include="CSceneManager.cpp" />
     <ClCompile Include="CScrollManager.cpp" />

@@ -93,6 +93,11 @@
     </Filter>
     <Filter Include="02_Object\02_CY\03_CYFood">
       <UniqueIdentifier>{6397a87a-0c59-4dcd-af28-8653f5b43644}</UniqueIdentifier>
+    <Filter Include="02_Object\03_DW\Player">
+      <UniqueIdentifier>{0d3222b4-2f14-4b7e-8af5-f05c3a925ebd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Object\03_DW\Road">
+      <UniqueIdentifier>{c7d4fdb4-97bc-48c5-bb95-6a4870249238}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -183,9 +188,6 @@
     <ClInclude Include="CCYObject.h">
       <Filter>02_Object\02_CY</Filter>
     </ClInclude>
-    <ClInclude Include="CDWPlayer.h">
-      <Filter>02_Object\03_DW</Filter>
-    </ClInclude>
     <ClInclude Include="CFruit.h">
       <Filter>02_Object\04_JW</Filter>
     </ClInclude>
@@ -200,6 +202,14 @@
     </ClInclude>
     <ClInclude Include="CCYFood.h">
       <Filter>02_Object\02_CY\03_CYFood</Filter>
+    <ClInclude Include="CRoad.h">
+      <Filter>02_Object\03_DW\Road</Filter>
+    </ClInclude>
+    <ClInclude Include="CDWPlayer.h">
+      <Filter>02_Object\03_DW\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="CDWObject.h">
+      <Filter>02_Object\03_DW</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -275,9 +285,6 @@
     <ClCompile Include="CCYObject.cpp">
       <Filter>02_Object\02_CY</Filter>
     </ClCompile>
-    <ClCompile Include="CDWPlayer.cpp">
-      <Filter>02_Object\03_DW</Filter>
-    </ClCompile>
     <ClCompile Include="CFruit.cpp">
       <Filter>02_Object\04_JW</Filter>
     </ClCompile>
@@ -289,6 +296,14 @@
     </ClCompile>
     <ClCompile Include="CCYFood.cpp">
       <Filter>02_Object\02_CY\03_CYFood</Filter>
+    <ClCompile Include="CRoad.cpp">
+      <Filter>02_Object\03_DW\Road</Filter>
+    </ClCompile>
+    <ClCompile Include="CDWPlayer.cpp">
+      <Filter>02_Object\03_DW\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="CDWObject.cpp">
+      <Filter>02_Object\03_DW</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

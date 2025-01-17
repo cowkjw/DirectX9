@@ -16,7 +16,6 @@ public:
 private:
 	void Key_Input();
 	void Increase_TailSegment();
-
 private:
 	D3DXMATRIX	matScale;
 	D3DXMATRIX	matRotZ;
@@ -25,6 +24,5 @@ private:
 	D3DXVECTOR3 m_vEyePoint[4];
 
 	vector<CObject*> m_TailSegvec;
-
 };
 
