@@ -7,6 +7,8 @@
 #include "CAbstractFactory.h"
 #include "CCYPlayer.h"
 
+#define OBJMGR CObjectManager::Get_Instance()
+
 CCYScene::CCYScene()
 {
 	// testtest
@@ -15,6 +17,7 @@ CCYScene::CCYScene()
 void CCYScene::Initialize()
 {
 	CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CCYPlayer>::Create(300, 400, 100, 100));
+	//m_SlitherSegvec.push_back(static_cast<CCYPlayer*>(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER).front())->Get_)
 	CUiManager::Get_Instance()->Set_UiType(UI_CY);
 }
 
@@ -28,6 +31,7 @@ int CCYScene::Update()
 void CCYScene::Late_Update()
 {
 	CObjectManager::Get_Instance()->Late_Update();
+
 }
 
 void CCYScene::Render(HDC hDC)

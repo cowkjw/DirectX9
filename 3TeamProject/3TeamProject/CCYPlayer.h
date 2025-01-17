@@ -23,6 +23,7 @@ private:
 	D3DXMATRIX	matTrans;
 	float       m_fAngle;
 
+	vector<CObject*> m_TailSegvec;
 
 };
 

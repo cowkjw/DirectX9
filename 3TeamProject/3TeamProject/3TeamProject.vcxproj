@@ -149,10 +149,12 @@
     <ClInclude Include="CAbstractFactory.h" />
     <ClInclude Include="CBitManager.h" />
     <ClInclude Include="CCollisionManager.h" />
+    <ClInclude Include="CCYHead.h" />
     <ClInclude Include="CCYMonster.h" />
     <ClInclude Include="CCYObject.h" />
     <ClInclude Include="CCYPlayer.h" />
     <ClInclude Include="CCYScene.h" />
+    <ClInclude Include="CCYSegment.h" />
     <ClInclude Include="CCYTail.h" />
     <ClInclude Include="CDWPlayer.h" />
     <ClInclude Include="CDWScene.h" />
@@ -182,10 +184,12 @@
     <ClCompile Include="3TeamProject.cpp" />
     <ClCompile Include="CBitManager.cpp" />
     <ClCompile Include="CCollisionManager.cpp" />
+    <ClCompile Include="CCYHead.cpp" />
     <ClCompile Include="CCYMonster.cpp" />
     <ClCompile Include="CCYObject.cpp" />
     <ClCompile Include="CCYPlayer.cpp" />
     <ClCompile Include="CCYScene.cpp" />
+    <ClCompile Include="CCYSegment.cpp" />
     <ClCompile Include="CCYTail.cpp" />
     <ClCompile Include="CDWPlayer.cpp" />
     <ClCompile Include="CDWScene.cpp" />

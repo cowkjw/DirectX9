@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CCYPlayer.h"
 #include "CCYObject.h"
+#include "CCYTail.h"
 
 CCYPlayer::CCYPlayer() :m_fAngle(0.f)
 {
@@ -40,13 +41,20 @@ int CCYPlayer::Update()
 		m_pRenderPoint[i].x = m_vPointvec[i].x;
 		m_pRenderPoint[i].y = m_vPointvec[i].y;
 	}
-
-	//__super::Update_Rect();
+	for (auto& pTail : m_TailSegvec)
+	{
+		pTail->Update();
+	}
+	__super::Update_Rect();
     return 0;
 }
 
 void CCYPlayer::Late_Update()
 {
+	for (auto& pTail : m_TailSegvec)
+	{
+		pTail->Late_Update();
+	}
 }
 
 void CCYPlayer::Render(HDC hDC)
@@ -54,6 +62,11 @@ void CCYPlayer::Render(HDC hDC)
 	if (g_bDevmode) {
 		HitCircle(hDC, m_tHitRect, 0, 0);
 	}
+	for (auto iter = m_TailSegvec.rbegin(); iter != m_TailSegvec.rend(); ++iter)
+	{
+		(*iter)->Render(hDC);
+	}
+
 	HBRUSH PinkBrush = CreateSolidBrush(RGB(255, 220, 220));
 	HBRUSH OldBrush = (HBRUSH)SelectObject(hDC, PinkBrush);
 
@@ -65,6 +78,7 @@ void CCYPlayer::Render(HDC hDC)
 
 void CCYPlayer::Release()
 {
+	for_each(m_TailSegvec.begin(), m_TailSegvec.end(), Safe_Delete<CObject*>);
 }
 
 void CCYPlayer::OnCollision(CObject* _obj)
@@ -96,4 +110,23 @@ void CCYPlayer::Key_Input()
 		D3DXVec3TransformNormal(&m_tInfo.vDir, &m_tInfo.vDir, &m_tInfo.matWorld);
 		m_tInfo.vPos += m_tInfo.vDir;
 	}
+	if (GetAsyncKeyState(VK_SPACE))
+	{
+		CObject* pTail = new CCYTail;
+
+		static_cast<CCYTail*>(pTail)->Set_TargetHead(this);
+
+		if (m_TailSegvec.empty())
+		{
+			pTail->Set_TargetObj(this);
+		}
+		else
+		{
+			pTail->Set_TargetObj(m_TailSegvec.back());
+		}
+
+		pTail->Initialize();
+		m_TailSegvec.push_back(pTail);
+	}
+	
 }

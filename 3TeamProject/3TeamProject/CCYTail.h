@@ -13,7 +13,11 @@ public:
 	void Release() override;
 	void OnCollision(CObject* _obj) override;
 
+public:
+	void	 Set_TargetHead(CObject* _pHead) { m_targetHead = _pHead; }
+	CObject* Get_TargetHead() { return m_targetHead; }
+
 private:
-	CObject* m_ptargetHead;
+	CObject* m_targetHead;
 };
 

@@ -7,8 +7,8 @@ CObject::CObject():m_fSpeed(0)
 	D3DXMatrixIdentity(&m_tInfo.matWorld);
 }
 
-CObject::~CObject()
-{
+CObject::~CObject(){
+
 }
 
 void CObject::Update_Rect()
