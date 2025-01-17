@@ -2,7 +2,7 @@
 #include "CYGPlayer.h"
 #include "CKeyManager.h"
 
-CYGPlayer::CYGPlayer()
+CYGPlayer::CYGPlayer():m_bLeftPush(false)
 {
 }
 
@@ -36,6 +36,9 @@ void CYGPlayer::Initialize()
 	}
 
 	m_vOriginPos = m_tInfo.vPos;
+
+	m_iHp = 100;
+	m_iMaxHp = m_iHp;
 }
 
 int CYGPlayer::Update()
@@ -93,8 +96,8 @@ void CYGPlayer::Late_Update()
 void CYGPlayer::Render(HDC hDC)
 {
 	if (m_PlayerState == PS_NOGUN) {
-		Ellipse(hDC, m_vLeftNoGunHandPos.x - 10, m_vLeftNoGunHandPos.y - 10, m_vLeftNoGunHandPos.x + 10, m_vLeftNoGunHandPos.y + 10); // ¿Þ¼Õ
-		Ellipse(hDC, m_vRightNoGunHandPos.x - 10, m_vRightNoGunHandPos.y - 10, m_vRightNoGunHandPos.x + 10, m_vRightNoGunHandPos.y + 10); // ¿À¸¥¼Õ
+		ColorCircle(hDC, m_vLeftNoGunHandPos.x - 10, m_vLeftNoGunHandPos.y - 10, m_vLeftNoGunHandPos.x + 10, m_vLeftNoGunHandPos.y + 10, 252,194,114,2); // ¿Þ¼Õ
+		ColorCircle(hDC, m_vRightNoGunHandPos.x - 10, m_vRightNoGunHandPos.y - 10, m_vRightNoGunHandPos.x + 10, m_vRightNoGunHandPos.y + 10, 252, 194, 114,2); // ¿À¸¥¼Õ
 	}
 	else {
 		MoveToEx(hDC, m_vGunRectanglePoint[3].x, m_vGunRectanglePoint[3].y, nullptr);
@@ -102,11 +105,11 @@ void CYGPlayer::Render(HDC hDC)
 			LineTo(hDC, m_vGunRectanglePoint[i].x, m_vGunRectanglePoint[i].y);
 		}
 
-		Ellipse(hDC, m_vLeftGunHandPos.x - 10, m_vLeftGunHandPos.y - 10, m_vLeftGunHandPos.x + 10, m_vLeftGunHandPos.y + 10); // ¿Þ¼Õ
-		Ellipse(hDC, m_vRightGunHandPos.x - 10, m_vRightGunHandPos.y - 10, m_vRightGunHandPos.x + 10, m_vRightGunHandPos.y + 10); // ¿À¸¥¼Õ
+		ColorCircle(hDC, m_vLeftGunHandPos.x - 10, m_vLeftGunHandPos.y - 10, m_vLeftGunHandPos.x + 10, m_vLeftGunHandPos.y + 10, 252, 194, 114, 2); // ¿Þ¼Õ
+		ColorCircle(hDC, m_vRightGunHandPos.x - 10, m_vRightGunHandPos.y - 10, m_vRightGunHandPos.x + 10, m_vRightGunHandPos.y + 10, 252, 194, 114, 2); // ¿À¸¥¼Õ
 	}
 
-	Ellipse(hDC, m_tHitRect.left, m_tHitRect.top, m_tHitRect.right, m_tHitRect.bottom);
+	ColorCircle(hDC, m_tHitRect.left, m_tHitRect.top, m_tHitRect.right, m_tHitRect.bottom, 252, 194, 114,2);
 
 
 	if (g_bDevmode) {
@@ -157,7 +160,21 @@ void CYGPlayer::Key_Input()
 		else {
 			m_PlayerState = PS_NOGUN;
 		}
-		
+	}
+
+	if (CKeyManager::Get_Instance()->Key_Down(VK_LBUTTON)) {
+		if (m_PlayerState == PS_NOGUN) {
+			float radian = D3DXToRadian(m_fAngle);
+			D3DXVec3Normalize(&m_tInfo.vLook, &m_tInfo.vLook);
+			if (m_bLeftPush) {
+				m_vLeftNoGunHandPos += m_tInfo.vLook * 10;
+				m_bLeftPush = !m_bLeftPush;
+			}
+			else {
+				m_vRightNoGunHandPos += m_tInfo.vLook * 10;
+				m_bLeftPush = !m_bLeftPush;
+			}
+		}
 	}
 
 }

@@ -37,5 +37,7 @@ private:
 	//무기 관련
 	PLAYERSTATE m_PlayerState;
 
+	//무기 없을 때 손 내밀기
+	bool m_bLeftPush;
 };
 
