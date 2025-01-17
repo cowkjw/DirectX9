@@ -3,6 +3,7 @@
 
 CObject::CObject():m_fSpeed(0)
 {
+
 	ZeroMemory(&m_tInfo, sizeof(m_tInfo));
 	D3DXMatrixIdentity(&m_tInfo.matWorld);
 }
