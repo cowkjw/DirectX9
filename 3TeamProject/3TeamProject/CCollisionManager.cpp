@@ -57,10 +57,12 @@ bool CCollisionManager::JW_Check_Circle(CObject* _Dst, CObject* _Src)
 
     if (!pFruit1 || !pFruit2) return false;
 
-    float fObj1Radi = pFruit1->Get_Radius();
-    float fObj2Radi = pFruit2->Get_Radius();
+    float fObj1RadiMultiScale = pFruit1->Get_Radius()* pFruit1->Get_Scale().x;
+    float fObj2RadiMultiScale = pFruit2->Get_Radius() * pFruit2->Get_Scale().x;
 
     float fDist = hypotf(pFruit2->Get_Info().vPos.x - pFruit1->Get_Info().vPos.x
         , pFruit2->Get_Info().vPos.y - pFruit1->Get_Info().vPos.y);
-    return fDist <= fObj1Radi + fObj2Radi;
+    return fDist <= fObj1RadiMultiScale + fObj2RadiMultiScale;
 }
+
+
