@@ -147,6 +147,8 @@ void CSoundManager::Update()
 void CSoundManager::Initialize()
 {
    LoadSound("WaterMelon_BGM", "../Assets/Sound/WaterMelon_BGM.mp3", true,true);
+   LoadSound("DropSound", "../Assets/Sound/DropSound.mp3");
+   LoadSound("MergeSound", "../Assets/Sound/MergeSound.mp3");
 }
 
 void CSoundManager::Release()

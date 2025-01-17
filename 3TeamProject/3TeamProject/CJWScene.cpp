@@ -217,6 +217,7 @@ void CJWScene::Merge_Fruit()
 				pMergeFruit->Set_Pos(pFruit->Get_Info().vPos.x, pFruit->Get_Info().vPos.y);
 				pMergeFruit->Set_Type(eFruitType);
 				pMergeFruit->Set_Merged_Fruit();
+				CSoundManager::GetInstance()->PlayEffect("MergeSound");
 				CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, pMergeFruit);
 			}
 			m_FruitPoolMap[pFruit->Get_FruitType()]->Return_Obj(pFruit);
