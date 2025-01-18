@@ -6,7 +6,7 @@
 #include "CCYFood.h"
 #include "CKeyManager.h"
 
-CCYPlayer::CCYPlayer() :m_fAngle(0.f)
+CCYPlayer::CCYPlayer() :m_fAngle(0.f), m_fWormSize(0.f)
 {
 }
 
@@ -23,7 +23,7 @@ void CCYPlayer::Initialize()
 	m_tInfo.vPos = { 400.f, 300.f, 0.f };
 	m_fSpeed = 2.f;
 	m_tInfo.vLook = { 1.f, 0.f, 0.f };
-	CCYObject::Initialize_OriginPoint(6, 16);
+	CCYObject::Initialize_OriginPoint(12, 16);
 
 }
 
@@ -74,8 +74,10 @@ int CCYPlayer::Update()
 	/// 월드매트릭스
 	D3DXMatrixTranslation(&matTrans, m_tInfo.vPos.x, m_tInfo.vPos.y, 0.f);
 	D3DXMatrixRotationZ(&matRotZ, m_fAngle);
+	m_fWormSize = 1.f + m_TailSegvec.size() * 0.001f;
+	D3DXMatrixScaling(&matScale, m_fWormSize, m_fWormSize, 0);
 
-	m_tInfo.matWorld = matRotZ * matTrans;
+	m_tInfo.matWorld = matScale * matRotZ * matTrans;
 	//D3DXVec3TransformNormal(&m_tInfo.vDir, &m_tInfo.vDir, &m_tInfo.matWorld);
 	//m_tInfo.vPos -= m_tInfo.vDir * m_fSpeed;
 	///
@@ -169,7 +171,7 @@ void CCYPlayer::Key_Input()
 		D3DXVec3TransformNormal(&m_tInfo.vDir, &m_tInfo.vDir, &m_tInfo.matWorld);
 		m_tInfo.vPos += m_tInfo.vDir;
 	}
-	if (CKeyManager::Get_Instance()->Key_Down(VK_SPACE))
+	if (CKeyManager::Get_Instance()->Key_Pressing(VK_SPACE))
 	{
 		Increase_TailSegment();
 	}

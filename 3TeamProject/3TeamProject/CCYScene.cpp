@@ -6,16 +6,17 @@
 #include "CUiManager.h"
 #include "CAbstractFactory.h"
 #include "CCYPlayer.h"
+#include "CCYFood.h"
+#include "CCollisionManager.h"
 
 
-CCYScene::CCYScene()
+CCYScene::CCYScene() : m_ullFoodTimeTicker(0)
 {
-	// testtest
 }
 
 void CCYScene::Initialize()
 {
-	CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CCYPlayer>::Create(300, 400, 24, 24));
+	CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CCYPlayer>::Create(300, 400, 35, 35));
 	//m_SlitherSegvec.push_back(static_cast<CCYPlayer*>(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER).front())->Get_)
 	CUiManager::Get_Instance()->Set_UiType(UI_CY);
 }
@@ -23,6 +24,13 @@ void CCYScene::Initialize()
 int CCYScene::Update()
 {
 	Key_Input();
+
+	if (m_ullFoodTimeTicker + rand() % 20 * 20  + 500 < GetTickCount64())
+	{
+		CObjectManager::Get_Instance()->Add_Object(OBJ_MISC, CAbstractFactory<CCYFood>::Create());
+		m_ullFoodTimeTicker = GetTickCount64();
+	}
+
 	CObjectManager::Get_Instance()->Update();
     return 0;
 }
@@ -30,7 +38,7 @@ int CCYScene::Update()
 void CCYScene::Late_Update()
 {
 	CObjectManager::Get_Instance()->Late_Update();
-
+	CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER), OBJMGR->Get_ObjList_ByID(OBJ_MISC));
 }
 
 void CCYScene::Render(HDC hDC)

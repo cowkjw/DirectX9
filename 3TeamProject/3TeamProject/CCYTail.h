@@ -3,7 +3,7 @@
 class CCYTail : public CCYObject
 {
 public:
-	CCYTail() {}
+	CCYTail() : m_targetHead(nullptr){}
 	virtual ~CCYTail() {}
 public:
 	void Initialize() override;

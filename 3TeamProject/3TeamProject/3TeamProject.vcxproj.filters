@@ -195,9 +195,6 @@
     <ClInclude Include="CCYHead.h">
       <Filter>02_Object\02_CY</Filter>
     </ClInclude>
-    <ClInclude Include="CCYFood.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="CRoad.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -206,6 +203,15 @@
     </ClInclude>
     <ClInclude Include="CDWPlayer.h">
       <Filter>02_Object\03_DW</Filter>
+    </ClInclude>
+    <ClInclude Include="CSoundManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CYGBullet.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CCYFood.h">
+      <Filter>02_Object\02_CY</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -290,9 +296,6 @@
     <ClCompile Include="CCYHead.cpp">
       <Filter>02_Object\02_CY</Filter>
     </ClCompile>
-    <ClCompile Include="CCYFood.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="CRoad.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -301,6 +304,15 @@
     </ClCompile>
     <ClCompile Include="CDWPlayer.cpp">
       <Filter>02_Object\03_DW</Filter>
+    </ClCompile>
+    <ClCompile Include="CSoundManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CYGBullet.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CCYFood.cpp">
+      <Filter>02_Object\02_CY</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

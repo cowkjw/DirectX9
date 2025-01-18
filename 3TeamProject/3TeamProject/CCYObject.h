@@ -4,7 +4,7 @@
 class CCYObject : public CObject
 {
 public:
-	CCYObject(): m_pRenderPoint(nullptr), m_fRadius(0.f), m_fTargetAngle(0.f), m_fAngle(0.f) {}
+	CCYObject(): m_pRenderPoint(nullptr), m_fRadius(0.f), m_fTargetAngle(0.f), m_fAngle(0.f), m_bDead(false) {}
 	virtual ~CCYObject();
 public:
 	void Initialize() PURE;
@@ -30,6 +30,8 @@ protected:
 	D3DXMATRIX			matTrans;
 	float				m_fAngle;
 	float				m_fTargetAngle;
+
+	bool				m_bDead;
 };
 
 //static D3DXVECTOR3		Get_Mouse()
