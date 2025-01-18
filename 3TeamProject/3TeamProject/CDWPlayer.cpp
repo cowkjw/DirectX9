@@ -26,7 +26,7 @@ void CDWPlayer::Initialize()
 
 int CDWPlayer::Update()
 {
-	Key_Input();
+	//Key_Input();
 
 
 	D3DXMatrixTranslation(&matTrans, m_tInfo.vPos.x, m_tInfo.vPos.y, 0.f);
@@ -54,7 +54,7 @@ void CDWPlayer::Render(HDC hDC)
 	{
 		HitCircle(hDC, m_tHitRect, 0, 0);
 	}
-	HBRUSH PinkBrush = CreateSolidBrush(RGB(128,128,128));
+	HBRUSH PinkBrush = CreateSolidBrush(RGB(255, 220, 220));
 	HBRUSH OldBrush = (HBRUSH)SelectObject(hDC, PinkBrush);
 
 	Polygon(hDC, m_pRenderPoint, m_vOriginPointvec.size());
@@ -64,6 +64,8 @@ void CDWPlayer::Render(HDC hDC)
 	TCHAR m_szBuf[100] = {};
 	swprintf_s(m_szBuf, L"플레이어 x : %.f, 플레이어 y : %.f", m_tInfo.vPos.x, m_tInfo.vPos.y);
 	TextOut(hDC, 300, 5, m_szBuf, lstrlen(m_szBuf));
+
+	
 
 
 }
@@ -79,19 +81,19 @@ void CDWPlayer::OnCollision(CObject* _obj)
 void CDWPlayer::Key_Input()
 {
 	
-	if (GetAsyncKeyState('A'))
-	{
-		m_tInfo.vDir = { -m_fSpeed, 0.f, 0.f };
+	//if (GetAsyncKeyState('A'))
+	//{
+	//	m_tInfo.vDir = { -m_fSpeed, 0.f, 0.f };
 
-		D3DXVec3TransformNormal(&m_tInfo.vDir, &m_tInfo.vDir, &m_tInfo.matWorld);
-		m_tInfo.vPos += m_tInfo.vDir;
-	}
-	if (GetAsyncKeyState('D'))
-	{
-		m_tInfo.vDir = { m_fSpeed, 0.f, 0.f };
+	//	D3DXVec3TransformNormal(&m_tInfo.vDir, &m_tInfo.vDir, &m_tInfo.matWorld);
+	//	m_tInfo.vPos += m_tInfo.vDir;
+	//}
+	//if (GetAsyncKeyState('D'))
+	//{
+	//	m_tInfo.vDir = { m_fSpeed, 0.f, 0.f };
 
-		D3DXVec3TransformNormal(&m_tInfo.vDir, &m_tInfo.vDir, &m_tInfo.matWorld);
-		m_tInfo.vPos += m_tInfo.vDir;
-	}
+	//	D3DXVec3TransformNormal(&m_tInfo.vDir, &m_tInfo.vDir, &m_tInfo.matWorld);
+	//	m_tInfo.vPos += m_tInfo.vDir;
+	//}
 }
 
