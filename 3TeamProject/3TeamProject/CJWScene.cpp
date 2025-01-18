@@ -9,10 +9,9 @@
 #include "CSoundManager.h"
 #include <time.h>
 
-CJWScene::CJWScene() :m_pFruit(nullptr), m_iLevel(1), m_bCreated(false), m_bGameOver(false), m_iScore(0),
-m_dwDropDelay(0ULL), m_dwDroppedTime(0ULL)
+CJWScene::CJWScene() :m_pFruit(nullptr), m_iLevel(0), m_bCreated(false), m_bGameOver(false), m_iScore(0),
+m_dwDropDelay(0ULL), m_dwDroppedTime(0ULL), m_tNextFruitInfo{}
 {
-	ZeroMemory(&m_tNextFruitInfo, sizeof(Fruit_Info));
 	for (int i = 0; i < (int)FRUIT_TYPE::FT_END; i++)
 	{
 		m_FruitPoolMap[(FRUIT_TYPE)i] = nullptr;
@@ -22,13 +21,19 @@ m_dwDropDelay(0ULL), m_dwDroppedTime(0ULL)
 
 void CJWScene::Initialize()
 {
+	if (AddFontResourceEx(L"../Assets/Fonts/Eulyoo1945-SemiBold.otf", FR_PRIVATE, NULL) == 0)
+	{
+		MessageBox(NULL, L"폰트 로드 실패", L"오류", MB_OK);
+	}
+	
 	CSoundManager::GetInstance()->PlayBGM("WaterMelon_BGM");
+	CUiManager::Get_Instance()->Set_UiType(UI_JW);
 	srand(unsigned int(time(nullptr)));
 	m_bGameOver = false;
 	m_dwDropDelay = 1000ULL;
 	m_dwDroppedTime = GetTickCount64();
 	m_bCreated = true;
-	m_iLevel = 3;
+	m_iLevel = 0;
 	m_iScore = 0;
 	for (int i = 0; i < (int)FRUIT_TYPE::FT_END; i++)
 	{
@@ -38,7 +43,7 @@ void CJWScene::Initialize()
 		}
 	}
 
-	FRUIT_TYPE eType = (FRUIT_TYPE)(rand() % m_iLevel);
+	FRUIT_TYPE eType = (FRUIT_TYPE)(rand() % (m_iLevel+1));
 	CObject* pObj = m_FruitPoolMap[eType]->Get_Obj();
 	static_cast<CFruit*>(pObj)->Set_Type(eType);
 	static_cast<CFruit*>(pObj)->Reset();
@@ -46,13 +51,12 @@ void CJWScene::Initialize()
 
 
 	// 다음 나올 애
-	eType = (FRUIT_TYPE)(rand() % m_iLevel);
+	eType = (FRUIT_TYPE)(rand() % (m_iLevel + 1));
 	m_pFruit = m_FruitPoolMap[eType]->Get_Obj();
 	static_cast<CFruit*>(m_pFruit)->Set_Type(eType);
 	static_cast<CFruit*>(m_pFruit)->Reset();
 	Update_Next_FruitInfo(static_cast<CFruit*>(m_pFruit)->Get_RenderPoints(), static_cast<CFruit*>(m_pFruit)->Get_Color(), static_cast<CFruit*>(pObj)->Get_FruitType());
 
-	CUiManager::Get_Instance()->Set_UiType(UI_JW);
 }
 
 int CJWScene::Update()
@@ -81,7 +85,7 @@ void CJWScene::Late_Update()
 
 void CJWScene::Render(HDC hDC)
 {
-	HBRUSH ivoryBrush = CreateSolidBrush(RGB(255, 255, 240));
+	HBRUSH ivoryBrush = CreateSolidBrush(RGB(255, 248, 235));
 	HBRUSH oldBrush = (HBRUSH)SelectObject(hDC, ivoryBrush);
 	Rectangle(hDC, 0, 0, WINCX, WINCY);
 	Render_Box(hDC);
@@ -110,8 +114,8 @@ void CJWScene::Render(HDC hDC)
 		HPEN hPen = CreatePen(PS_SOLID, 5, RGB(255, 0, 0));
 		HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
 		// 선 그리기
-		MoveToEx(hDC, 0, 70, nullptr);
-		LineTo(hDC, 800, 70);
+		MoveToEx(hDC, 70, 70, nullptr);
+		LineTo(hDC, 720, 70);
 	
 		// 리소스 정리
 		SelectObject(hDC, hOldPen);
@@ -125,6 +129,12 @@ void CJWScene::Render(HDC hDC)
 
 void CJWScene::Release()
 {
+	if (m_pFruit)
+	{
+		// Safe_Delete(m_pFruit) 제거
+		m_FruitPoolMap[static_cast<CFruit*>(m_pFruit)->Get_FruitType()]->Return_Obj(static_cast<CFruit*>(m_pFruit));
+		m_pFruit = nullptr;
+	}
 	CObjectManager::Get_Instance()->Release();
 	CObjectManager::Get_Instance()->RenderList_Clear();
 	for (auto& pool : m_FruitPoolMap)
@@ -132,6 +142,7 @@ void CJWScene::Release()
 		Safe_Delete(pool.second);
 	}
 	m_FruitPoolMap.clear();
+
 	CSoundManager::GetInstance()->StopAllSounds();
 }
 
@@ -172,7 +183,7 @@ void CJWScene::Create_MapObj()
 			CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, m_pFruit);
 
 
-			FRUIT_TYPE eType = (FRUIT_TYPE)(rand() % m_iLevel);
+			FRUIT_TYPE eType = (FRUIT_TYPE)(rand() % (m_iLevel + 1));
 			m_pFruit = m_FruitPoolMap[eType]->Get_Obj();
 			static_cast<CFruit*>(m_pFruit)->Set_Type(eType);
 			static_cast<CFruit*>(m_pFruit)->Reset();
@@ -195,7 +206,7 @@ void CJWScene::Check_GameOver()
 		if (pFruit && pFruit->Is_Active())
 		{
 			float fLen = (pFruit->Get_Info().vPos.y - pFruit->Get_Scale().y * pFruit->Get_Radius());
-			if (fLen <= 70.f && pFruit->Is_Dropped() && pFruit->In_Box())
+			if (fLen <= 70.f && pFruit->Is_Dropped() && (pFruit->In_Box()|| pFruit->Is_Collide()))
 			{
 				m_bGameOver = true;
 			}
@@ -259,7 +270,7 @@ void CJWScene::Render_Box(HDC hDC)
 	POINT backPoints[] = {
 		{100, 50}, {700, 50}, {700, 500}, {50, 500}
 	};
-	HBRUSH lightPurpleBrush = CreateSolidBrush(RGB(200, 180, 255));  // 연한 보라
+	HBRUSH lightPurpleBrush = CreateSolidBrush(RGB(230, 210, 255));
 	HBRUSH oldBrush = (HBRUSH)SelectObject(hDC, lightPurpleBrush);
 	Polygon(hDC, backPoints, 4);
 
@@ -273,7 +284,7 @@ void CJWScene::Render_Box(HDC hDC)
 	POINT leftPoints[] = {
 		{50, 100}, {100, 50}, {100, 500}, {50, 550}
 	};
-	HBRUSH darkPurpleBrush = CreateSolidBrush(RGB(150, 100, 255));  // 진한 보라
+	HBRUSH darkPurpleBrush = CreateSolidBrush(RGB(170, 130, 255));
 	SelectObject(hDC, darkPurpleBrush);
 	Polygon(hDC, leftPoints, 4);
 
