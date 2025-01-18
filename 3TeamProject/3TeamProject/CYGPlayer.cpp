@@ -103,9 +103,11 @@ int CYGPlayer::Update()
 	D3DXVec3TransformCoord(&m_vBulletSpawn, &m_vBulletSpawn, &m_tInfo.matWorld);
 
 
-	Key_Input();
+	
 
 	__super::Update_Rect();
+
+	Key_Input();
 	return 0;
 }
 

@@ -1,15 +1,18 @@
 #pragma once
 
 #include "CDWObject.h"
-
+#include <d3dx9math.h>  
 class CRoad : public CDWObject
 {
-	struct Obstacle
+	struct SObstacle
 	{
-		D3DXVECTOR3 vPos;   
-		D3DXVECTOR3 vSize; 
-		float fScale;     
+		D3DXVECTOR3 vPos;   // 장애물의 월드 위치 (z축 포함)
+		float       fWidth; // 장애물의 가로크기
+		float       fHeight;// 장애물의 세로크기
+		float       fAngle; // Z축 기준 회전각 (2D게임이면 yaw 개념)
+		float       fScale; // 스케일(배율)
 	};
+
 
 
 public:
@@ -24,6 +27,10 @@ public:
 	void Release() override;
 	void OnCollision(CObject* _obj) override;
     void Wall_Update();
+
+	void Update_Obstacles();
+
+	void Render_Obstacles(HDC hDC);
 
 private:
 	D3DXVECTOR3     m_vPoint[4];
@@ -51,6 +58,8 @@ private:
 
 	static bool m_bLeft_Rotation;
 	static bool m_bRight_Rotation;
+	static bool m_bTop_Rotation;
+	static bool m_bBottom_Rotation;
 
 	bool m_bFirst_Check;
 
@@ -58,10 +67,8 @@ private:
 
 	vector<POINT*> m_vecPoints; // 벡터안에 포인트라는 4개짜리배열을`
 
-	vector<Obstacle> m_Obstacles;
-
-	Obstacle obs = {}; 
 	
+	vector<SObstacle> m_Obstacles;
 
 
 };
