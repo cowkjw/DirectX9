@@ -98,7 +98,7 @@ void CUiManager::RenderUi_YG(HDC hDC)
 		TCHAR bulletNum[64];
 		_stprintf_s(bulletNum, _T("%d"), _copyYGPlayer->Get_BulletNum());
 		RECT rect2 = { 740, 540, 780, 550 };
-		DrawText(hDC, bulletNum, _tcslen(bulletNum), &rect2, DT_RIGHT | DT_SINGLELINE | DT_VCENTER); //가운데 중앙 정렬
+		DrawText(hDC, bulletNum, _tcslen(bulletNum), &rect2, DT_RIGHT | DT_SINGLELINE | DT_VCENTER);
 
 		break;
 	}

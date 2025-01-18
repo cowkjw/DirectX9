@@ -23,22 +23,22 @@ void CYGPlayer::Initialize()
 
 	m_PlayerState = PS_NOGUN;
 
-	m_vLeftNoGunHandPos = { 385.f,270.f,0.f };
-	m_vRightNoGunHandPos = { 415.f,270.f,0.f };
+	m_vLeftNoGunHandPos = { 65.f,270.f,0.f };
+	m_vRightNoGunHandPos = { 95.f,270.f,0.f };
 	m_vOriginLeftNoGunHand = m_vLeftNoGunHandPos; 
 	m_vOriginRightNoGunHand = m_vRightNoGunHandPos;
 
-	m_vLeftGunHandPos = {395.f, 240.f, 0.f};
-	m_vRightGunHandPos = {405.f, 270.f, 0.f};
+	m_vLeftGunHandPos = {75.f, 240.f, 0.f};
+	m_vRightGunHandPos = {85.f, 270.f, 0.f};
 	m_vOriginLeftGunHand = m_vLeftGunHandPos;
 	m_vOriginRightGunHand = m_vRightGunHandPos;
 
-	m_vGunRectanglePoint[0] = {395.f, 210.f, 0.f};
-	m_vGunRectanglePoint[1] = {405.f, 210.f, 0.f};
-	m_vGunRectanglePoint[2] = {405.f, 280.f, 0.f};
-	m_vGunRectanglePoint[3] = {395.f, 280.f, 0.f};
+	m_vGunRectanglePoint[0] = {75.f, 210.f, 0.f};
+	m_vGunRectanglePoint[1] = {85.f, 210.f, 0.f};
+	m_vGunRectanglePoint[2] = {85.f, 280.f, 0.f};
+	m_vGunRectanglePoint[3] = {75.f, 280.f, 0.f};
 
-	m_vBulletSpawn = { 400.f, 210.f, 0.f };
+	m_vBulletSpawn = { 80.f, 210.f, 0.f };
 	m_vOriginBulletSpawn = m_vBulletSpawn;
 
 	for (int i = 0; i < 4; ++i) {
@@ -77,29 +77,29 @@ int CYGPlayer::Update()
 
 
 	m_vLeftNoGunHandPos = m_vOriginLeftNoGunHand;
-	m_vLeftNoGunHandPos -= {400.f, 300.f, 0.f};
+	m_vLeftNoGunHandPos -= {80.f, 300.f, 0.f};
 	D3DXVec3TransformCoord(&m_vLeftNoGunHandPos, &m_vLeftNoGunHandPos, &m_tInfo.matWorld);
 
 	m_vRightNoGunHandPos = m_vOriginRightNoGunHand;
-	m_vRightNoGunHandPos -= {400.f, 300.f, 0.f};
+	m_vRightNoGunHandPos -= {80.f, 300.f, 0.f};
 	D3DXVec3TransformCoord(&m_vRightNoGunHandPos, &m_vRightNoGunHandPos, &m_tInfo.matWorld);
 
 	m_vLeftGunHandPos = m_vOriginLeftGunHand;
-	m_vLeftGunHandPos -= {400.f, 300.f, 0.f};
+	m_vLeftGunHandPos -= {80.f, 300.f, 0.f};
 	D3DXVec3TransformCoord(&m_vLeftGunHandPos, &m_vLeftGunHandPos, &m_tInfo.matWorld);
 
 	m_vRightGunHandPos = m_vOriginRightGunHand;
-	m_vRightGunHandPos -= {400.f, 300.f, 0.f};
+	m_vRightGunHandPos -= {80.f, 300.f, 0.f};
 	D3DXVec3TransformCoord(&m_vRightGunHandPos, &m_vRightGunHandPos, &m_tInfo.matWorld);
 
 	for (int i = 0; i < 4; ++i) {
 		m_vGunRectanglePoint[i] = m_vOriginGunRectanglePoint[i];
-		m_vGunRectanglePoint[i] -= {400.f, 300.f, 0.f};
+		m_vGunRectanglePoint[i] -= {80.f, 300.f, 0.f};
 		D3DXVec3TransformCoord(&m_vGunRectanglePoint[i], &m_vGunRectanglePoint[i], &m_tInfo.matWorld);
 	}
 
 	m_vBulletSpawn = m_vOriginBulletSpawn;
-	m_vBulletSpawn -= {400.f, 300.f, 0.f};
+	m_vBulletSpawn -= {80.f, 300.f, 0.f};
 	D3DXVec3TransformCoord(&m_vBulletSpawn, &m_vBulletSpawn, &m_tInfo.matWorld);
 
 
