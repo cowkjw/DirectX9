@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CYGBullet.h"
+#include "CScrollManager.h"
 
 CYGBullet::CYGBullet():m_iReMoveTick(0)
 {
@@ -38,7 +39,9 @@ void CYGBullet::Late_Update()
 
 void CYGBullet::Render(HDC hDC)
 {
-	Rectangle(hDC, m_tHitRect.left, m_tHitRect.top, m_tHitRect.right, m_tHitRect.bottom); 
+	int		iScrollX = (int)CScrollManager::Get_Instance()->Get_ScrollX();
+	int		iScrollY = (int)CScrollManager::Get_Instance()->Get_ScrollY();
+	Rectangle(hDC, m_tHitRect.left+ iScrollX, m_tHitRect.top+ iScrollY, m_tHitRect.right+ iScrollX, m_tHitRect.bottom+ iScrollY);
 }
 
 void CYGBullet::Release()

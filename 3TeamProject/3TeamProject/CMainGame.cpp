@@ -25,7 +25,7 @@ void CMainGame::Initialize()
 	CBitManager::Get_Instance()->Insert_Bmp(L"../Assets/Back/Back.bmp", L"Back");
 
 	m_hDC = GetDC(g_hWnd);
-	CSceneManager::Get_Instance()->Set_Scene(SC_DW);
+	CSceneManager::Get_Instance()->Set_Scene(SC_YG);
 }
 
 void CMainGame::Update()
