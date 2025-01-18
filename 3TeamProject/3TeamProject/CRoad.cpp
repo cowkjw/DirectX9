@@ -5,6 +5,9 @@
 
 bool CRoad::m_bLeft_Rotation = false;
 bool CRoad::m_bRight_Rotation = false;
+bool CRoad::m_bTop_Rotation = false;
+bool CRoad::m_bBottom_Rotation = false;
+
 
 CRoad::CRoad()
 {
@@ -40,17 +43,27 @@ void CRoad::Initialize()
 
 
 
-	obs.vPos = { 400.f, 100.f, 0.f };   // 초기 위치 (화면 위)
-	obs.vSize = { 50.f, 50.f, 0.f };    // 초기 크기
-	obs.fScale = 1.0f;                  // 초기 스케일
-
-	m_Obstacles.push_back(obs);
-
 	Wall_Update();
 
 	m_pPlayer = CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYER).front();
 
 	m_bFirst_Check = false;
+
+	float halfWidth = 50.f;
+
+
+	SObstacle obs;
+	obs.vPos = D3DXVECTOR3(300, 0.f, 2000.f); 
+	obs.fAngle = D3DXToRadian(90.f);              
+	obs.fScale = 1.f;
+	obs.fWidth = 60.f;
+	obs.fHeight = 80.f;
+
+
+	
+m_Obstacles.push_back(obs);
+
+
 }
 
 void CRoad::Wall_Update()
@@ -84,20 +97,229 @@ void CRoad::Wall_Update()
 
 	
 }
+void CRoad::Update_Obstacles()
+{
+	// 장애물이 z축으로 (카메라 쪽으로) 계속 다가오게 만들고...
+	float fSpeed = 5.f;  
+	for (auto& obs : m_Obstacles)
+	{
+		obs.vPos.z -= fSpeed; // 카메라가 z=0에 있다고 가정해야되는데,,
 
+		// 만약 obs.vPos.z >= 0 이 되면, 화면에 도달했다고 간주할 수도 있음.
+		// 충돌 판정, 소멸, 재생성 등 로직을 추가하면 되려나
+
+		//z축이 가까워지면
+
+		// 
+	}
+
+}
+void CRoad::Render_Obstacles(HDC hDC)
+{
+	float cameraZ = 500.f;  // 카메라랑~ 미니소실네모와의 거리
+	float centerX = 400.f;  
+	float centerY = 300.f;  
+	for (auto& obs : m_Obstacles)
+	{
+		//--------------------------------------------------
+		// 사각형 꼭짓점 정해주기(중심 원점 기준)
+		//--------------------------------------------------
+		float halfW = obs.fWidth * 0.5f;
+		float halfH = obs.fHeight * 0.5f;
+
+		// (0,0) 기준 → 좌하, 우하, 우상, 좌상
+		/*D3DXVECTOR3 localCorner[4] =
+		{
+			{ -halfW, -halfH, 0.f },
+			{ +halfW, -halfH, 0.f },
+			{ +halfW, +halfH, 0.f },
+			{ -halfW, +halfH, 0.f },
+		}; 정사각형*/
+
+		//사다리꼴 모양 잡는거고
+		D3DXVECTOR3 localCorner[4] =
+		{
+			{ -30.f, -40.f, 0.f }, 
+			{ +30.f, -40.f, 0.f }, 
+			{ +20.f, +40.f, 0.f }, 
+			{ -20.f, +40.f, 0.f }, 
+		};
+		D3DXMATRIX matScale, matRot, matTrans, matWorld;
+
+
+		float fobs_Angle = m_fTargetAngle;
+		fobs_Angle += D3DXToRadian(-90.f);
+		D3DXMatrixScaling(&matScale, obs.fScale, obs.fScale, 1.f);
+		// Z축 회전
+		D3DXMatrixRotationZ(&matRot, fobs_Angle);
+
+		float x = 0.f;
+		float y = 0.f;
+
+		if (m_bLeft_Rotation)
+		{
+			 x = -obs.vPos.y;
+			 y = obs.vPos.x;
+		}
+		else
+		{
+			x = obs.vPos.x;
+			y = obs.vPos.y;
+
+		}
+
+		TCHAR m_szBuf[100] = {};
+		swprintf_s(m_szBuf, L"장애물 x : %.f, 장애물 y : %.f", obs.vPos.x, obs.vPos.y);
+		TextOut(hDC, 300, 70, m_szBuf, lstrlen(m_szBuf));
+
+		D3DXMatrixTranslation(&matTrans, x, y, obs.vPos.z);
+
+		matWorld = matScale * matRot * matTrans;
+
+		D3DXVECTOR3 worldCorner[4];
+		for (int i = 0; i < 4; ++i)
+		{
+			D3DXVec3TransformCoord(&worldCorner[i], &localCorner[i], &matWorld);
+		}
+
+		POINT pt[4];
+		for (int i = 0; i < 4; ++i)
+		{
+			// 1점(worldCorner[i])이 카메라로부터 얼마나 떨어져 있는가?
+			float distance = cameraZ + worldCorner[i].z;
+
+
+			// 원근 비율(factor) 계산
+			float factor = (cameraZ / distance);
+
+			float screenX = centerX + worldCorner[i].x * factor;
+			float screenY = centerY - worldCorner[i].y * factor;
+
+			pt[i].x = (LONG)screenX;
+			pt[i].y = (LONG)screenY;
+		}
+
+		HPEN   hPen = CreatePen(PS_SOLID, 2, RGB(255, 0, 0));
+		HPEN   hOldPen = (HPEN)SelectObject(hDC, hPen);
+
+		HBRUSH hBrush = CreateSolidBrush(RGB(128, 128, 128));
+		HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+
+		Polygon(hDC, pt, 4);
+
+		SelectObject(hDC, hOldPen);
+		DeleteObject(hPen);
+		SelectObject(hDC, hOldBrush);
+		DeleteObject(hBrush);
+
+	}
+}
+void CRoad::Render(HDC hDC)
+{
+	// 카메라 화면
+
+	MoveToEx(hDC, transformedCorners[0].x, transformedCorners[0].y, nullptr);
+	LineTo(hDC, transformedCorners[1].x, transformedCorners[1].y);
+	LineTo(hDC, transformedCorners[2].x, transformedCorners[2].y);
+	LineTo(hDC, transformedCorners[3].x, transformedCorners[3].y);
+	LineTo(hDC, transformedCorners[0].x, transformedCorners[0].y);
+	// 소실점 네모 
+	MoveToEx(hDC, rotatedSosil[0].x, rotatedSosil[0].y, nullptr);
+	LineTo(hDC, rotatedSosil[1].x, rotatedSosil[1].y);
+	LineTo(hDC, rotatedSosil[2].x, rotatedSosil[2].y);
+	LineTo(hDC, rotatedSosil[3].x, rotatedSosil[3].y);
+	LineTo(hDC, rotatedSosil[0].x, rotatedSosil[0].y);
+
+
+
+	HPEN hPen = CreatePen(PS_SOLID, 3, RGB(128, 128, 128));
+	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+
+
+
+	// 처음 기준 왼쪽 면
+	HBRUSH GrayBrush = CreateSolidBrush(RGB(128, 128, 128));
+	HBRUSH OldBrush = (HBRUSH)SelectObject(hDC, GrayBrush);
+
+	Polygon(hDC, m_vecPoints[0], 4);
+
+	SelectObject(hDC, OldBrush);
+	DeleteObject(GrayBrush);
+
+	// 처음 기준 오른쪽 면
+	HBRUSH GrayBrush1 = CreateSolidBrush(RGB(128, 128, 128));
+	HBRUSH OldBrush1 = (HBRUSH)SelectObject(hDC, GrayBrush1);
+
+	Polygon(hDC, m_vecPoints[1], 4);
+
+	SelectObject(hDC, OldBrush1);
+	DeleteObject(GrayBrush1);
+
+	// 처음 기준 윗 면
+	HBRUSH GrayBrush2 = CreateSolidBrush(RGB(128, 128, 128));
+	HBRUSH OldBrush2 = (HBRUSH)SelectObject(hDC, GrayBrush2);
+
+	Polygon(hDC, m_vecPoints[2], 4);
+
+	SelectObject(hDC, OldBrush2);
+	DeleteObject(GrayBrush2);
+
+	HBRUSH GrayBrush3 = CreateSolidBrush(RGB(128, 128, 128));
+	HBRUSH OldBrush3 = (HBRUSH)SelectObject(hDC, GrayBrush3);
+
+	Polygon(hDC, m_vecPoints[3], 4);
+
+	SelectObject(hDC, OldBrush3);
+	DeleteObject(GrayBrush3);
+
+	HBRUSH GrayBrush4 = CreateSolidBrush(RGB(0, 0, 0));
+	HBRUSH OldBrush4 = (HBRUSH)SelectObject(hDC, GrayBrush4);
+
+	Polygon(hDC, m_vecPoints[4], 4);
+
+	SelectObject(hDC, OldBrush4);
+	DeleteObject(GrayBrush4);
+
+
+	HBRUSH GrayBrush5 = CreateSolidBrush(RGB(128, 128, 128));
+	HBRUSH OldBrush5 = (HBRUSH)SelectObject(hDC, GrayBrush5);
+
+
+	SelectObject(hDC, hOldPen); DeleteObject(hPen);
+	SelectObject(hDC, OldBrush5);
+	DeleteObject(GrayBrush5);
+
+
+	if (g_bDevmode)
+	{
+		HitCircle(hDC, m_tHitRect, 0, 0);
+	}
+
+
+	hPen = CreatePen(PS_SOLID, 3, RGB(128, 128, 128));
+	hOldPen = (HPEN)SelectObject(hDC, hPen);
+
+	SelectObject(hDC, hOldPen); DeleteObject(hPen);
+
+	for (int i = 0; i < 4; ++i)
+	{
+		MoveToEx(hDC, transformedCorners[i].x, transformedCorners[i].y, nullptr);
+		LineTo(hDC, rotatedSosil[i].x, rotatedSosil[i].y);
+	}
+	Render_Obstacles(hDC);
+
+
+	TCHAR m_szBuf[100] = {};
+	swprintf_s(m_szBuf, L"통로 x : %.f, 통로 y : %.f", m_tInfo.vPos.x, m_tInfo.vPos.y);
+	TextOut(hDC, 300, 30, m_szBuf, lstrlen(m_szBuf));
+
+
+}
 
 int CRoad::Update()
 {
+
 	Key_Input();
-	//if (m_bRight_Rotation)
-	//{
-	//	//static float m_Move = 20.f;
-	//	//m_pPlayer->Set_Pos(m_pPlayer->Get_Info().vPos.x - m_Move, 550.f);
-
-	//	//if (m_pPlayer->Get_Info().vPos.x < 210)
-	//	//	m_bRight_Rotation = false;
-	//}
-
 
 	if (abs(m_fTargetAngle - m_fAngle) > D3DXToRadian(1.f)) 
 	{
@@ -108,7 +330,10 @@ int CRoad::Update()
 	}
 
 	D3DXMatrixRotationZ(&matRotZ, m_fAngle);
-	D3DXMatrixTranslation(&matTrans, m_tInfo.vPos.x, m_tInfo.vPos.y, m_tInfo.vPos.z);
+
+	
+		D3DXMatrixTranslation(&matTrans, m_tInfo.vPos.x, m_tInfo.vPos.y, m_tInfo.vPos.z);
+	
 	WorldMat = matRotZ * matTrans;
 
 	for (int i = 0; i < 4; i++)
@@ -140,19 +365,20 @@ int CRoad::Update()
 		rotatedSosil[i].z = 0.f;
 	}
 
+
+
+	m_tInfo.vPos.z += m_fSpeed;
+
+	//// 통로가 시점에서 벗어나면 다시 앞으로 이동
+	//if (m_tInfo.vPos.z > 1000.f)
+	//{
+	//	m_tInfo.vPos.z = -1000.f;
+	//}
+
+
 	Wall_Update();
-
-	for (auto& obs : m_Obstacles)
-	{
-		obs.vPos.y += 5.f;  // Y로 장애물 이동
-		obs.fScale -= 0.01f; // 거리와 비례해 스케일 감소하는거
-		if (obs.fScale <= 0.1f)
-		{
-			obs.fScale = 0.1f; // 최소 크기에용
-		}
-	}
-
-	__super::Update_Rect();
+	Update_Obstacles();
+	//__super::Update_Rect();
 	return 0;
 
 }
@@ -207,12 +433,25 @@ void CRoad::Key_Input()
 		D3DXVECTOR3 fixedUpDir = { 0.f, -40.f, 0.f };
 		m_tInfo.vPos += fixedUpDir;
 	}
+	m_bRight_Rotation = false;
+	m_bTop_Rotation = false;
+	m_bBottom_Rotation = false;
 
 	// 왼쪽 방향으로 90도 회전
 	if (CKeyManager::Get_Instance()->Key_Down(VK_LEFT))
 	{
 		m_bRight_Rotation = !m_bRight_Rotation;
 		m_fTargetAngle -= D3DXToRadian(90.f);	
+
+		if (!m_bLeft_Rotation) // 왼쪽으로 한번도 돈적이 없으면
+		{
+			m_bLeft_Rotation = true;
+			//if (!m_bTop_Rotation&&m_bLeft_Rotation) // 바닥이 왼쪽벽이고 거기서 또 왼쪽벽으로 돌았을때
+			//{
+			//	
+		 //   }
+
+		}
 	}
 	if (m_tInfo.vPos.x > 1900)
 	{
@@ -221,6 +460,8 @@ void CRoad::Key_Input()
 		m_tInfo.vPos.x = -1140;
 
 		static float m_Move = 20.f;
+
+		
 		//m_tInfo.vPos.x += m_Move;
 
 		//if (m_tInfo.vPos.x > 610)
@@ -258,141 +499,6 @@ void CRoad::Key_Input()
 void CRoad::Late_Update()
 {
 }
-void CRoad::Render(HDC hDC)
-{
-	// 카메라 화면
-
-
-	
-
-	MoveToEx(hDC, transformedCorners[0].x, transformedCorners[0].y, nullptr);
-	LineTo(hDC, transformedCorners[1].x, transformedCorners[1].y);
-	LineTo(hDC, transformedCorners[2].x, transformedCorners[2].y);
-	LineTo(hDC, transformedCorners[3].x, transformedCorners[3].y);
-	LineTo(hDC, transformedCorners[0].x, transformedCorners[0].y);
-
-
-
-	// 소실점 네모 
-	MoveToEx(hDC, rotatedSosil[0].x, rotatedSosil[0].y, nullptr);
-	LineTo(hDC, rotatedSosil[1].x, rotatedSosil[1].y);
-	LineTo(hDC, rotatedSosil[2].x, rotatedSosil[2].y);
-	LineTo(hDC, rotatedSosil[3].x, rotatedSosil[3].y);
-	LineTo(hDC, rotatedSosil[0].x, rotatedSosil[0].y);
-
-	
-	
-
-
-	HPEN hPen = CreatePen(PS_SOLID, 3, RGB(128, 128, 128));
-	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
-
-
-
-
-
-	// 처음 기준 왼쪽 면
-	HBRUSH GrayBrush = CreateSolidBrush(RGB(128, 128, 128));
-	HBRUSH OldBrush = (HBRUSH)SelectObject(hDC, GrayBrush);
-
-	Polygon(hDC, m_vecPoints[0], 4);
-
-	SelectObject(hDC, OldBrush);
-	DeleteObject(GrayBrush);
-
-	// 처음 기준 오른쪽 면
-	HBRUSH GrayBrush1 = CreateSolidBrush(RGB(128, 128, 128));
-	HBRUSH OldBrush1 = (HBRUSH)SelectObject(hDC, GrayBrush1);
-
-	Polygon(hDC, m_vecPoints[1], 4);
-
-	SelectObject(hDC, OldBrush1);
-	DeleteObject(GrayBrush1);
-
-	// 처음 기준 오른쪽 면
-	HBRUSH GrayBrush2 = CreateSolidBrush(RGB(128, 128, 128));
-	HBRUSH OldBrush2 = (HBRUSH)SelectObject(hDC, GrayBrush2);
-
-	Polygon(hDC, m_vecPoints[2], 4);
-
-	SelectObject(hDC, OldBrush2);
-	DeleteObject(GrayBrush2);
-
-	HBRUSH GrayBrush3 = CreateSolidBrush(RGB(128, 128, 128));
-	HBRUSH OldBrush3 = (HBRUSH)SelectObject(hDC, GrayBrush3);
-
-	Polygon(hDC, m_vecPoints[3], 4);
-
-	SelectObject(hDC, OldBrush3);
-	DeleteObject(GrayBrush3);
-
-	HBRUSH GrayBrush4 = CreateSolidBrush(RGB(0, 0, 0));
-	HBRUSH OldBrush4 = (HBRUSH)SelectObject(hDC, GrayBrush4);
-
-	Polygon(hDC, m_vecPoints[4], 4);
-
-	SelectObject(hDC, GrayBrush4);
-	DeleteObject(OldBrush4);
-
-
-	HBRUSH GrayBrush5 = CreateSolidBrush(RGB(128, 128, 128));
-	HBRUSH OldBrush5 = (HBRUSH)SelectObject(hDC, GrayBrush5);
-
-
-	SelectObject(hDC, hOldPen); DeleteObject(hPen);
-	SelectObject(hDC, GrayBrush5);
-	DeleteObject(OldBrush5);
-
-
-	if (g_bDevmode)
-	{
-		HitCircle(hDC, m_tHitRect, 0, 0);
-	}
-
-
-	 hPen = CreatePen(PS_SOLID, 3, RGB(128, 128, 128));
-	 hOldPen = (HPEN)SelectObject(hDC, hPen);
-	
-	SelectObject(hDC, hOldPen); DeleteObject(hPen);
-
-	for (int i = 0; i < 4; ++i)
-	{
-		MoveToEx(hDC, transformedCorners[i].x, transformedCorners[i].y, nullptr);
-		LineTo(hDC, rotatedSosil[i].x, rotatedSosil[i].y);
-	}
-
-	for (const auto& ons : m_Obstacles)
-	{
-		D3DXMATRIX matScale, matTrans, matWorld;
-		
-		D3DXMatrixScaling(&matScale, obs.fScale, obs.fScale, 1.0f);
-		D3DXMatrixTranslation(&matTrans, obs.vPos.x, obs.vPos.y, 0.0f);
-		matWorld = matScale * matTrans;
-
-		RECT rect = {
-		(LONG)(obs.vPos.x - obs.vSize.x * obs.fScale / 2),
-		(LONG)(obs.vPos.y - obs.vSize.y * obs.fScale / 2),
-		(LONG)(obs.vPos.x + obs.vSize.x * obs.fScale / 2),
-		(LONG)(obs.vPos.y + obs.vSize.y * obs.fScale / 2)
-		};
-
-		HBRUSH brush = CreateSolidBrush(RGB(255, 0, 0));
-		HBRUSH oldBrush = (HBRUSH)SelectObject(hDC, brush);
-		Rectangle(hDC, rect.left, rect.top, rect.right, rect.bottom);
-		SelectObject(hDC, oldBrush);
-		DeleteObject(brush);
-
-
-	}
-
-
-
-
-	TCHAR m_szBuf[100] = {};
-	swprintf_s(m_szBuf, L"통로 x : %.f, 통로 y : %.f", m_tInfo.vPos.x, m_tInfo.vPos.y);
-	TextOut(hDC, 300, 30, m_szBuf, lstrlen(m_szBuf));
-}
-
 
 void CRoad::Release()
 {
@@ -401,6 +507,7 @@ void CRoad::Release()
 		delete[] pointArray;
 	}
 	m_vecPoints.clear(); 
+	m_Obstacles.clear();
 }
 
 void CRoad::OnCollision(CObject* _obj)
