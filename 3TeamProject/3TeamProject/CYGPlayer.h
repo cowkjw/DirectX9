@@ -17,6 +17,7 @@ public:
 public:
 	int Get_MaxHp() { return m_iMaxHp; }
 	int Get_Hp() { return m_iHp; }
+	RECT Get_CollisionBox() { return m_CollisionBox; }
 private:
 	void Key_Input();
 private:
@@ -44,7 +45,8 @@ private:
 
 	//무기 없을 때 손 내밀기
 	bool m_bLeftPush;
-
 	int m_iShootTick;
+
+	RECT m_CollisionBox;
 };
 

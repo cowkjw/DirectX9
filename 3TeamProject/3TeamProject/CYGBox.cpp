@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "CYGBox.h"
+#include "CObjectManager.h"
+#include "CYGPlayer.h"
 
-CYGBox::CYGBox()
+CYGBox::CYGBox():m_HitTick(0), m_iScaleSize(0)
 {
 }
 
@@ -29,33 +31,42 @@ void CYGBox::Initialize()
 		m_vOriginInBox[i] = m_vInBox[i];
 	}
 
+	m_iScaleSize = 1.2f;
+	m_fOriginSizeX = 70.f;
+	m_fOriginSizeY = 70.f;
 }
 
 int CYGBox::Update()
 {
+	if (m_iScaleSize == 0.f) {
+		return OBJ_DEAD;
+	}
+
+	m_HitTick++;
+	m_tInfo.fSizeX = m_fOriginSizeX * m_iScaleSize;
+	m_tInfo.fSizeY = m_fOriginSizeY * m_iScaleSize;
 	D3DXMATRIX		matScale, matRotZ, matTrans;
 
-	D3DXMatrixScaling(&matScale, 1.2f, 1.2f, 1.f);
+	D3DXMatrixScaling(&matScale, m_iScaleSize, m_iScaleSize, 1.f);
 	D3DXMatrixTranslation(&matTrans, m_tInfo.vPos.x, m_tInfo.vPos.y, m_tInfo.vPos.z);
 	m_tInfo.matWorld = matScale * matTrans;
 
 	for (int i = 0; i < 4; ++i) {
 		m_vOutBox[i] = m_vOriginOutBox[i];
-		m_vOutBox[i] -= {400.f, 300.f, 0.f};
+		m_vOutBox[i] -= {300.f, 300.f, 0.f};
 		D3DXVec3TransformCoord(&m_vOutBox[i], &m_vOutBox[i], &m_tInfo.matWorld);
 
 		m_vInBox[i] = m_vOriginInBox[i];
-		m_vInBox[i] -= {400.f, 300.f, 0.f};
+		m_vInBox[i] -= {300.f, 300.f, 0.f};
 		D3DXVec3TransformCoord(&m_vInBox[i], &m_vInBox[i], &m_tInfo.matWorld);
 	}
-
-
 	__super::Update_Rect();
 	return 0;
 }
 
 void CYGBox::Late_Update()
 {
+	OnCollision();
 }
 
 void CYGBox::Render(HDC hDC)
@@ -109,4 +120,28 @@ void CYGBox::Release()
 
 void CYGBox::OnCollision(CObject* _obj)
 {
+}
+
+void CYGBox::OnCollision()
+{
+	RECT _copyRect = static_cast<CYGPlayer*>(CObjectManager::Get_Instance()->Get_Player())->Get_CollisionBox();
+
+	float fRadius = (20 + m_tInfo.fSizeX) * 0.5f;
+
+	float x = (_copyRect.right + _copyRect.left) * 0.5f;
+	float y = (_copyRect.bottom + _copyRect.top) * 0.5f;
+
+	float fWidth = abs(x - m_tInfo.vPos.x);
+	float fHeight = abs(y - m_tInfo.vPos.y);
+
+	float fDiagonal = powf((fWidth * fWidth + fHeight * fHeight), 0.5f);
+
+	bool check =  fRadius >= fDiagonal;
+
+	if (check) {
+		if (m_HitTick > 20) {
+			m_iScaleSize -= 0.3f;
+			m_HitTick = 0;
+		}
+	}
 }

@@ -46,10 +46,13 @@ void CYGPlayer::Initialize()
 	m_iHp = 100;
 	m_iMaxHp = m_iHp;
 	m_iShootTick = 0;
+
+	m_CollisionBox = { 0,0,0,0};
 }
 
 int CYGPlayer::Update()
 {
+	m_CollisionBox = { 0,0,0,0 };
 	m_iShootTick++;
 	m_tInfo.vLook = Get_Mouse() - m_tInfo.vPos;
 	D3DXVec3Normalize(&m_tInfo.vLook, &m_tInfo.vLook);
@@ -127,6 +130,7 @@ void CYGPlayer::Render(HDC hDC)
 
 	if (g_bDevmode) {
 		HitCircle(hDC, m_tHitRect, 0, 0);
+		HitCircle(hDC, m_CollisionBox, 0, 0);
 		if (g_bDevmode) {
 			TCHAR szWhoScene[64];
 			_stprintf_s(szWhoScene, _T("%f ¸¶¿ì½º %f %f"), m_fAngle, Get_Mouse().x, Get_Mouse().y);
@@ -181,10 +185,12 @@ void CYGPlayer::Key_Input()
 			if (m_bLeftPush) {
 				m_vLeftNoGunHandPos += m_tInfo.vLook * 10;
 				m_bLeftPush = !m_bLeftPush;
+				m_CollisionBox = { (int)m_vLeftNoGunHandPos.x - 10, (int)m_vLeftNoGunHandPos.y - 10,(int)m_vLeftNoGunHandPos.x + 10, (int)m_vLeftNoGunHandPos.y + 10 };
 			}
 			else {
 				m_vRightNoGunHandPos += m_tInfo.vLook * 10;
 				m_bLeftPush = !m_bLeftPush;
+				m_CollisionBox = { (int)m_vRightNoGunHandPos.x - 10, (int)m_vRightNoGunHandPos.y - 10,(int)m_vRightNoGunHandPos.x + 10, (int)m_vRightNoGunHandPos.y + 10 };
 			}
 		}
 		else {
