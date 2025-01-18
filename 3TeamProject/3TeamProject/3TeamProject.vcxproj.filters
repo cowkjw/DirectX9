@@ -328,4 +328,12 @@
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="font1.bin">
+      <Filter>리소스 파일</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\..\..\..\..\Downloads\bamboy\BamboyTrial-Regular.otf" />
+  </ItemGroup>
 </Project>
