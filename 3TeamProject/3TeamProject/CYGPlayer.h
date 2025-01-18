@@ -18,6 +18,7 @@ public:
 	int Get_MaxHp() { return m_iMaxHp; }
 	int Get_Hp() { return m_iHp; }
 	RECT Get_CollisionBox() { return m_CollisionBox; }
+	RECT Get_HitBox() { return m_tHitRect; }
 private:
 	void Key_Input();
 private:

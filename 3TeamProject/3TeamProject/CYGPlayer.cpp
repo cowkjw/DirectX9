@@ -5,6 +5,9 @@
 #include "CObjectManager.h"
 #include "CYGBullet.h"
 #include "CScrollManager.h"
+#include "CYGBulletItem.h"
+#include "CYGGunItem.h"
+#include "CYGItem.h"
 
 CYGPlayer::CYGPlayer():m_bLeftPush(false), m_iShootTick(0)
 {
@@ -205,6 +208,26 @@ void CYGPlayer::Key_Input()
 			}
 
 		}
+	}
+
+	if (CKeyManager::Get_Instance()->Key_Down('F')) {
+		list<CObject*> _itemList = CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_ITEM);
+		for (auto& _obj : _itemList) {
+			switch (static_cast<CYGItem*>(_obj)->Get_ItemType())
+			{
+			case ITEM_GUN:
+				if (static_cast<CYGItem*>(_obj)->Get_CanPick()) {
+					static_cast<CYGItem*>(_obj)->Set_Dead();
+				}
+				break;
+			case ITEM_BULLET:
+				if (static_cast<CYGItem*>(_obj)->Get_CanPick()) {
+					static_cast<CYGItem*>(_obj)->Set_Dead();
+				}
+				break;
+			}
+		}
+
 	}
 
 }

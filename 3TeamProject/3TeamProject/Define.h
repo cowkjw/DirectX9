@@ -18,6 +18,7 @@ enum SCENEID { SC_MENU, SC_YG, SC_CY, SC_DW, SC_JW, SC_END };
 enum UITYPE{UI_YG, UI_CY,UI_DW, UI_JW, UI_END};
 enum OBJID {OBJ_PLAYER,OBJ_DW_ROAD,OBJ_PLAYERBULLET, OBJ_MONSTERBULLET, OBJ_MAP, OBJ_ITEM,OBJ_END};
 enum RENDERID { RENDER_BACKGROUND, RENDER_GAMEOBJECT, RENDER_END };
+enum YGITEMTYPE{ITEM_GUN, ITEM_BULLET, ITEM_END};
 
 static D3DXVECTOR3		Get_Mouse()
 {
@@ -178,6 +179,23 @@ static BOOL ColorRect(HDC hDC, int leftTopX, int leftTopY, int rightBottomX, int
 
 	HBRUSH hBrush = CreateSolidBrush(color);
 	HPEN hPen = CreatePen(PS_SOLID, penSize, RGB(0, 0, 0));
+	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+	Rectangle(hDC, leftTopX, leftTopY, rightBottomX, rightBottomY);
+
+	SelectObject(hDC, hOldBrush);
+	SelectObject(hDC, hOldPen);
+	DeleteObject(hBrush);
+	DeleteObject(hPen);
+	return true;
+}
+
+static BOOL ColorRect(HDC hDC, int leftTopX, int leftTopY, int rightBottomX, int rightBottomY, int R, int G, int B, int penSize, int penR, int penG, int penB)
+{
+	COLORREF color = RGB(R, G, B);
+
+	HBRUSH hBrush = CreateSolidBrush(color);
+	HPEN hPen = CreatePen(PS_SOLID, penSize, RGB(penR,penG,penB));
 	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
 	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
 	Rectangle(hDC, leftTopX, leftTopY, rightBottomX, rightBottomY);

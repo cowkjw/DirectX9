@@ -43,7 +43,9 @@ void CYGBox::Initialize()
 int CYGBox::Update()
 {
 	if (m_iScaleSize == 0.f) {
-		CObjectManager::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CYGGunItem>::Create(m_tInfo.vPos.x - 20, m_tInfo.vPos.y - 20));
+		CObjectManager::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CYGGunItem>::Create(m_tInfo.vPos.x, m_tInfo.vPos.y - 40, 50,30));
+		CObjectManager::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CYGBulletItem>::Create(m_tInfo.vPos.x + 20, m_tInfo.vPos.y, 30, 30));
+		CObjectManager::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CYGBulletItem>::Create(m_tInfo.vPos.x - 20, m_tInfo.vPos.y, 30, 30));
 		return OBJ_DEAD;
 	}
 
