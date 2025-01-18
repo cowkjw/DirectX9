@@ -154,8 +154,7 @@ void CFruit::Late_Update()
 		}
 		else
 		{
-
-			m_fMergeAnimRatio = min(m_fMergeAnimRatio + 0.05f, 1.f);
+			m_fMergeAnimRatio = min(m_fMergeAnimRatio + 0.03f, 1.f);
 		}
 	}
 }

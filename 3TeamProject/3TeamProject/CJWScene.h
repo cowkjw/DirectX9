@@ -36,6 +36,8 @@ private:
 	void BoxLine_Collision();
 	void Merge_Fruit();
 	void Render_Box(HDC hDC);
+	void Find_Proximate_Fruit();
+	void Blink_Line();
 	void Update_Next_FruitInfo(const vector<D3DXVECTOR3>&,const COLORREF, FRUIT_TYPE);
 private:
 	unordered_map<FRUIT_TYPE,CObjPool<CFruit>*> m_FruitPoolMap;
@@ -43,7 +45,9 @@ private:
 	vector<int> m_vecScore;
 	int m_iLevel;
 	int m_iScore;
+	float m_fDropLenDebug;
 	bool m_bGameOver;
+	bool m_bCanWarning;
 	bool m_bCreated;
 	DWORD64 m_dwDroppedTime;
 	DWORD64 m_dwDropDelay;
