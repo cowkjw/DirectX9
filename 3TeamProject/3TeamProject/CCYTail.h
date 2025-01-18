@@ -3,7 +3,7 @@
 class CCYTail : public CCYObject
 {
 public:
-	CCYTail() {}
+	CCYTail() : m_targetHead(nullptr), m_fWormSize(0){}
 	virtual ~CCYTail() {}
 public:
 	void Initialize() override;
@@ -13,7 +13,12 @@ public:
 	void Release() override;
 	void OnCollision(CObject* _obj) override;
 
+public:
+	void	 Set_TargetHead(CObject* _pHead) { m_targetHead = _pHead; }
+	CObject* Get_TargetHead() { return m_targetHead; }
+
 private:
-	CObject* m_ptargetHead;
+	CObject* m_targetHead;
+	float	 m_fWormSize;
 };
 

@@ -1,5 +1,7 @@
 #pragma once
 #include "CScene.h"
+#include "CObject.h"
+
 class CCYScene :public CScene
 {
 public:
@@ -14,5 +16,10 @@ public:
 	void Key_Input() override;
 	void Create_MapObj() override;
 	void Offset() override;
+
+private:
+	enum SLITHERNUM { SL_PLAYER, SL_END };
+	vector<vector<CObject>*> m_SlitherSegvec;
+	ULONGLONG	m_ullFoodTimeTicker;
 };
 

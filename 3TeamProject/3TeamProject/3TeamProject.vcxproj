@@ -118,11 +118,13 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>..\core\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>d3d9.lib;d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\core\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -149,13 +151,17 @@
     <ClInclude Include="CAbstractFactory.h" />
     <ClInclude Include="CBitManager.h" />
     <ClInclude Include="CCollisionManager.h" />
+    <ClInclude Include="CCYHead.h" />
     <ClInclude Include="CCYMonster.h" />
     <ClInclude Include="CCYObject.h" />
     <ClInclude Include="CCYPlayer.h" />
     <ClInclude Include="CCYScene.h" />
+    <ClInclude Include="CCYSegment.h" />
     <ClInclude Include="CCYTail.h" />
+    <ClInclude Include="CDWObject.h" />
     <ClInclude Include="CDWPlayer.h" />
     <ClInclude Include="CDWScene.h" />
+    <ClInclude Include="CCYFood.h" />
     <ClInclude Include="CFruit.h" />
     <ClInclude Include="CJWScene.h" />
     <ClInclude Include="CKeyManager.h" />
@@ -165,10 +171,17 @@
     <ClInclude Include="CObjectManager.h" />
     <ClInclude Include="CObject.h" />
     <ClInclude Include="CObjPool.h" />
+    <ClInclude Include="CRoad.h" />
     <ClInclude Include="CScene.h" />
     <ClInclude Include="CSceneManager.h" />
     <ClInclude Include="CScrollManager.h" />
+    <ClInclude Include="CSoundManager.h" />
     <ClInclude Include="CUiManager.h" />
+    <ClInclude Include="CYGBox.h" />
+    <ClInclude Include="CYGBullet.h" />
+    <ClInclude Include="CYGBulletItem.h" />
+    <ClInclude Include="CYGGunItem.h" />
+    <ClInclude Include="CYGItem.h" />
     <ClInclude Include="CYGObject.h" />
     <ClInclude Include="CYGPlayer.h" />
     <ClInclude Include="CYGScene.h" />
@@ -182,13 +195,17 @@
     <ClCompile Include="3TeamProject.cpp" />
     <ClCompile Include="CBitManager.cpp" />
     <ClCompile Include="CCollisionManager.cpp" />
+    <ClCompile Include="CCYHead.cpp" />
     <ClCompile Include="CCYMonster.cpp" />
     <ClCompile Include="CCYObject.cpp" />
     <ClCompile Include="CCYPlayer.cpp" />
     <ClCompile Include="CCYScene.cpp" />
+    <ClCompile Include="CCYSegment.cpp" />
     <ClCompile Include="CCYTail.cpp" />
+    <ClCompile Include="CDWObject.cpp" />
     <ClCompile Include="CDWPlayer.cpp" />
     <ClCompile Include="CDWScene.cpp" />
+    <ClCompile Include="CCYFood.cpp" />
     <ClCompile Include="CFruit.cpp" />
     <ClCompile Include="CJWScene.cpp" />
     <ClCompile Include="CKeyManager.cpp" />
@@ -197,10 +214,17 @@
     <ClCompile Include="CMyBmp.cpp" />
     <ClCompile Include="CObjectManager.cpp" />
     <ClCompile Include="CObject.cpp" />
+    <ClCompile Include="CRoad.cpp" />
     <ClCompile Include="CScene.cpp" />
     <ClCompile Include="CSceneManager.cpp" />
     <ClCompile Include="CScrollManager.cpp" />
+    <ClCompile Include="CSoundManager.cpp" />
     <ClCompile Include="CUiManager.cpp" />
+    <ClCompile Include="CYGBox.cpp" />
+    <ClCompile Include="CYGBullet.cpp" />
+    <ClCompile Include="CYGBulletItem.cpp" />
+    <ClCompile Include="CYGGunItem.cpp" />
+    <ClCompile Include="CYGItem.cpp" />
     <ClCompile Include="CYGObject.cpp" />
     <ClCompile Include="CYGPlayer.cpp" />
     <ClCompile Include="CYGScene.cpp" />
@@ -217,6 +241,12 @@
   <ItemGroup>
     <Image Include="3TeamProject.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="font1.bin" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\..\..\..\..\Downloads\bamboy\BamboyTrial-Regular.otf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

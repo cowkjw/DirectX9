@@ -1,5 +1,6 @@
 #pragma once
 #include "Define.h"
+
 class CUiManager
 {
 private:

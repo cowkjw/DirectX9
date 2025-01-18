@@ -2,10 +2,9 @@
 #include "CMainGame.h"
 #include "CSceneManager.h"
 #include "CKeyManager.h"
-#include "CKeyManager.h"
 #include "CUiManager.h"
 #include "CScrollManager.h"
-#include "CSceneManager.h"
+#include "CSoundManager.h"
 #include "CObjectManager.h"
 #include "CBitManager.h"
 
@@ -13,6 +12,7 @@ bool g_bDevmode = false;
 
 CMainGame::CMainGame() 
 {
+	 
 }
 
 CMainGame::~CMainGame()
@@ -25,7 +25,7 @@ void CMainGame::Initialize()
 	CBitManager::Get_Instance()->Insert_Bmp(L"../Assets/Back/Back.bmp", L"Back");
 
 	m_hDC = GetDC(g_hWnd);
-	CSceneManager::Get_Instance()->Set_Scene(SC_MENU);
+	CSceneManager::Get_Instance()->Set_Scene(SC_DW);
 }
 
 void CMainGame::Update()
@@ -54,5 +54,6 @@ void CMainGame::Release()
 	CSceneManager::Destroy_Instance();
 	CObjectManager::Destroy_Instance();
 	CBitManager::Destroy_Instance();
+	CSoundManager::Destroy_Instance();
 	ReleaseDC(g_hWnd, m_hDC);
 }
