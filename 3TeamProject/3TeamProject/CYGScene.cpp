@@ -6,6 +6,7 @@
 #include "CAbstractFactory.h"
 #include "CUiManager.h"
 #include "CYGPlayer.h"
+#include "CYGBox.h"
 
 CYGScene::CYGScene()
 {
@@ -15,6 +16,8 @@ void CYGScene::Initialize()
 {
 	CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CYGPlayer>::Create(400, 300, 50, 50));
 	CUiManager::Get_Instance()->Set_UiType(UI_YG);
+
+	Create_MapObj();
 }
 
 int CYGScene::Update()
@@ -78,6 +81,7 @@ void CYGScene::Key_Input()
 
 void CYGScene::Create_MapObj()
 {
+	CObjectManager::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CYGBox>::Create(300, 300, 70, 70));
 }
 
 void CYGScene::Offset()

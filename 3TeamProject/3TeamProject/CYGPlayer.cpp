@@ -17,7 +17,7 @@ void CYGPlayer::Initialize()
 	m_fSpeed = 3.f;
 	m_tInfo.vLook = { 1.f, 0.f, 0.f };
 
-	m_PlayerState = PS_GUN;
+	m_PlayerState = PS_NOGUN;
 
 	m_vLeftNoGunHandPos = { 385.f,270.f,0.f };
 	m_vRightNoGunHandPos = { 415.f,270.f,0.f };
@@ -189,8 +189,8 @@ void CYGPlayer::Key_Input()
 		}
 		else {
 			if (m_iShootTick > 10) {
-				CObjectManager::Get_Instance()->Add_Object(OBJ_BULLET, CAbstractFactory<CYGBullet>::Create(m_vBulletSpawn.x, m_vBulletSpawn.y));
-				static_cast<CYGBullet*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_BULLET).back())->Set_Dir(m_tInfo.vLook);
+				CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYERBULLET, CAbstractFactory<CYGBullet>::Create(m_vBulletSpawn.x, m_vBulletSpawn.y));
+				static_cast<CYGBullet*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYERBULLET).back())->Set_Dir(m_tInfo.vLook);
 				m_iShootTick = 0;
 			}
 

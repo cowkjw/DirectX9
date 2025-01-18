@@ -94,6 +94,9 @@
     <Filter Include="99_Managers\SoundManager">
       <UniqueIdentifier>{770f075b-4ae5-457f-a0f7-9e921ef6bd7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02_Object\01_YG\00_MapObj">
+      <UniqueIdentifier>{86f778fb-1c7a-4deb-9853-03fed2975adf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -213,6 +216,9 @@
     <ClInclude Include="CYGBullet.h">
       <Filter>02_Object\01_YG</Filter>
     </ClInclude>
+    <ClInclude Include="CYGBox.h">
+      <Filter>02_Object\01_YG\00_MapObj</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3TeamProject.cpp">
@@ -313,6 +319,9 @@
     </ClCompile>
     <ClCompile Include="CYGBullet.cpp">
       <Filter>02_Object\01_YG</Filter>
+    </ClCompile>
+    <ClCompile Include="CYGBox.cpp">
+      <Filter>02_Object\01_YG\00_MapObj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

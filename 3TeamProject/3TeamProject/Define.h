@@ -16,7 +16,7 @@ extern bool		g_bDevmode;
 
 enum SCENEID { SC_MENU, SC_YG, SC_CY, SC_DW, SC_JW, SC_END };
 enum UITYPE{UI_YG, UI_CY,UI_DW, UI_JW, UI_END};
-enum OBJID {OBJ_PLAYER,OBJ_DW_ROAD,OBJ_BULLET, OBJ_END};
+enum OBJID {OBJ_PLAYER,OBJ_DW_ROAD,OBJ_PLAYERBULLET, OBJ_MONSTERBULLET, OBJ_MAP, OBJ_END};
 enum RENDERID { RENDER_BACKGROUND, RENDER_GAMEOBJECT, RENDER_END };
 
 static D3DXVECTOR3		Get_Mouse()
@@ -98,6 +98,19 @@ static BOOL HitCircle(HDC hDC, RECT tRect, int x, int y)
 	return true;
 }
 
+static BOOL HitRect(HDC hDC, RECT tRect, int x, int y)
+{
+	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, GetStockObject(HOLLOW_BRUSH));
+	HPEN hNewPen = CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
+	HPEN hOldPen = (HPEN)SelectObject(hDC, hNewPen);
+	Rectangle(hDC, (int)(tRect.left + x), (int)(tRect.top + y), (int)(tRect.right + x), (int)(tRect.bottom + y));
+	SelectObject(hDC, hOldPen);
+	SelectObject(hDC, hOldBrush);
+
+	DeleteObject(hNewPen);
+	return true;
+}
+
 //적 감지용 
 static BOOL DetectCircle(HDC hDC, RECT tRect)
 {
@@ -151,6 +164,40 @@ static BOOL ColorCircle(HDC hDC, int leftTopX, int leftTopY, int rightBottomX, i
 	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
 	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
 	Ellipse(hDC, leftTopX, leftTopY, rightBottomX, rightBottomY);
+
+	SelectObject(hDC, hOldBrush);
+	SelectObject(hDC, hOldPen);
+	DeleteObject(hBrush);
+	DeleteObject(hPen);
+	return true;
+}
+
+static BOOL ColorRect(HDC hDC, int leftTopX, int leftTopY, int rightBottomX, int rightBottomY, int R, int G, int B, int penSize)
+{
+	COLORREF color = RGB(R, G, B);
+
+	HBRUSH hBrush = CreateSolidBrush(color);
+	HPEN hPen = CreatePen(PS_SOLID, penSize, RGB(0, 0, 0));
+	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+	Rectangle(hDC, leftTopX, leftTopY, rightBottomX, rightBottomY);
+
+	SelectObject(hDC, hOldBrush);
+	SelectObject(hDC, hOldPen);
+	DeleteObject(hBrush);
+	DeleteObject(hPen);
+	return true;
+}
+
+static BOOL ColorRoundRect(HDC hDC, int leftTopX, int leftTopY, int rightBottomX, int rightBottomY, int R, int G, int B, int penSize)
+{
+	COLORREF color = RGB(R, G, B);
+
+	HBRUSH hBrush = CreateSolidBrush(color);
+	HPEN hPen = CreatePen(PS_SOLID, penSize, RGB(0, 0, 0));
+	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+	RoundRect(hDC, leftTopX, leftTopY, rightBottomX, rightBottomY, 10, 10);
 
 	SelectObject(hDC, hOldBrush);
 	SelectObject(hDC, hOldPen);

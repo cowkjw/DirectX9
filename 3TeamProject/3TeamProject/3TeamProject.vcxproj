@@ -177,6 +177,7 @@
     <ClInclude Include="CScrollManager.h" />
     <ClInclude Include="CSoundManager.h" />
     <ClInclude Include="CUiManager.h" />
+    <ClInclude Include="CYGBox.h" />
     <ClInclude Include="CYGBullet.h" />
     <ClInclude Include="CYGObject.h" />
     <ClInclude Include="CYGPlayer.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="CScrollManager.cpp" />
     <ClCompile Include="CSoundManager.cpp" />
     <ClCompile Include="CUiManager.cpp" />
+    <ClCompile Include="CYGBox.cpp" />
     <ClCompile Include="CYGBullet.cpp" />
     <ClCompile Include="CYGObject.cpp" />
     <ClCompile Include="CYGPlayer.cpp" />
