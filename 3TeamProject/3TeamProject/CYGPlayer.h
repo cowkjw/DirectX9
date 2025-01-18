@@ -14,6 +14,9 @@ public:
 	void Render(HDC hDC) override;
 	void Release() override;
 	void OnCollision(CObject* _obj) override;
+public:
+	int Get_MaxHp() { return m_iMaxHp; }
+	int Get_Hp() { return m_iHp; }
 private:
 	void Key_Input();
 private:
@@ -30,6 +33,8 @@ private:
 	D3DXVECTOR3 m_vOriginLeftGunHand;
 	D3DXVECTOR3 m_vOriginRightGunHand;
 	D3DXVECTOR3 m_vOriginGunRectanglePoint[4];
+	D3DXVECTOR3 m_vBulletSpawn;
+	D3DXVECTOR3 m_vOriginBulletSpawn;
 
 	//플레이어 원본 중점
 	D3DXVECTOR3 m_vOriginPos;
@@ -37,5 +42,9 @@ private:
 	//무기 관련
 	PLAYERSTATE m_PlayerState;
 
+	//무기 없을 때 손 내밀기
+	bool m_bLeftPush;
+
+	int m_iShootTick;
 };
 

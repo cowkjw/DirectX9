@@ -207,9 +207,6 @@
     <ClInclude Include="CDWPlayer.h">
       <Filter>02_Object\03_DW</Filter>
     </ClInclude>
-    <ClInclude Include="CSoundManager.h">
-      <Filter>99_Managers\SoundManager</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3TeamProject.cpp">
@@ -304,9 +301,6 @@
     </ClCompile>
     <ClCompile Include="CDWPlayer.cpp">
       <Filter>02_Object\03_DW</Filter>
-    </ClCompile>
-    <ClCompile Include="CSoundManager.cpp">
-      <Filter>99_Managers\SoundManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
