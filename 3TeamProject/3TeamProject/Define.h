@@ -35,14 +35,14 @@ typedef struct tagInfo
 {
 	D3DXVECTOR3		vDir;
 	D3DXVECTOR3		vLook;
-	D3DXVECTOR3		vNormal;	// ¹ı¼± º¤ÅÍ(¹æÇâ º¤ÅÍ)
+	D3DXVECTOR3		vNormal;	// ë²•ì„  ë²¡í„°(ë°©í–¥ ë²¡í„°)
 	D3DXVECTOR3		vPos;
 	D3DXMATRIX		matWorld;
-	float fSizeX; //°¡·Î Å©±â
-	float fSizeY; //¼¼·Î Å©±â
+	float fSizeX; //ê°€ë¡œ í¬ê¸°
+	float fSizeY; //ì„¸ë¡œ í¬ê¸°
 }INFO;
 
-//ºñÆ®¸Ê °ü·Ã
+//ë¹„íŠ¸ë§µ ê´€ë ¨
 struct tagFinder
 {
 public:
@@ -84,8 +84,8 @@ void Safe_Delete(T& Temp)
 	}
 }
 
-//°³¹ß ¸ğµå
-// Ãæµ¹ ¹üÀ§
+//ê°œë°œ ëª¨ë“œ
+// ì¶©ëŒ ë²”ìœ„
 static BOOL HitCircle(HDC hDC, RECT tRect, int x, int y)
 {
 	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, GetStockObject(HOLLOW_BRUSH));
@@ -112,7 +112,7 @@ static BOOL HitRect(HDC hDC, RECT tRect, int x, int y)
 	return true;
 }
 
-//Àû °¨Áö¿ë 
+//ì  ê°ì§€ìš© 
 static BOOL DetectCircle(HDC hDC, RECT tRect)
 {
 	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, GetStockObject(HOLLOW_BRUSH));
