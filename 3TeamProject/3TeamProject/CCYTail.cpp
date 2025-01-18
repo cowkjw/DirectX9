@@ -7,7 +7,7 @@
 
 void CCYTail::Initialize()
 {
-	m_eOBJID = OBJ_END;
+	m_eOBJID = OBJ_CYTAIL;
 	m_eRender = RENDER_GAMEOBJECT;
 
 	m_tInfo.vPos = m_targetObj->Get_Info().vPos;
@@ -88,4 +88,20 @@ void CCYTail::Release()
 
 void CCYTail::OnCollision(CObject* _obj)
 {
+	if (_obj == m_targetHead)
+	{
+		return;
+	}
+	else
+	{
+		static_cast<CCYObject*>(m_targetHead)->Set_Dead();
+		return;
+	}
+	if (_obj == GET_PLAYER)
+	{
+		if (m_targetHead != GET_PLAYER)
+		{
+			static_cast<CCYObject*>(m_targetHead)->Set_Dead();
+		}
+	}
 }

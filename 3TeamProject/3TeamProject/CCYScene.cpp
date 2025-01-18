@@ -40,6 +40,8 @@ void CCYScene::Late_Update()
 {
 	CObjectManager::Get_Instance()->Late_Update();
 	CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER), OBJMGR->Get_ObjList_ByID(OBJ_MISC));
+	CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER), OBJMGR->Get_ObjList_ByID(OBJ_CYTAIL));
+	CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_MONSTER), OBJMGR->Get_ObjList_ByID(OBJ_CYTAIL));
 }
 
 void CCYScene::Render(HDC hDC)

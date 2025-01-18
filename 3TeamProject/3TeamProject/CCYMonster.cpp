@@ -50,7 +50,6 @@ int CCYMonster::Update()
 	if (m_bDead)
 	{
 		return OBJ_DEAD;
-
 	}
 	if (m_ullRandomTicker + 500 < GetTickCount64())
 	{
