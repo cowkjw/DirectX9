@@ -2,6 +2,10 @@
 #include "CYGBox.h"
 #include "CObjectManager.h"
 #include "CYGPlayer.h"
+#include "CYGBulletItem.h"
+#include "CYGGunItem.h"
+#include "CAbstractFactory.h"
+#include "CScrollManager.h"
 
 CYGBox::CYGBox():m_HitTick(0), m_iScaleSize(0)
 {
@@ -39,6 +43,7 @@ void CYGBox::Initialize()
 int CYGBox::Update()
 {
 	if (m_iScaleSize == 0.f) {
+		CObjectManager::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CYGGunItem>::Create(m_tInfo.vPos.x - 20, m_tInfo.vPos.y - 20));
 		return OBJ_DEAD;
 	}
 
@@ -71,6 +76,10 @@ void CYGBox::Late_Update()
 
 void CYGBox::Render(HDC hDC)
 {
+	int		iScrollX = (int)CScrollManager::Get_Instance()->Get_ScrollX();
+	int		iScrollY = (int)CScrollManager::Get_Instance()->Get_ScrollY();
+
+
 	COLORREF color = RGB(102, 48, 0);
 
 	HBRUSH hBrush = CreateSolidBrush(color);
@@ -80,8 +89,8 @@ void CYGBox::Render(HDC hDC)
 
 	POINT outBox[4];
 	for (int i = 0; i < 4; ++i) {
-		outBox[i].x = static_cast<LONG>(m_vOutBox[i].x);
-		outBox[i].y = static_cast<LONG>(m_vOutBox[i].y);
+		outBox[i].x = static_cast<LONG>(m_vOutBox[i].x) + iScrollX;
+		outBox[i].y = static_cast<LONG>(m_vOutBox[i].y) + iScrollY;
 	}
 	Polygon(hDC, outBox, 4);
 
@@ -99,8 +108,8 @@ void CYGBox::Render(HDC hDC)
 
 	POINT inBox[4];
 	for (int i = 0; i < 4; ++i) {
-		inBox[i].x = static_cast<LONG>(m_vInBox[i].x);
-		inBox[i].y = static_cast<LONG>(m_vInBox[i].y);
+		inBox[i].x = static_cast<LONG>(m_vInBox[i].x)+ iScrollX;
+		inBox[i].y = static_cast<LONG>(m_vInBox[i].y)+ iScrollY;
 	}
 	Polygon(hDC, inBox, 4);
 
@@ -110,7 +119,7 @@ void CYGBox::Render(HDC hDC)
 	DeleteObject(hPen);
 
 	if (g_bDevmode) {
-		HitRect(hDC, m_tHitRect, 0, 0);
+		HitRect(hDC, m_tHitRect, iScrollX, iScrollY);
 	}
 }
 

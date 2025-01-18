@@ -4,6 +4,7 @@
 #include "CAbstractFactory.h"
 #include "CObjectManager.h"
 #include "CYGBullet.h"
+#include "CScrollManager.h"
 
 CYGPlayer::CYGPlayer():m_bLeftPush(false), m_iShootTick(0)
 {
@@ -111,26 +112,29 @@ void CYGPlayer::Late_Update()
 
 void CYGPlayer::Render(HDC hDC)
 {
+	int		iScrollX = (int)CScrollManager::Get_Instance()->Get_ScrollX();
+	int		iScrollY = (int)CScrollManager::Get_Instance()->Get_ScrollY();
+
 	if (m_PlayerState == PS_NOGUN) {
-		ColorCircle(hDC, m_vLeftNoGunHandPos.x - 10, m_vLeftNoGunHandPos.y - 10, m_vLeftNoGunHandPos.x + 10, m_vLeftNoGunHandPos.y + 10, 252,194,114,2); // 왼손
-		ColorCircle(hDC, m_vRightNoGunHandPos.x - 10, m_vRightNoGunHandPos.y - 10, m_vRightNoGunHandPos.x + 10, m_vRightNoGunHandPos.y + 10, 252, 194, 114,2); // 오른손
+		ColorCircle(hDC, m_vLeftNoGunHandPos.x - 10 + iScrollX, m_vLeftNoGunHandPos.y - 10+ iScrollY, m_vLeftNoGunHandPos.x + 10+ iScrollX, m_vLeftNoGunHandPos.y + 10+ iScrollY, 252,194,114,2); // 왼손
+		ColorCircle(hDC, m_vRightNoGunHandPos.x - 10+ iScrollX, m_vRightNoGunHandPos.y - 10+ iScrollY, m_vRightNoGunHandPos.x + 10+ iScrollX, m_vRightNoGunHandPos.y + 10+ iScrollY, 252, 194, 114,2); // 오른손
 	}
 	else {
-		MoveToEx(hDC, m_vGunRectanglePoint[3].x, m_vGunRectanglePoint[3].y, nullptr);
+		MoveToEx(hDC, m_vGunRectanglePoint[3].x+ iScrollX, m_vGunRectanglePoint[3].y+ iScrollY, nullptr);
 		for (int i = 0; i < 4; ++i) {
-			LineTo(hDC, m_vGunRectanglePoint[i].x, m_vGunRectanglePoint[i].y);
+			LineTo(hDC, m_vGunRectanglePoint[i].x+ iScrollX, m_vGunRectanglePoint[i].y+ iScrollY);
 		}
 
-		ColorCircle(hDC, m_vLeftGunHandPos.x - 10, m_vLeftGunHandPos.y - 10, m_vLeftGunHandPos.x + 10, m_vLeftGunHandPos.y + 10, 252, 194, 114, 2); // 왼손
-		ColorCircle(hDC, m_vRightGunHandPos.x - 10, m_vRightGunHandPos.y - 10, m_vRightGunHandPos.x + 10, m_vRightGunHandPos.y + 10, 252, 194, 114, 2); // 오른손
+		ColorCircle(hDC, m_vLeftGunHandPos.x - 10+ iScrollX, m_vLeftGunHandPos.y - 10+ iScrollY, m_vLeftGunHandPos.x + 10+ iScrollX, m_vLeftGunHandPos.y + 10+ iScrollY, 252, 194, 114, 2); // 왼손
+		ColorCircle(hDC, m_vRightGunHandPos.x - 10+ iScrollX, m_vRightGunHandPos.y - 10+ iScrollY, m_vRightGunHandPos.x + 10+ iScrollX, m_vRightGunHandPos.y + 10+ iScrollY, 252, 194, 114, 2); // 오른손
 	}
 
-	ColorCircle(hDC, m_tHitRect.left, m_tHitRect.top, m_tHitRect.right, m_tHitRect.bottom, 252, 194, 114,2);
+	ColorCircle(hDC, m_tHitRect.left+ iScrollX, m_tHitRect.top+ iScrollY, m_tHitRect.right+ iScrollX, m_tHitRect.bottom+ iScrollY, 252, 194, 114,2);
 
 
 	if (g_bDevmode) {
-		HitCircle(hDC, m_tHitRect, 0, 0);
-		HitCircle(hDC, m_CollisionBox, 0, 0);
+		HitCircle(hDC, m_tHitRect, iScrollX, iScrollY);
+		HitCircle(hDC, m_CollisionBox, iScrollX, iScrollY);
 		if (g_bDevmode) {
 			TCHAR szWhoScene[64];
 			_stprintf_s(szWhoScene, _T("%f 마우스 %f %f"), m_fAngle, Get_Mouse().x, Get_Mouse().y);
