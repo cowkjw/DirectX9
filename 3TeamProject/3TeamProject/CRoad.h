@@ -4,6 +4,14 @@
 
 class CRoad : public CDWObject
 {
+	struct Obstacle
+	{
+		D3DXVECTOR3 vPos;   
+		D3DXVECTOR3 vSize; 
+		float fScale;     
+	};
+
+
 public:
 	CRoad();
 	virtual ~CRoad() { Release(); }
@@ -15,8 +23,7 @@ public:
 	void Render(HDC hDC) override;
 	void Release() override;
 	void OnCollision(CObject* _obj) override;
-
-	bool CheckCollision(D3DXVECTOR3 playerPos, D3DXVECTOR3 lineStart, D3DXVECTOR3 lineEnd, float threshold);
+    void Wall_Update();
 
 private:
 	D3DXVECTOR3     m_vPoint[4];
@@ -48,5 +55,14 @@ private:
 	bool m_bFirst_Check;
 
 	CObject* m_pPlayer;
+
+	vector<POINT*> m_vecPoints; // 벡터안에 포인트라는 4개짜리배열을`
+
+	vector<Obstacle> m_Obstacles;
+
+	Obstacle obs = {}; 
+	
+
+
 };
 
