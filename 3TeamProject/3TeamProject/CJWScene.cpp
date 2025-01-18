@@ -12,6 +12,7 @@
 CJWScene::CJWScene() :m_pFruit(nullptr), m_iLevel(1), m_bCreated(false), m_bGameOver(false), m_iScore(0),
 m_dwDropDelay(0ULL), m_dwDroppedTime(0ULL)
 {
+	ZeroMemory(&m_tNextFruitInfo, sizeof(Fruit_Info));
 	for (int i = 0; i < (int)FRUIT_TYPE::FT_END; i++)
 	{
 		m_FruitPoolMap[(FRUIT_TYPE)i] = nullptr;
@@ -42,6 +43,14 @@ void CJWScene::Initialize()
 	static_cast<CFruit*>(pObj)->Set_Type(eType);
 	static_cast<CFruit*>(pObj)->Reset();
 	CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, pObj);
+
+
+	// 다음 나올 애
+	eType = (FRUIT_TYPE)(rand() % m_iLevel);
+	m_pFruit = m_FruitPoolMap[eType]->Get_Obj();
+	static_cast<CFruit*>(m_pFruit)->Set_Type(eType);
+	static_cast<CFruit*>(m_pFruit)->Reset();
+	Update_Next_FruitInfo(static_cast<CFruit*>(m_pFruit)->Get_RenderPoints(), static_cast<CFruit*>(m_pFruit)->Get_Color(), static_cast<CFruit*>(pObj)->Get_FruitType());
 
 	CUiManager::Get_Instance()->Set_UiType(UI_JW);
 }
@@ -153,12 +162,21 @@ void CJWScene::Create_MapObj()
 		auto dwCur = GetTickCount64();
 		if (dwCur - m_dwDroppedTime >= m_dwDropDelay)
 		{
+			if (!m_pFruit) return;
 			m_bCreated = true;
+		//	FRUIT_TYPE eType = (FRUIT_TYPE)(rand() % m_iLevel);
+			//CObject* pObj = m_FruitPoolMap[eType]->Get_Obj();
+			//static_cast<CFruit*>(pObj)->Set_Type(eType);
+			static_cast<CFruit*>(m_pFruit)->Reset();
+		//	Update_Next_FruitInfo(static_cast<CFruit*>(pObj)->Get_RenderPoints(), static_cast<CFruit*>(pObj)->Get_Color(), static_cast<CFruit*>(pObj)->Get_FruitType());
+			CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, m_pFruit);
+
+
 			FRUIT_TYPE eType = (FRUIT_TYPE)(rand() % m_iLevel);
-			CObject* pObj = m_FruitPoolMap[eType]->Get_Obj();
-			static_cast<CFruit*>(pObj)->Set_Type(eType);
-			static_cast<CFruit*>(pObj)->Reset();
-			CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, pObj);
+			m_pFruit = m_FruitPoolMap[eType]->Get_Obj();
+			static_cast<CFruit*>(m_pFruit)->Set_Type(eType);
+			static_cast<CFruit*>(m_pFruit)->Reset();
+			Update_Next_FruitInfo(static_cast<CFruit*>(m_pFruit)->Get_RenderPoints(), static_cast<CFruit*>(m_pFruit)->Get_Color(), static_cast<CFruit*>(m_pFruit)->Get_FruitType());
 		}
 	}
 }
@@ -295,4 +313,11 @@ void CJWScene::Render_Box(HDC hDC)
 	DeleteObject(hPen);
 	DeleteObject(lightPurpleBrush);
 	DeleteObject(darkPurpleBrush);
+}
+
+void CJWScene::Update_Next_FruitInfo(const vector<D3DXVECTOR3>& vecRenderPoints, const COLORREF tColor, FRUIT_TYPE eType)
+{
+	m_tNextFruitInfo.vecRenderPoints = vecRenderPoints;
+	m_tNextFruitInfo.tColor = tColor;
+	m_tNextFruitInfo.eFruitType = eType;
 }

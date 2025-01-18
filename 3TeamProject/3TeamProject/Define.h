@@ -158,3 +158,4 @@ static BOOL ColorCircle(HDC hDC, int leftTopX, int leftTopY, int rightBottomX, i
 	DeleteObject(hPen);
 	return true;
 }
+
