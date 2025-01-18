@@ -1,8 +1,11 @@
 #include "pch.h"
 #include "CYGPlayer.h"
 #include "CKeyManager.h"
+#include "CAbstractFactory.h"
+#include "CObjectManager.h"
+#include "CYGBullet.h"
 
-CYGPlayer::CYGPlayer()
+CYGPlayer::CYGPlayer():m_bLeftPush(false), m_iShootTick(0)
 {
 }
 
@@ -31,16 +34,25 @@ void CYGPlayer::Initialize()
 	m_vGunRectanglePoint[2] = {405.f, 280.f, 0.f};
 	m_vGunRectanglePoint[3] = {395.f, 280.f, 0.f};
 
+	m_vBulletSpawn = { 400.f, 210.f, 0.f };
+	m_vOriginBulletSpawn = m_vBulletSpawn;
+
 	for (int i = 0; i < 4; ++i) {
 		m_vOriginGunRectanglePoint[i] = m_vGunRectanglePoint[i];
 	}
 
 	m_vOriginPos = m_tInfo.vPos;
+
+	m_iHp = 100;
+	m_iMaxHp = m_iHp;
+	m_iShootTick = 0;
 }
 
 int CYGPlayer::Update()
 {
+	m_iShootTick++;
 	m_tInfo.vLook = Get_Mouse() - m_tInfo.vPos;
+	D3DXVec3Normalize(&m_tInfo.vLook, &m_tInfo.vLook);
 	m_fAngle = D3DXToDegree(atan2f(m_tInfo.vLook.y, m_tInfo.vLook.x));
 
 	if (m_fAngle < 0) {
@@ -79,6 +91,10 @@ int CYGPlayer::Update()
 		D3DXVec3TransformCoord(&m_vGunRectanglePoint[i], &m_vGunRectanglePoint[i], &m_tInfo.matWorld);
 	}
 
+	m_vBulletSpawn = m_vOriginBulletSpawn;
+	m_vBulletSpawn -= {400.f, 300.f, 0.f};
+	D3DXVec3TransformCoord(&m_vBulletSpawn, &m_vBulletSpawn, &m_tInfo.matWorld);
+
 
 	Key_Input();
 
@@ -93,8 +109,8 @@ void CYGPlayer::Late_Update()
 void CYGPlayer::Render(HDC hDC)
 {
 	if (m_PlayerState == PS_NOGUN) {
-		Ellipse(hDC, m_vLeftNoGunHandPos.x - 10, m_vLeftNoGunHandPos.y - 10, m_vLeftNoGunHandPos.x + 10, m_vLeftNoGunHandPos.y + 10); // ¿Þ¼Õ
-		Ellipse(hDC, m_vRightNoGunHandPos.x - 10, m_vRightNoGunHandPos.y - 10, m_vRightNoGunHandPos.x + 10, m_vRightNoGunHandPos.y + 10); // ¿À¸¥¼Õ
+		ColorCircle(hDC, m_vLeftNoGunHandPos.x - 10, m_vLeftNoGunHandPos.y - 10, m_vLeftNoGunHandPos.x + 10, m_vLeftNoGunHandPos.y + 10, 252,194,114,2); // ¿Þ¼Õ
+		ColorCircle(hDC, m_vRightNoGunHandPos.x - 10, m_vRightNoGunHandPos.y - 10, m_vRightNoGunHandPos.x + 10, m_vRightNoGunHandPos.y + 10, 252, 194, 114,2); // ¿À¸¥¼Õ
 	}
 	else {
 		MoveToEx(hDC, m_vGunRectanglePoint[3].x, m_vGunRectanglePoint[3].y, nullptr);
@@ -102,11 +118,11 @@ void CYGPlayer::Render(HDC hDC)
 			LineTo(hDC, m_vGunRectanglePoint[i].x, m_vGunRectanglePoint[i].y);
 		}
 
-		Ellipse(hDC, m_vLeftGunHandPos.x - 10, m_vLeftGunHandPos.y - 10, m_vLeftGunHandPos.x + 10, m_vLeftGunHandPos.y + 10); // ¿Þ¼Õ
-		Ellipse(hDC, m_vRightGunHandPos.x - 10, m_vRightGunHandPos.y - 10, m_vRightGunHandPos.x + 10, m_vRightGunHandPos.y + 10); // ¿À¸¥¼Õ
+		ColorCircle(hDC, m_vLeftGunHandPos.x - 10, m_vLeftGunHandPos.y - 10, m_vLeftGunHandPos.x + 10, m_vLeftGunHandPos.y + 10, 252, 194, 114, 2); // ¿Þ¼Õ
+		ColorCircle(hDC, m_vRightGunHandPos.x - 10, m_vRightGunHandPos.y - 10, m_vRightGunHandPos.x + 10, m_vRightGunHandPos.y + 10, 252, 194, 114, 2); // ¿À¸¥¼Õ
 	}
 
-	Ellipse(hDC, m_tHitRect.left, m_tHitRect.top, m_tHitRect.right, m_tHitRect.bottom);
+	ColorCircle(hDC, m_tHitRect.left, m_tHitRect.top, m_tHitRect.right, m_tHitRect.bottom, 252, 194, 114,2);
 
 
 	if (g_bDevmode) {
@@ -157,7 +173,28 @@ void CYGPlayer::Key_Input()
 		else {
 			m_PlayerState = PS_NOGUN;
 		}
-		
+	}
+
+	if (CKeyManager::Get_Instance()->Key_Down(VK_LBUTTON)) {
+		if (m_PlayerState == PS_NOGUN) {
+			float radian = D3DXToRadian(m_fAngle);
+			if (m_bLeftPush) {
+				m_vLeftNoGunHandPos += m_tInfo.vLook * 10;
+				m_bLeftPush = !m_bLeftPush;
+			}
+			else {
+				m_vRightNoGunHandPos += m_tInfo.vLook * 10;
+				m_bLeftPush = !m_bLeftPush;
+			}
+		}
+		else {
+			if (m_iShootTick > 10) {
+				CObjectManager::Get_Instance()->Add_Object(OBJ_BULLET, CAbstractFactory<CYGBullet>::Create(m_vBulletSpawn.x, m_vBulletSpawn.y));
+				static_cast<CYGBullet*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_BULLET).back())->Set_Dir(m_tInfo.vLook);
+				m_iShootTick = 0;
+			}
+
+		}
 	}
 
 }

@@ -44,6 +44,8 @@ public:
 	auto& Get_Velocity() { return m_vVelocity; }
 	auto Get_State() const { return m_eFruitSt; }
 	const auto& Get_Scale() const { return m_vScale; }
+	auto Get_Color() const { return m_tColor; }
+	auto& Get_RenderPoints() const { return m_vecRenderPoints; }
 	bool Is_Active() const { return m_bActive; }
 	bool Is_Dropped() const { return m_bDropped; }
 	bool In_Box() const { return m_bInBox; }

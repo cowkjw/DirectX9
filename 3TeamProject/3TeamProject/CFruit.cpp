@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CFruit.h"
 #include "CKeyManager.h"
+#include "CSoundManager.h"
 
 CFruit::CFruit() : m_fMass(0.f), m_fRadius(0.f), m_fAngle(0.f), m_fRollingSpeed(0.f), m_fMergeAnimRatio(0.f), m_tColor(0UL), m_eFruitType(FRUIT_TYPE::FT_END)
 , m_bDropped(false), m_vVelocity(D3DXVECTOR3(0.f, 0.f, 0.f)), m_bIsGround(false), m_bInBox(false), m_eFruitSt(FRUIT_STATE::IDLE),
@@ -107,6 +108,17 @@ int CFruit::Update()
 			}
 		}
 
+		if (m_bIsGround)
+		{
+			const float FRICTION = 1.f;  // 마찰 계수 (1보다 작을수록 마찰이 강함)
+			m_vVelocity.x *= FRICTION;    // x방향 속도 감소
+
+			if (abs(m_vVelocity.x) < 0.01f)
+			{
+				m_vVelocity.x = 0.f;
+				m_fRollingSpeed = 0.f; 
+			}
+		}
 		// 위치 업데이트
 		m_tInfo.vPos += m_vVelocity;
 	}
@@ -118,25 +130,11 @@ int CFruit::Update()
 	}
 	Update_Matrix();
 
-	if (CKeyManager::Get_Instance()->Key_Down('A'))
-	{
-		m_fAngle -= 5.f;
-		m_vScale = { 2.f,2.f,2.f };
-		m_fRadius *= 2.f;
-		m_fMass *= 2.f;
-	}
-
-	if (CKeyManager::Get_Instance()->Key_Down('D'))
-	{
-		m_fAngle += 5.f;
-		m_vScale = { 1.f,1.f,1.f };
-		m_fRadius *= 0.5f;
-	}
-
 	if (GetAsyncKeyState(VK_LBUTTON))
 	{
 		if (!m_bDropped)
 		{
+			CSoundManager::GetInstance()->PlayEffect("DropSound");
 			m_bDropped = true;
 		}
 	}
@@ -164,8 +162,6 @@ void CFruit::Late_Update()
 
 void CFruit::Render(HDC hDC)
 {
-
-
 	POINT* points = new POINT[m_vecRenderPoints.size()];
 	for (size_t i = 0; i < m_vecRenderPoints.size(); ++i)
 	{
@@ -185,10 +181,10 @@ void CFruit::Render(HDC hDC)
 	LineTo(hDC, (int)m_vecRenderPoints[0].x, (int)m_vecRenderPoints[0].y);
 
 	Ellipse(hDC,
-		int(m_vecRenderPoints.back().x - 5.f),
-		int(m_vecRenderPoints.back().y - 5.f),
-		int(m_vecRenderPoints.back().x + 5.f),
-		int(m_vecRenderPoints.back().y + 5.f));
+		int(m_vecRenderPoints.back().x - m_fRadius/1.5f),
+		int(m_vecRenderPoints.back().y - m_fRadius /1.5f),
+		int(m_vecRenderPoints.back().x + m_fRadius / 1.5f),
+		int(m_vecRenderPoints.back().y + m_fRadius / 1.5f));
 
 	if (g_bDevmode)
 	{
@@ -226,7 +222,13 @@ void CFruit::OnCollision(CObject* _obj)
 	// 1. 충돌 방향과 깊이 계산
 	D3DXVECTOR3 vDir = (pFruit->Get_Info().vPos - m_tInfo.vPos);
 	float fDist = D3DXVec3Length(&vDir);
-
+	const float EPSILON = 0.0001f;
+	if (vDir.y < 0.f && abs(vDir.x) < EPSILON)
+	{
+		vDir = D3DXVECTOR3(-0.1f, -0.9f, 0.0f); // 살짝 비스듬하게
+	
+		fDist = 0.005f;
+	}
 	D3DXVec3Normalize(&vDir, &vDir);
 
 	float fPenetration = (pFruit->Get_Radius() * pFruit->Get_Scale().x + m_fRadius * m_vScale.x) - fDist;
@@ -400,7 +402,7 @@ void CFruit::Set_Scale()
 		m_vScale = { 2.f,2.f,2.f };
 		break;
 	case FRUIT_TYPE::WATERMELON:
-		m_vScale = { 1.5f,1.5f,1.5f };
+		m_vScale = { 2.3f, 2.3f, 2.3f };
 		break;
 	case FRUIT_TYPE::FT_END:
 	default:
