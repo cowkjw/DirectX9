@@ -11,7 +11,7 @@ CYGBullet::~CYGBullet()
 
 void CYGBullet::Initialize()
 {
-	m_eOBJID = OBJ_BULLET;
+	m_eOBJID = OBJ_PLAYERBULLET;
 	m_eRender = RENDER_GAMEOBJECT;
 
 	m_tInfo.fSizeX = 10.f;

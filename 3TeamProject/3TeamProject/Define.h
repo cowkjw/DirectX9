@@ -16,8 +16,9 @@ extern bool		g_bDevmode;
 
 enum SCENEID { SC_MENU, SC_YG, SC_CY, SC_DW, SC_JW, SC_END };
 enum UITYPE{UI_YG, UI_CY,UI_DW, UI_JW, UI_END};
-enum OBJID {OBJ_PLAYER,OBJ_DW_ROAD,OBJ_BULLET, OBJ_END};
+enum OBJID {OBJ_PLAYER,OBJ_DW_ROAD,OBJ_PLAYERBULLET, OBJ_MONSTERBULLET, OBJ_MAP, OBJ_ITEM,OBJ_END};
 enum RENDERID { RENDER_BACKGROUND, RENDER_GAMEOBJECT, RENDER_END };
+enum YGITEMTYPE{ITEM_GUN, ITEM_BULLET, ITEM_END};
 
 static D3DXVECTOR3		Get_Mouse()
 {
@@ -34,14 +35,14 @@ typedef struct tagInfo
 {
 	D3DXVECTOR3		vDir;
 	D3DXVECTOR3		vLook;
-	D3DXVECTOR3		vNormal;	// π˝º± ∫§≈Õ(πÊ«‚ ∫§≈Õ)
+	D3DXVECTOR3		vNormal;	// Î≤ïÏÑ† Î≤°ÌÑ∞(Î∞©Ìñ• Î≤°ÌÑ∞)
 	D3DXVECTOR3		vPos;
 	D3DXMATRIX		matWorld;
-	float fSizeX; //∞°∑Œ ≈©±‚
-	float fSizeY; //ºº∑Œ ≈©±‚
+	float fSizeX; //Í∞ÄÎ°ú ÌÅ¨Í∏∞
+	float fSizeY; //ÏÑ∏Î°ú ÌÅ¨Í∏∞
 }INFO;
 
-//∫Ò∆Æ∏  ∞¸∑√
+//ÎπÑÌä∏Îßµ Í¥ÄÎ†®
 struct tagFinder
 {
 public:
@@ -83,8 +84,8 @@ void Safe_Delete(T& Temp)
 	}
 }
 
-//∞≥πﬂ ∏µÂ
-// √Êµπ π¸¿ß
+//Í∞úÎ∞ú Î™®Îìú
+// Ï∂©Îèå Î≤îÏúÑ
 static BOOL HitCircle(HDC hDC, RECT tRect, int x, int y)
 {
 	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, GetStockObject(HOLLOW_BRUSH));
@@ -98,7 +99,20 @@ static BOOL HitCircle(HDC hDC, RECT tRect, int x, int y)
 	return true;
 }
 
-//¿˚ ∞®¡ˆøÎ 
+static BOOL HitRect(HDC hDC, RECT tRect, int x, int y)
+{
+	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, GetStockObject(HOLLOW_BRUSH));
+	HPEN hNewPen = CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
+	HPEN hOldPen = (HPEN)SelectObject(hDC, hNewPen);
+	Rectangle(hDC, (int)(tRect.left + x), (int)(tRect.top + y), (int)(tRect.right + x), (int)(tRect.bottom + y));
+	SelectObject(hDC, hOldPen);
+	SelectObject(hDC, hOldBrush);
+
+	DeleteObject(hNewPen);
+	return true;
+}
+
+//Ï†Å Í∞êÏßÄÏö© 
 static BOOL DetectCircle(HDC hDC, RECT tRect)
 {
 	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, GetStockObject(HOLLOW_BRUSH));
@@ -159,3 +173,53 @@ static BOOL ColorCircle(HDC hDC, int leftTopX, int leftTopY, int rightBottomX, i
 	return true;
 }
 
+static BOOL ColorRect(HDC hDC, int leftTopX, int leftTopY, int rightBottomX, int rightBottomY, int R, int G, int B, int penSize)
+{
+	COLORREF color = RGB(R, G, B);
+
+	HBRUSH hBrush = CreateSolidBrush(color);
+	HPEN hPen = CreatePen(PS_SOLID, penSize, RGB(0, 0, 0));
+	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+	Rectangle(hDC, leftTopX, leftTopY, rightBottomX, rightBottomY);
+
+	SelectObject(hDC, hOldBrush);
+	SelectObject(hDC, hOldPen);
+	DeleteObject(hBrush);
+	DeleteObject(hPen);
+	return true;
+}
+
+static BOOL ColorRect(HDC hDC, int leftTopX, int leftTopY, int rightBottomX, int rightBottomY, int R, int G, int B, int penSize, int penR, int penG, int penB)
+{
+	COLORREF color = RGB(R, G, B);
+
+	HBRUSH hBrush = CreateSolidBrush(color);
+	HPEN hPen = CreatePen(PS_SOLID, penSize, RGB(penR,penG,penB));
+	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+	Rectangle(hDC, leftTopX, leftTopY, rightBottomX, rightBottomY);
+
+	SelectObject(hDC, hOldBrush);
+	SelectObject(hDC, hOldPen);
+	DeleteObject(hBrush);
+	DeleteObject(hPen);
+	return true;
+}
+
+static BOOL ColorRoundRect(HDC hDC, int leftTopX, int leftTopY, int rightBottomX, int rightBottomY, int R, int G, int B, int penSize)
+{
+	COLORREF color = RGB(R, G, B);
+
+	HBRUSH hBrush = CreateSolidBrush(color);
+	HPEN hPen = CreatePen(PS_SOLID, penSize, RGB(0, 0, 0));
+	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+	RoundRect(hDC, leftTopX, leftTopY, rightBottomX, rightBottomY, 10, 10);
+
+	SelectObject(hDC, hOldBrush);
+	SelectObject(hDC, hOldPen);
+	DeleteObject(hBrush);
+	DeleteObject(hPen);
+	return true;
+}

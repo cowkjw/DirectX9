@@ -94,6 +94,12 @@
     <Filter Include="99_Managers\SoundManager">
       <UniqueIdentifier>{770f075b-4ae5-457f-a0f7-9e921ef6bd7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02_Object\01_YG\00_MapObj">
+      <UniqueIdentifier>{86f778fb-1c7a-4deb-9853-03fed2975adf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_Object\01_YG\01_Item">
+      <UniqueIdentifier>{ce2f99e0-24a9-44e1-a810-eb4497b8686f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -213,6 +219,18 @@
     <ClInclude Include="CYGBullet.h">
       <Filter>02_Object\01_YG</Filter>
     </ClInclude>
+    <ClInclude Include="CYGBox.h">
+      <Filter>02_Object\01_YG\00_MapObj</Filter>
+    </ClInclude>
+    <ClInclude Include="CYGItem.h">
+      <Filter>02_Object\01_YG\01_Item</Filter>
+    </ClInclude>
+    <ClInclude Include="CYGGunItem.h">
+      <Filter>02_Object\01_YG\01_Item</Filter>
+    </ClInclude>
+    <ClInclude Include="CYGBulletItem.h">
+      <Filter>02_Object\01_YG\01_Item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3TeamProject.cpp">
@@ -272,9 +290,6 @@
     <ClCompile Include="CYGPlayer.cpp">
       <Filter>02_Object\01_YG</Filter>
     </ClCompile>
-    <ClCompile Include="CYGObject.cpp">
-      <Filter>02_Object\01_YG</Filter>
-    </ClCompile>
     <ClCompile Include="CCYPlayer.cpp">
       <Filter>02_Object\02_CY\00_CYPlayer</Filter>
     </ClCompile>
@@ -312,6 +327,21 @@
       <Filter>99_Managers\SoundManager</Filter>
     </ClCompile>
     <ClCompile Include="CYGBullet.cpp">
+      <Filter>02_Object\01_YG</Filter>
+    </ClCompile>
+    <ClCompile Include="CYGBox.cpp">
+      <Filter>02_Object\01_YG\00_MapObj</Filter>
+    </ClCompile>
+    <ClCompile Include="CYGItem.cpp">
+      <Filter>02_Object\01_YG\01_Item</Filter>
+    </ClCompile>
+    <ClCompile Include="CYGGunItem.cpp">
+      <Filter>02_Object\01_YG\01_Item</Filter>
+    </ClCompile>
+    <ClCompile Include="CYGBulletItem.cpp">
+      <Filter>02_Object\01_YG\01_Item</Filter>
+    </ClCompile>
+    <ClCompile Include="CYGObject.cpp">
       <Filter>02_Object\01_YG</Filter>
     </ClCompile>
   </ItemGroup>
