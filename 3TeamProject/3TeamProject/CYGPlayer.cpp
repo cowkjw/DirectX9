@@ -9,7 +9,7 @@
 #include "CYGGunItem.h"
 #include "CYGItem.h"
 
-CYGPlayer::CYGPlayer():m_bLeftPush(false), m_iShootTick(0)
+CYGPlayer::CYGPlayer():m_bLeftPush(false), m_iShootTick(0), m_bHaveGun(false), m_iBulletNum(0)
 {
 }
 
@@ -25,7 +25,7 @@ void CYGPlayer::Initialize()
 
 	m_vLeftNoGunHandPos = { 385.f,270.f,0.f };
 	m_vRightNoGunHandPos = { 415.f,270.f,0.f };
-	m_vOriginLeftNoGunHand = m_vLeftNoGunHandPos;
+	m_vOriginLeftNoGunHand = m_vLeftNoGunHandPos; 
 	m_vOriginRightNoGunHand = m_vRightNoGunHandPos;
 
 	m_vLeftGunHandPos = {395.f, 240.f, 0.f};
@@ -140,7 +140,7 @@ void CYGPlayer::Render(HDC hDC)
 		HitCircle(hDC, m_CollisionBox, iScrollX, iScrollY);
 		if (g_bDevmode) {
 			TCHAR szWhoScene[64];
-			_stprintf_s(szWhoScene, _T("%f ¸¶¿ì½º %f %f"), m_fAngle, Get_Mouse().x, Get_Mouse().y);
+			_stprintf_s(szWhoScene, _T("%d %d %d"), iScrollX, iScrollY, m_iBulletNum);
 			SetTextColor(hDC, RGB(0, 0, 0));
 			TextOut(hDC, 350, 10, szWhoScene, _tcslen(szWhoScene));
 		}
@@ -160,29 +160,34 @@ void CYGPlayer::Key_Input()
 	if (CKeyManager::Get_Instance()->Key_Pressing('W')) {
 		m_tInfo.vDir = { 0.f, -1.f, 0.f };
 		m_tInfo.vPos += m_tInfo.vDir * m_fSpeed;
+		m_vOriginPos += m_tInfo.vDir * m_fSpeed;
 	}
 
 	if (CKeyManager::Get_Instance()->Key_Pressing('S')) {
 		m_tInfo.vDir = { 0.f, 1.f, 0.f };
 		m_tInfo.vPos += m_tInfo.vDir * m_fSpeed;
+		m_vOriginPos += m_tInfo.vDir * m_fSpeed;
 	}
 
 	if (CKeyManager::Get_Instance()->Key_Pressing('A')) {
 		m_tInfo.vDir = { -1.f, 0.f, 0.f };
 		m_tInfo.vPos += m_tInfo.vDir * m_fSpeed;
+		m_vOriginPos += m_tInfo.vDir * m_fSpeed;
 	}
 
 	if (CKeyManager::Get_Instance()->Key_Pressing('D')) {
 		m_tInfo.vDir = { 1.f, 0.f, 0.f };
 		m_tInfo.vPos += m_tInfo.vDir * m_fSpeed;
+		m_vOriginPos += m_tInfo.vDir * m_fSpeed;
 	}
 
-	if (CKeyManager::Get_Instance()->Key_Down('K')) {
-		if (m_PlayerState == PS_NOGUN) {
+	if (CKeyManager::Get_Instance()->Key_Down('1')) {
+		m_PlayerState = PS_NOGUN;
+	}
+
+	if (CKeyManager::Get_Instance()->Key_Down('2')) {
+		if (m_bHaveGun) {
 			m_PlayerState = PS_GUN;
-		}
-		else {
-			m_PlayerState = PS_NOGUN;
 		}
 	}
 
@@ -202,11 +207,13 @@ void CYGPlayer::Key_Input()
 		}
 		else {
 			if (m_iShootTick > 10) {
-				CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYERBULLET, CAbstractFactory<CYGBullet>::Create(m_vBulletSpawn.x, m_vBulletSpawn.y));
-				static_cast<CYGBullet*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYERBULLET).back())->Set_Dir(m_tInfo.vLook);
-				m_iShootTick = 0;
+				if (m_iBulletNum > 0) {
+					m_iBulletNum--;
+					CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYERBULLET, CAbstractFactory<CYGBullet>::Create(m_vBulletSpawn.x, m_vBulletSpawn.y));
+					static_cast<CYGBullet*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYERBULLET).back())->Set_Dir(m_tInfo.vLook);
+					m_iShootTick = 0;
+				}
 			}
-
 		}
 	}
 
@@ -218,11 +225,13 @@ void CYGPlayer::Key_Input()
 			case ITEM_GUN:
 				if (static_cast<CYGItem*>(_obj)->Get_CanPick()) {
 					static_cast<CYGItem*>(_obj)->Set_Dead();
+					m_bHaveGun = true;
 				}
 				break;
 			case ITEM_BULLET:
 				if (static_cast<CYGItem*>(_obj)->Get_CanPick()) {
 					static_cast<CYGItem*>(_obj)->Set_Dead();
+					m_iBulletNum += 5;
 				}
 				break;
 			}

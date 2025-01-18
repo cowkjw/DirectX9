@@ -2,7 +2,7 @@
 #include "CYGObject.h"
 class CYGPlayer :public CYGObject
 {
-private:
+public:
 	enum PLAYERSTATE { PS_NOGUN, PS_GUN, PS_END };
 public:
 	CYGPlayer();
@@ -19,6 +19,8 @@ public:
 	int Get_Hp() { return m_iHp; }
 	RECT Get_CollisionBox() { return m_CollisionBox; }
 	RECT Get_HitBox() { return m_tHitRect; }
+	PLAYERSTATE Get_PS() { return m_PlayerState; }
+	int Get_BulletNum() { return m_iBulletNum; }
 private:
 	void Key_Input();
 private:
@@ -46,8 +48,11 @@ private:
 
 	//무기 없을 때 손 내밀기
 	bool m_bLeftPush;
-	int m_iShootTick;
-
 	RECT m_CollisionBox;
+
+	//총 관련
+	bool m_bHaveGun;
+	int m_iShootTick;
+	int m_iBulletNum;
 };
 

@@ -17,6 +17,7 @@ void CYGScene::Initialize()
 {
 	CScrollManager::Get_Instance()->Set_ScrollLock(4000, 4000);
 	CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CYGPlayer>::Create(400, 300, 50, 50));
+	CScrollManager::Get_Instance()->Set_Scroll(-50, -50);
 	CUiManager::Get_Instance()->Set_UiType(UI_YG);
 
 	Create_MapObj();
@@ -24,9 +25,11 @@ void CYGScene::Initialize()
 
 int CYGScene::Update()
 {
-	Key_Input();
+	
 	CObjectManager::Get_Instance()->Update();
-	Offset();
+	//Offset();
+
+	Key_Input();
     return 0;
 }
 
@@ -89,8 +92,8 @@ void CYGScene::Create_MapObj()
 void CYGScene::Offset()
 {
 	CObject* _copyPlayer = CObjectManager::Get_Instance()->Get_Player();
-	int		iOffSetminX = 412;
-	int		iOffSetmaxX = 612;
+	int		iOffSetminX = 350;
+	int		iOffSetmaxX = 450;
 
 	int iScrollX = (int)CScrollManager::Get_Instance()->Get_ScrollX();
 	if (iOffSetminX > _copyPlayer->Get_Info().vPos.x+ iScrollX)
@@ -99,8 +102,8 @@ void CYGScene::Offset()
 	if (iOffSetmaxX < _copyPlayer->Get_Info().vPos.x + iScrollX)
 		CScrollManager::Get_Instance()->Set_ScrollX(-_copyPlayer->Get_Speed());
 
-	int		iOffSetminY = 260;
-	int		iOffSetmaxY = 460;
+	int		iOffSetminY = 250;
+	int		iOffSetmaxY = 350;
 
 	int		iScrollY = (int)CScrollManager::Get_Instance()->Get_ScrollY();
 
