@@ -8,6 +8,7 @@
 #include "CCYPlayer.h"
 #include "CCYFood.h"
 #include "CCollisionManager.h"
+#include "CCYMonster.h"
 
 
 CCYScene::CCYScene() : m_ullFoodTimeTicker(0)
@@ -64,6 +65,12 @@ void CCYScene::Key_Input()
 {
 	if (CKeyManager::Get_Instance()->Key_Down(VK_F1)) {
 		g_bDevmode = !g_bDevmode;
+	}
+
+	if (CKeyManager::Get_Instance()->Key_Down('1'))
+	{
+		CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CCYMonster>::Create());
+
 	}
 
 	if (CKeyManager::Get_Instance()->Key_Down(VK_F9)) {

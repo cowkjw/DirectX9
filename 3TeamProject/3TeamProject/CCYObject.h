@@ -18,6 +18,8 @@ public:
 	void Set_PositionVector(D3DXVECTOR3 _vPos) { m_tInfo.vPos = _vPos; }
 	void Set_DirectionVector(D3DXVECTOR3 _vDir) { m_tInfo.vDir = _vDir; }
 	D3DXVECTOR3& Get_DirectionVector() { return m_tInfo.vDir; }
+	void Set_Dead() { m_bDead = true; }
+	COLORREF Get_WormColor() { return m_WormColor; }
 
 protected:
 	vector<D3DXVECTOR3> m_vOriginPointvec;
@@ -30,6 +32,8 @@ protected:
 	D3DXMATRIX			matTrans;
 	float				m_fAngle;
 	float				m_fTargetAngle;
+
+	COLORREF	        m_WormColor;
 
 	bool				m_bDead;
 };

@@ -6,7 +6,7 @@
 #include "CCYFood.h"
 #include "CKeyManager.h"
 
-CCYPlayer::CCYPlayer() :m_fAngle(0.f), m_fWormSize(0.f)
+CCYPlayer::CCYPlayer() :m_fAngle(0.f), m_fWormSize(0.f), m_ullTailDeleteTicker(0.f)
 {
 }
 
@@ -24,7 +24,12 @@ void CCYPlayer::Initialize()
 	m_fSpeed = 2.f;
 	m_tInfo.vLook = { 1.f, 0.f, 0.f };
 	CCYObject::Initialize_OriginPoint(12, 16);
+	m_WormColor = RGB(255, 220, 220);
 
+	for (int i = 0; i < 10; ++i)
+	{
+		Increase_TailSegment();
+	}
 }
 
 int CCYPlayer::Update()
@@ -68,7 +73,6 @@ int CCYPlayer::Update()
 		m_fAngle += 2 * D3DX_PI;
 	///fin
 
-
 	m_tInfo.vPos.x -= cosf(m_fAngle) * m_fSpeed;
 	m_tInfo.vPos.y -= sinf(m_fAngle) * m_fSpeed;
 	/// 월드매트릭스
@@ -80,11 +84,9 @@ int CCYPlayer::Update()
 	m_tInfo.matWorld = matScale * matRotZ * matTrans;
 	//D3DXVec3TransformNormal(&m_tInfo.vDir, &m_tInfo.vDir, &m_tInfo.matWorld);
 	//m_tInfo.vPos -= m_tInfo.vDir * m_fSpeed;
-	///
 
 	//m_tInfo.vPos.x -= cosf(m_fAngle) * m_fSpeed;
 	//m_tInfo.vPos.y -= sinf(m_fAngle) * m_fSpeed;
-
 
 	for (int i = 0; i < m_vOriginPointvec.size(); ++i)
 	{
@@ -119,11 +121,11 @@ void CCYPlayer::Render(HDC hDC)
 		(*iter)->Render(hDC);
 	}
 
-	HPEN hPen = CreatePen(PS_SOLID, 3, RGB(255, 220, 220));
+	HPEN hPen = CreatePen(PS_SOLID, 3, m_WormColor);
 	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
 
 
-	HBRUSH PinkBrush = CreateSolidBrush(RGB(255, 220, 220));
+	HBRUSH PinkBrush = CreateSolidBrush(m_WormColor);
 	HBRUSH OldBrush = (HBRUSH)SelectObject(hDC, PinkBrush);
 
 	Polygon(hDC, m_pRenderPoint, m_vOriginPointvec.size());
@@ -178,6 +180,14 @@ void CCYPlayer::Key_Input()
 	if (GetAsyncKeyState(VK_LSHIFT))
 	{
 		m_fSpeed = 4.f;
+		if (m_ullTailDeleteTicker + 100 < GetTickCount64())
+		{
+			if (m_TailSegvec.empty())
+				return;
+			static_cast<CCYObject*>(m_TailSegvec.back())->Set_Dead();
+			m_TailSegvec.pop_back();
+			m_ullTailDeleteTicker = GetTickCount64();
+		}
 	}
 	else
 	{

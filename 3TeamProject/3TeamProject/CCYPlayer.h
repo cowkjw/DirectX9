@@ -29,5 +29,7 @@ private:
 	vector<CObject*> m_TailSegvec;
 
 	float		m_fWormSize;
+	ULONGLONG	m_ullTailDeleteTicker;
+
 };
 
