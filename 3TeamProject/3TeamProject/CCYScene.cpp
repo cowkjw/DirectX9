@@ -25,8 +25,8 @@ void CCYScene::Initialize()
 int CCYScene::Update()
 {
 	Key_Input();
-
-	if (m_ullFoodTimeTicker + rand() % 20 * 20  + 500 < GetTickCount64())
+	CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER), OBJMGR->Get_ObjList_ByID(OBJ_MISC));
+	if (m_ullFoodTimeTicker + rand() % 20 * 20  + 1000 < GetTickCount64())
 	{
 		CObjectManager::Get_Instance()->Add_Object(OBJ_MISC, CAbstractFactory<CCYFood>::Create());
 		m_ullFoodTimeTicker = GetTickCount64();
@@ -38,15 +38,25 @@ int CCYScene::Update()
 
 void CCYScene::Late_Update()
 {
+	//CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER), OBJMGR->Get_ObjList_ByID(OBJ_CYTAIL));
+	//CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_MONSTER), OBJMGR->Get_ObjList_ByID(OBJ_CYTAIL));
 	CObjectManager::Get_Instance()->Late_Update();
-	CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER), OBJMGR->Get_ObjList_ByID(OBJ_MISC));
-	CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER), OBJMGR->Get_ObjList_ByID(OBJ_CYTAIL));
-	CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_MONSTER), OBJMGR->Get_ObjList_ByID(OBJ_CYTAIL));
 }
 
 void CCYScene::Render(HDC hDC)
 {
+	//RGB(13, 21, 32)
+	HPEN hPen = CreatePen(PS_SOLID, 3, RGB(20, 29, 43));
+	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+
+
+	HBRUSH PinkBrush = CreateSolidBrush(RGB(20, 29, 43));
+	HBRUSH OldBrush = (HBRUSH)SelectObject(hDC, PinkBrush);
+
 	Rectangle(hDC, -100, -100, 900, 700);
+
+	SelectObject(hDC, OldBrush); DeleteObject(PinkBrush);
+	SelectObject(hDC, hOldPen); DeleteObject(hPen);
 
 	CObjectManager::Get_Instance()->Render(hDC);
 	if (g_bDevmode) {
@@ -55,6 +65,7 @@ void CCYScene::Render(HDC hDC)
 		SetTextColor(hDC, RGB(0, 0, 0));
 		TextOut(hDC, 300, 10, szWhoScene, _tcslen(szWhoScene));
 	}
+	CUiManager::Get_Instance()->Render(hDC);
 }
 
 void CCYScene::Release()
@@ -71,7 +82,7 @@ void CCYScene::Key_Input()
 
 	if (CKeyManager::Get_Instance()->Key_Down('1'))
 	{
-		CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CCYMonster>::Create());
+		CObjectManager::Get_Instance()->Add_Object(OBJ_MONSTER, CAbstractFactory<CCYMonster>::Create());
 
 	}
 

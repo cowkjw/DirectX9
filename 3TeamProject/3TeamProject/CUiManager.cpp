@@ -5,6 +5,7 @@
 #include "CKeyManager.h"
 #include "CYGPlayer.h"
 #include "CJWScene.h"
+#include "CCYPlayer.h"
 
 CUiManager* CUiManager::m_pInstance = nullptr;
 
@@ -107,6 +108,30 @@ void CUiManager::RenderUi_YG(HDC hDC)
 
 void CUiManager::RenderUi_CY(HDC hDC)
 {
+	
+	SetTextColor(hDC, RGB(150,150,175)); //글자 색
+	SetBkMode(hDC, TRANSPARENT); //글자 배경 투명
+
+	
+	HFONT hFont1 = CreateFont(17, 0, 0, 0, FW_SEMIBOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+		OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, NONANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Arial"));
+
+
+	HFONT OldFont = (HFONT)SelectObject(hDC, hFont1);
+	//13 21 32
+
+	if (!(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYER).empty()))
+	{
+		TCHAR szLength[32];
+		_stprintf_s(szLength, _T("Your length: %d"), static_cast<CCYPlayer*>(GET_PLAYER)->Get_WormLength());
+		//SetTextColor(hDC, RGB(0, 0, 0));
+		//RECT rect2 = { 10, 450, 100, 600 };
+		TextOut(hDC, 10, 550, szLength, _tcslen(szLength));
+	}
+
+	SelectObject(hDC, OldFont);
+	DeleteObject(hFont1);
+
 }
 
 void CUiManager::RenderUi_DW(HDC hDC)
