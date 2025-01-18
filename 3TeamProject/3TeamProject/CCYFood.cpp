@@ -9,7 +9,7 @@ void CCYFood::Initialize()
 	m_tInfo.vPos = { (float)(rand() % 740 + 30), (float)(rand() % 540 + 30), 0.f };
 	m_fSpeed = (float)(rand() % 3 + 1) * (float)(rand() % 2 == 0 ? 1 : -1);
 	m_tInfo.vLook = { 1.f, 0.f, 0.f };
-	m_tInfo.fSizeX = m_tInfo.fSizeY = (float)(rand() % 18 + 8) / 2.f;
+	m_tInfo.fSizeX = m_tInfo.fSizeY = (float)(rand() % 18 + 8);
 	CCYObject::Initialize_OriginPoint(rand() % 3 + 3, (int)(m_tInfo.fSizeX / 2));
 }
 

@@ -25,3 +25,28 @@ void CCYObject::Initialize_OriginPoint(const int& _iCount, const int& _Radius, c
         m_pRenderPoint[i] = { long(_Radius * cosf(CurAngle)), long(_Radius * sinf(CurAngle)) };
     }
 }
+
+COLORREF CCYObject::SetRGB(BYTE r, BYTE g, BYTE b)
+{
+    return RGB(r, g, b); 
+}
+
+// 각 색상의 값 분리 함수 
+void CCYObject::GetRGB(COLORREF color, BYTE* r, BYTE* g, BYTE* b)
+{
+    *r = GetRValue(color);
+    *g = GetGValue(color);
+    *b = GetBValue(color); 
+} 
+
+// RGB 값을 조정하는 함수
+COLORREF CCYObject::AdjustRGB(COLORREF& color, int adjust)
+{
+    BYTE r, g, b; GetRGB(color, &r, &g, &b); 
+// 값 조정
+    r = (BYTE)max(0, min(255, r - adjust));
+    g = (BYTE)max(0, min(255, g - adjust));
+    b = (BYTE)max(0, min(255, b - adjust));
+    color = SetRGB(r, g, b);
+    return color;
+}

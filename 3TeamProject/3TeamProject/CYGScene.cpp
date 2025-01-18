@@ -24,9 +24,9 @@ void CYGScene::Initialize()
 
 int CYGScene::Update()
 {
-	Key_Input();
 	CObjectManager::Get_Instance()->Update();
 	Offset();
+	Key_Input();
     return 0;
 }
 

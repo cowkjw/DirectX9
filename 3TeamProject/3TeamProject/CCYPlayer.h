@@ -15,6 +15,7 @@ public:
 
 public:
 	float Get_WormSize() { return m_fWormSize; }
+	int	 Get_WormLength() { if (m_TailSeglist.empty()) return 0; else return m_TailSeglist.size(); }
 
 private:
 	void Key_Input();
@@ -26,10 +27,11 @@ private:
 	float       m_fAngle;
 	D3DXVECTOR3 m_vEyePoint[4];
 
-	vector<CObject*> m_TailSegvec;
+	list<CObject*> m_TailSeglist;
 
 	float		m_fWormSize;
 	ULONGLONG	m_ullTailDeleteTicker;
+	bool		m_bDashing;
 
 };
 

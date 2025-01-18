@@ -25,6 +25,6 @@ private:
 
 	ULONGLONG	m_ullRandomTicker;
 
-	vector<CObject*> m_TailSegvec;
+	list<CObject*> m_TailSeglist;
 };
 
