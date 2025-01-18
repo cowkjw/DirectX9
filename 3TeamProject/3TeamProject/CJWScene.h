@@ -26,7 +26,9 @@ private:
 	vector<CObject*> m_vecFruit;
 	CObject* m_pFruit;
 	list<CObject*> m_FruitList;
+	vector<int> m_vecScore;
 	int m_iLevel;
+	int m_iScore;
 	bool m_bGameOver;
 	bool m_bCreated;
 	DWORD64 m_dwDroppedTime;

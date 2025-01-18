@@ -91,6 +91,9 @@
     <Filter Include="02_Object\02_CY\00. CCY">
       <UniqueIdentifier>{2f981760-cd01-4146-8716-782c00189ac8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="99_Managers\SoundManager">
+      <UniqueIdentifier>{770f075b-4ae5-457f-a0f7-9e921ef6bd7d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -204,9 +207,6 @@
     <ClInclude Include="CDWPlayer.h">
       <Filter>02_Object\03_DW</Filter>
     </ClInclude>
-    <ClInclude Include="CYGBullet.h">
-      <Filter>02_Object\01_YG</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3TeamProject.cpp">
@@ -301,9 +301,6 @@
     </ClCompile>
     <ClCompile Include="CDWPlayer.cpp">
       <Filter>02_Object\03_DW</Filter>
-    </ClCompile>
-    <ClCompile Include="CYGBullet.cpp">
-      <Filter>02_Object\01_YG</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
