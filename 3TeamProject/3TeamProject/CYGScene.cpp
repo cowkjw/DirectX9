@@ -26,6 +26,7 @@ void CYGScene::Initialize()
 
 int CYGScene::Update()
 {
+	CObjectManager::Get_Instance()->Update();
 	if (!m_bRound1Start) {
 		m_iMoveX += 20;
 		if (m_iMoveX == 1600) {
@@ -34,7 +35,6 @@ int CYGScene::Update()
 			CObjectManager::Get_Instance()->Add_Object(OBJ_MONSTER, CAbstractFactory<CYGPunchMonster>::Create(720, 300, 50, 50));
 		}
 	}
-	CObjectManager::Get_Instance()->Update();
 	Key_Input();
     return 0;
 }
@@ -98,7 +98,7 @@ void CYGScene::Render(HDC hDC)
 
 	if (g_bDevmode) {
 		TCHAR szWhoScene[64];
-		_stprintf_s(szWhoScene, _T("À¯°æ"));
+		_stprintf_s(szWhoScene, _T("Ã€Â¯Â°Ã¦"));
 		SetTextColor(hDC, RGB(0, 0, 0));
 		//SetBkMode(hDC, TRANSPARENT);
 		TextOut(hDC, 300, 10, szWhoScene, _tcslen(szWhoScene));
