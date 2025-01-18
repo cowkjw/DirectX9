@@ -13,7 +13,7 @@ void CCYTail::Initialize()
 	m_tInfo.vPos = m_targetObj->Get_Info().vPos;
 	m_fSpeed = 2.f;
 	m_tInfo.vLook = { 1.f, 0.f, 0.f };
-	m_tInfo.fSizeX = m_tInfo.fSizeY = 24;
+	m_tInfo.fSizeX = m_tInfo.fSizeY = 40;
 	CCYObject::Initialize_OriginPoint(12, 12);
 	m_WormColor = static_cast<CCYObject*>(m_targetHead)->Get_WormColor();
 }
@@ -45,7 +45,7 @@ int CCYTail::Update()
 
 
 	m_tInfo.vDir = m_targetObj->Get_Info().vPos - m_tInfo.vPos;
-	if (D3DXVec3Length(&m_tInfo.vDir) > 5)
+	if (D3DXVec3Length(&m_tInfo.vDir) > 8)
 	{
 		//m_tInfo.vPos = m_targetObj->Get_Info().vPos;
 		D3DXVec3Normalize(&m_tInfo.vDir, &m_tInfo.vDir);
@@ -94,14 +94,29 @@ void CCYTail::OnCollision(CObject* _obj)
 	}
 	else
 	{
-		static_cast<CCYObject*>(m_targetHead)->Set_Dead();
-		return;
-	}
-	if (_obj == GET_PLAYER)
-	{
-		if (m_targetHead != GET_PLAYER)
+		if (_obj == GET_PLAYER)
 		{
-			static_cast<CCYObject*>(m_targetHead)->Set_Dead();
+			static_cast<CCYObject*>(GET_PLAYER)->Set_Dead();
 		}
+		else
+		{
+			static_cast<CCYObject*>(_obj)->Set_Dead();
+		}
+		//static_cast<CCYObject*>(m_targetHead)->Set_Dead();
+		//return;
 	}
+	//if (_obj == GET_PLAYER)
+	//{
+	//	if (m_targetHead != GET_PLAYER)
+	//	{
+	//		static_cast<CCYObject*>(GET_PLAYER)->Set_Dead();
+	//	}
+	//}
+	//else
+	//{
+	//	if (m_targetHead == GET_PLAYER)
+	//	{
+	//		static_cast<CCYObject*>(m_targetHead)->Set_Dead();
+	//	}
+	//}
 }

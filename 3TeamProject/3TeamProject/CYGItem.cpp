@@ -11,7 +11,7 @@ CYGItem::CYGItem():m_bCanPick(false), m_bDead(false)
 void CYGItem::Initialize()
 {
     m_eOBJID = OBJ_ITEM;
-    m_eRender = RENDER_GAMEOBJECT;
+    m_eRender = RENDER_BACKGROUND;
 }
 
 int CYGItem::Update()

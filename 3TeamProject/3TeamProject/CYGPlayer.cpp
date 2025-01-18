@@ -9,7 +9,7 @@
 #include "CYGGunItem.h"
 #include "CYGItem.h"
 
-CYGPlayer::CYGPlayer():m_bLeftPush(false), m_iShootTick(0)
+CYGPlayer::CYGPlayer():m_bLeftPush(false), m_iShootTick(0), m_bHaveGun(false), m_iBulletNum(0)
 {
 }
 
@@ -23,22 +23,22 @@ void CYGPlayer::Initialize()
 
 	m_PlayerState = PS_NOGUN;
 
-	m_vLeftNoGunHandPos = { 385.f,270.f,0.f };
-	m_vRightNoGunHandPos = { 415.f,270.f,0.f };
-	m_vOriginLeftNoGunHand = m_vLeftNoGunHandPos;
+	m_vLeftNoGunHandPos = { 65.f,270.f,0.f };
+	m_vRightNoGunHandPos = { 95.f,270.f,0.f };
+	m_vOriginLeftNoGunHand = m_vLeftNoGunHandPos; 
 	m_vOriginRightNoGunHand = m_vRightNoGunHandPos;
 
-	m_vLeftGunHandPos = {395.f, 240.f, 0.f};
-	m_vRightGunHandPos = {405.f, 270.f, 0.f};
+	m_vLeftGunHandPos = {75.f, 240.f, 0.f};
+	m_vRightGunHandPos = {85.f, 270.f, 0.f};
 	m_vOriginLeftGunHand = m_vLeftGunHandPos;
 	m_vOriginRightGunHand = m_vRightGunHandPos;
 
-	m_vGunRectanglePoint[0] = {395.f, 210.f, 0.f};
-	m_vGunRectanglePoint[1] = {405.f, 210.f, 0.f};
-	m_vGunRectanglePoint[2] = {405.f, 280.f, 0.f};
-	m_vGunRectanglePoint[3] = {395.f, 280.f, 0.f};
+	m_vGunRectanglePoint[0] = {75.f, 210.f, 0.f};
+	m_vGunRectanglePoint[1] = {85.f, 210.f, 0.f};
+	m_vGunRectanglePoint[2] = {85.f, 280.f, 0.f};
+	m_vGunRectanglePoint[3] = {75.f, 280.f, 0.f};
 
-	m_vBulletSpawn = { 400.f, 210.f, 0.f };
+	m_vBulletSpawn = { 80.f, 210.f, 0.f };
 	m_vOriginBulletSpawn = m_vBulletSpawn;
 
 	for (int i = 0; i < 4; ++i) {
@@ -77,29 +77,29 @@ int CYGPlayer::Update()
 
 
 	m_vLeftNoGunHandPos = m_vOriginLeftNoGunHand;
-	m_vLeftNoGunHandPos -= {400.f, 300.f, 0.f};
+	m_vLeftNoGunHandPos -= {80.f, 300.f, 0.f};
 	D3DXVec3TransformCoord(&m_vLeftNoGunHandPos, &m_vLeftNoGunHandPos, &m_tInfo.matWorld);
 
 	m_vRightNoGunHandPos = m_vOriginRightNoGunHand;
-	m_vRightNoGunHandPos -= {400.f, 300.f, 0.f};
+	m_vRightNoGunHandPos -= {80.f, 300.f, 0.f};
 	D3DXVec3TransformCoord(&m_vRightNoGunHandPos, &m_vRightNoGunHandPos, &m_tInfo.matWorld);
 
 	m_vLeftGunHandPos = m_vOriginLeftGunHand;
-	m_vLeftGunHandPos -= {400.f, 300.f, 0.f};
+	m_vLeftGunHandPos -= {80.f, 300.f, 0.f};
 	D3DXVec3TransformCoord(&m_vLeftGunHandPos, &m_vLeftGunHandPos, &m_tInfo.matWorld);
 
 	m_vRightGunHandPos = m_vOriginRightGunHand;
-	m_vRightGunHandPos -= {400.f, 300.f, 0.f};
+	m_vRightGunHandPos -= {80.f, 300.f, 0.f};
 	D3DXVec3TransformCoord(&m_vRightGunHandPos, &m_vRightGunHandPos, &m_tInfo.matWorld);
 
 	for (int i = 0; i < 4; ++i) {
 		m_vGunRectanglePoint[i] = m_vOriginGunRectanglePoint[i];
-		m_vGunRectanglePoint[i] -= {400.f, 300.f, 0.f};
+		m_vGunRectanglePoint[i] -= {80.f, 300.f, 0.f};
 		D3DXVec3TransformCoord(&m_vGunRectanglePoint[i], &m_vGunRectanglePoint[i], &m_tInfo.matWorld);
 	}
 
 	m_vBulletSpawn = m_vOriginBulletSpawn;
-	m_vBulletSpawn -= {400.f, 300.f, 0.f};
+	m_vBulletSpawn -= {80.f, 300.f, 0.f};
 	D3DXVec3TransformCoord(&m_vBulletSpawn, &m_vBulletSpawn, &m_tInfo.matWorld);
 
 
@@ -142,7 +142,7 @@ void CYGPlayer::Render(HDC hDC)
 		HitCircle(hDC, m_CollisionBox, iScrollX, iScrollY);
 		if (g_bDevmode) {
 			TCHAR szWhoScene[64];
-			_stprintf_s(szWhoScene, _T("%f ¸¶¿ì½º %f %f"), m_fAngle, Get_Mouse().x, Get_Mouse().y);
+			_stprintf_s(szWhoScene, _T("%d %d %d"), iScrollX, iScrollY, m_iBulletNum);
 			SetTextColor(hDC, RGB(0, 0, 0));
 			TextOut(hDC, 350, 10, szWhoScene, _tcslen(szWhoScene));
 		}
@@ -162,29 +162,34 @@ void CYGPlayer::Key_Input()
 	if (CKeyManager::Get_Instance()->Key_Pressing('W')) {
 		m_tInfo.vDir = { 0.f, -1.f, 0.f };
 		m_tInfo.vPos += m_tInfo.vDir * m_fSpeed;
+		m_vOriginPos += m_tInfo.vDir * m_fSpeed;
 	}
 
 	if (CKeyManager::Get_Instance()->Key_Pressing('S')) {
 		m_tInfo.vDir = { 0.f, 1.f, 0.f };
 		m_tInfo.vPos += m_tInfo.vDir * m_fSpeed;
+		m_vOriginPos += m_tInfo.vDir * m_fSpeed;
 	}
 
 	if (CKeyManager::Get_Instance()->Key_Pressing('A')) {
 		m_tInfo.vDir = { -1.f, 0.f, 0.f };
 		m_tInfo.vPos += m_tInfo.vDir * m_fSpeed;
+		m_vOriginPos += m_tInfo.vDir * m_fSpeed;
 	}
 
 	if (CKeyManager::Get_Instance()->Key_Pressing('D')) {
 		m_tInfo.vDir = { 1.f, 0.f, 0.f };
 		m_tInfo.vPos += m_tInfo.vDir * m_fSpeed;
+		m_vOriginPos += m_tInfo.vDir * m_fSpeed;
 	}
 
-	if (CKeyManager::Get_Instance()->Key_Down('K')) {
-		if (m_PlayerState == PS_NOGUN) {
+	if (CKeyManager::Get_Instance()->Key_Down('1')) {
+		m_PlayerState = PS_NOGUN;
+	}
+
+	if (CKeyManager::Get_Instance()->Key_Down('2')) {
+		if (m_bHaveGun) {
 			m_PlayerState = PS_GUN;
-		}
-		else {
-			m_PlayerState = PS_NOGUN;
 		}
 	}
 
@@ -204,11 +209,13 @@ void CYGPlayer::Key_Input()
 		}
 		else {
 			if (m_iShootTick > 10) {
-				CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYERBULLET, CAbstractFactory<CYGBullet>::Create(m_vBulletSpawn.x, m_vBulletSpawn.y));
-				static_cast<CYGBullet*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYERBULLET).back())->Set_Dir(m_tInfo.vLook);
-				m_iShootTick = 0;
+				if (m_iBulletNum > 0) {
+					m_iBulletNum--;
+					CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYERBULLET, CAbstractFactory<CYGBullet>::Create(m_vBulletSpawn.x, m_vBulletSpawn.y));
+					static_cast<CYGBullet*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYERBULLET).back())->Set_Dir(m_tInfo.vLook);
+					m_iShootTick = 0;
+				}
 			}
-
 		}
 	}
 
@@ -220,11 +227,13 @@ void CYGPlayer::Key_Input()
 			case ITEM_GUN:
 				if (static_cast<CYGItem*>(_obj)->Get_CanPick()) {
 					static_cast<CYGItem*>(_obj)->Set_Dead();
+					m_bHaveGun = true;
 				}
 				break;
 			case ITEM_BULLET:
 				if (static_cast<CYGItem*>(_obj)->Get_CanPick()) {
 					static_cast<CYGItem*>(_obj)->Set_Dead();
+					m_iBulletNum += 5;
 				}
 				break;
 			}

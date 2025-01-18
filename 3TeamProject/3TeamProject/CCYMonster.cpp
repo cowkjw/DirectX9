@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CCYMonster.h"
 #include "CCYTail.h"
+#include "CCollisionManager.h"
+#include "CObjectManager.h"
 
 void CCYMonster::Initialize()
 {
@@ -69,11 +71,11 @@ int CCYMonster::Update()
 		m_pRenderPoint[i].x = m_vPointvec[i].x;
 		m_pRenderPoint[i].y = m_vPointvec[i].y;
 	}
-	for (auto& pTail : m_TailSegvec)
+	for (auto& pTail : m_TailSeglist)
 	{
 		pTail->Update();
 	}
-	auto iter = m_TailSegvec.rbegin();
+	auto iter = m_TailSeglist.rbegin();
 	if ((*iter)->Get_Info().vPos.x < 0
 		|| (*iter)->Get_Info().vPos.y < 0
 		|| (*iter)->Get_Info().vPos.x > 800
@@ -88,7 +90,9 @@ int CCYMonster::Update()
 
 void CCYMonster::Late_Update()
 {
-	for (auto& pTail : m_TailSegvec)
+	CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER), m_TailSeglist);
+
+	for (auto& pTail : m_TailSeglist)
 	{
 		pTail->Late_Update();
 	}
@@ -100,7 +104,7 @@ void CCYMonster::Render(HDC hDC)
 		HitCircle(hDC, m_tHitRect, 0, 0);
 	}
 
-	for (auto iter = m_TailSegvec.rbegin(); iter != m_TailSegvec.rend(); ++iter)
+	for (auto iter = m_TailSeglist.rbegin(); iter != m_TailSeglist.rend(); ++iter)
 	{
 		(*iter)->Render(hDC);
 	}
@@ -119,7 +123,7 @@ void CCYMonster::Render(HDC hDC)
 
 void CCYMonster::Release()
 {
-	for_each(m_TailSegvec.begin(), m_TailSegvec.end(), Safe_Delete<CObject*>);
+	for_each(m_TailSeglist.begin(), m_TailSeglist.end(), Safe_Delete<CObject*>);
 
 }
 
@@ -133,15 +137,15 @@ void CCYMonster::Increase_TailSegment()
 
 	static_cast<CCYTail*>(pTail)->Set_TargetHead(this);
 
-	if (m_TailSegvec.empty())
+	if (m_TailSeglist.empty())
 	{
 		pTail->Set_TargetObj(this);
 	}
 	else
 	{
-		pTail->Set_TargetObj(m_TailSegvec.back());
+		pTail->Set_TargetObj(m_TailSeglist.back());
 	}
 
 	pTail->Initialize();
-	m_TailSegvec.push_back(pTail);
+	m_TailSeglist.push_back(pTail);
 }

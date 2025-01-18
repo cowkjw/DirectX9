@@ -5,6 +5,7 @@
 #include "CKeyManager.h"
 #include "CYGPlayer.h"
 #include "CJWScene.h"
+#include "CCYPlayer.h"
 
 CUiManager* CUiManager::m_pInstance = nullptr;
 
@@ -55,10 +56,82 @@ void CUiManager::RenderUi_YG(HDC hDC)
 	SelectObject(hDC, hOldPen);
 	DeleteObject(hBrush);
 	DeleteObject(hPen);
+
+	switch (_copyYGPlayer->Get_PS()) {
+	case CYGPlayer::PS_NOGUN:
+		color = RGB(0, 200, 230);
+		hBrush = CreateSolidBrush(color);
+		hPen = CreatePen(PS_SOLID, 2, RGB(0, 255, 255));
+		hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+		hOldPen = (HPEN)SelectObject(hDC, hPen);
+		RoundRect(hDC, 690, 490, 790, 560, 10, 10);
+
+		SelectObject(hDC, hOldBrush);
+		SelectObject(hDC, hOldPen);
+		DeleteObject(hBrush);
+		DeleteObject(hPen);
+		ColorCircle(hDC, 730- 15, 515, 750-15, 535,252,194,114,2);
+		ColorCircle(hDC, 730+15, 515, 750+15, 535,252,194,114,2);
+
+		break;
+	case CYGPlayer::PS_GUN:
+		color = RGB(0, 200, 230);
+		hBrush = CreateSolidBrush(color);
+		hPen = CreatePen(PS_SOLID, 2, RGB(0, 255, 255));
+		hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+		hOldPen = (HPEN)SelectObject(hDC, hPen);
+		RoundRect(hDC, 690, 490, 790, 560, 10, 10);
+
+		SelectObject(hDC, hOldBrush);
+		SelectObject(hDC, hOldPen);
+		DeleteObject(hBrush);
+		DeleteObject(hPen);
+
+		ColorRect(hDC, 740 - 25 , 525 - 15 , 740 + 25 ,525, 0,0,0,0);
+		ColorRect(hDC, 740 +10 , 525, 740 + 25, 525 +15, 0,0,0,0);
+		MoveToEx(hDC, 740, 525, nullptr);
+		LineTo(hDC, 740 +3, 525+7);
+		LineTo(hDC, 740+10, 525+7);
+
+		SetTextColor(hDC, RGB(255, 255, 255)); //글자 색
+		SetBkMode(hDC, TRANSPARENT); //글자 배경 투명
+
+		TCHAR bulletNum[64];
+		_stprintf_s(bulletNum, _T("%d"), _copyYGPlayer->Get_BulletNum());
+		RECT rect2 = { 740, 540, 780, 550 };
+		DrawText(hDC, bulletNum, _tcslen(bulletNum), &rect2, DT_RIGHT | DT_SINGLELINE | DT_VCENTER);
+
+		break;
+	}
+
 }
 
 void CUiManager::RenderUi_CY(HDC hDC)
 {
+	
+	SetTextColor(hDC, RGB(150,150,175)); //글자 색
+	SetBkMode(hDC, TRANSPARENT); //글자 배경 투명
+
+	
+	HFONT hFont1 = CreateFont(17, 0, 0, 0, FW_SEMIBOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+		OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, NONANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Arial"));
+
+
+	HFONT OldFont = (HFONT)SelectObject(hDC, hFont1);
+	//13 21 32
+
+	if (!(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYER).empty()))
+	{
+		TCHAR szLength[32];
+		_stprintf_s(szLength, _T("Your length: %d"), static_cast<CCYPlayer*>(GET_PLAYER)->Get_WormLength());
+		//SetTextColor(hDC, RGB(0, 0, 0));
+		//RECT rect2 = { 10, 450, 100, 600 };
+		TextOut(hDC, 10, 550, szLength, _tcslen(szLength));
+	}
+
+	SelectObject(hDC, OldFont);
+	DeleteObject(hFont1);
+
 }
 
 void CUiManager::RenderUi_DW(HDC hDC)
@@ -117,7 +190,7 @@ void CUiManager::RenderUi_JW(HDC hDC)
 		
 		D3DXMatrixScaling(&matScale, vScale.x, vScale.y, vScale.z);
 		D3DXMatrixRotationZ(&matRotZ, 0.f);
-		D3DXMatrixTranslation(&matTrans, 730.f, 50.f, 0.f);
+		D3DXMatrixTranslation(&matTrans, 750.f, 50.f, 0.f);
 
 		for (int i = 0; i < (int)m_vecRenderPoints.size(); i++)
 		{
@@ -135,7 +208,7 @@ void CUiManager::RenderUi_JW(HDC hDC)
 	
 		Polygon(hDC, m_vecPolyPoints.data(), (int)m_vecPolyPoints.size());
 
-		D3DXVECTOR3 vDir = (m_vecRenderPoints.front() - D3DXVECTOR3(730.f, 50.f, 0.f));
+		D3DXVECTOR3 vDir = (m_vecRenderPoints.front() - D3DXVECTOR3(750.f, 50.f, 0.f));
 		float fRadius =D3DXVec3Length(&vDir);
 		Ellipse(hDC,
 			int(m_vecRenderPoints[50].x - fRadius / 3.f),
@@ -143,185 +216,99 @@ void CUiManager::RenderUi_JW(HDC hDC)
 			int(m_vecRenderPoints[50].x + fRadius / 3.f),
 			int(m_vecRenderPoints[50].y + fRadius / 3.f));
 
+
+	    SetTextColor(hDC, RGB(50, 68, 45));
+		SetBkMode(hDC, TRANSPARENT); //글자 배경 투명
+
+		HFONT hFont1 = CreateFont(
+			30, 0, 0, 0, FW_BLACK, FALSE, FALSE, FALSE,
+			DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+			DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, L"Eulyoo1945-SemiBold"
+		); //m3x6이 폰트
+
+		HFONT OldFont = (HFONT)SelectObject(hDC, hFont1);
+
+		TCHAR szInfo[64];
+		_stprintf_s(szInfo, _T("SCORE"));
+		RECT rect = { 20, 60, 120, 80 };
+		DrawText(hDC, szInfo, _tcslen(szInfo), &rect, DT_RIGHT | DT_SINGLELINE | DT_VCENTER); //가운데 중앙 정렬
+
+		TCHAR szScore[64];
+		_stprintf_s(szScore, _T("%d"), pScene->Get_Score());
+		RECT rect2 = { 30, 80, 80, 110 };
+		DrawText(hDC, szScore, _tcslen(szScore), &rect2, DT_RIGHT | DT_SINGLELINE | DT_VCENTER); //가운데 중앙 정렬
+
+		TCHAR szLevelText[64];
+		_stprintf_s(szLevelText, _T("현재 레벨 %d"), pScene->Get_Level()+1);
+		RECT rect3 = { 0, 10, 150, 50 };
+		DrawText(hDC, szLevelText, _tcslen(szLevelText), &rect3, DT_RIGHT | DT_SINGLELINE | DT_VCENTER); //가운데 중앙 정렬
+	
+
+		if (pScene->Get_GameOver())
+		{
+
+		HFONT hGameOverFont = CreateFont(
+			100,            // 폰트 크기
+			0, 0, 0,
+			FW_BLACK,      // 굵기
+			FALSE, FALSE, FALSE,
+			DEFAULT_CHARSET,
+			OUT_DEFAULT_PRECIS,
+			CLIP_DEFAULT_PRECIS,
+			DEFAULT_QUALITY,
+			DEFAULT_PITCH | FF_SWISS,
+			L"Eulyoo1945-SemiBold"
+		);
+
+		// GAME OVER 텍스트 중앙 배치를 위한 RECT
+		RECT gameOverRect = { 0, 0, 800, 600 };
+		gameOverRect.top = 200;     // 상단에서 200픽셀 아래
+		gameOverRect.bottom = 300;  // 영역 높이 100픽셀
+
+		// GAME OVER 텍스트 그리기
+		SelectObject(hDC, hGameOverFont);
+		TCHAR szGameOver[] = _T("GAME OVER");
+		DrawText(hDC, szGameOver, _tcslen(szGameOver), &gameOverRect,
+			DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+
+		// 최종 점수 표시용 폰트
+		HFONT hFinalScoreFont = CreateFont(
+			50,             // 폰트 크기
+			0, 0, 0,
+			FW_BOLD,
+			FALSE, FALSE, FALSE,
+			DEFAULT_CHARSET,
+			OUT_DEFAULT_PRECIS,
+			CLIP_DEFAULT_PRECIS,
+			DEFAULT_QUALITY,
+			DEFAULT_PITCH | FF_SWISS,
+			L"Eulyoo1945-SemiBold"
+		);
+
+		// 최종 점수 텍스트
+		SelectObject(hDC, hFinalScoreFont);
+		TCHAR szFinalScore[64];
+		_stprintf_s(szFinalScore, _T("FINAL SCORE: %d"), pScene->Get_Score());
+
+		// 최종 점수 표시 영역 (GAME OVER 텍스트 아래)
+		RECT finalScoreRect = { 0, 0, 800, 600 };
+		finalScoreRect.top = 320;     
+		finalScoreRect.bottom = 370;  
+
+		DrawText(hDC, szFinalScore, _tcslen(szFinalScore), &finalScoreRect,
+			DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+
+		// 폰트 리소스 정리
+		DeleteObject(hGameOverFont);
+		DeleteObject(hFinalScoreFont);
+		}
+
+
+		SelectObject(hDC, OldFont);
+		DeleteObject(hFont1);
+
+
 		SelectObject(hDC,hOldBrush);
 		DeleteObject(hBrush);
 	}
-	int baseX = 50;
-	int baseY = 50;
-	int size = 30;    // 숫자 크기
-	int depth = 10;   // 입체감을 위한 깊이
-	int gap = 50;     // 숫자 간격
-	HPEN hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
-	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
-
-	//// 숫자 0
-	//MoveToEx(hDC, baseX, baseY, NULL);
-	//LineTo(hDC, baseX + size, baseY);              // 앞면 상단
-	//LineTo(hDC, baseX + size, baseY + size);       // 앞면 우측
-	//LineTo(hDC, baseX, baseY + size);              // 앞면 하단
-	//LineTo(hDC, baseX, baseY);                     // 앞면 좌측
-	//// 윗면
-	//LineTo(hDC, baseX + depth, baseY - depth);     // 좌측 상단 사선
-	//LineTo(hDC, baseX + size + depth, baseY - depth); // 윗면 상단
-	//LineTo(hDC, baseX + size, baseY);              // 우측 상단 사선
-	//// 우측면
-	//MoveToEx(hDC, baseX + size + depth, baseY - depth, NULL);
-	//LineTo(hDC, baseX + size + depth, baseY + size - depth); // 우측 사선
-	//LineTo(hDC, baseX + size, baseY + size);       // 우측 하단 연결
-
-	//// 숫자 1
-	baseX += gap;
-	int midX = baseX + size / 2;
-	MoveToEx(hDC, midX, baseY, NULL);
-	LineTo(hDC, midX, baseY + size);               // 앞면 수직선
-	// 윗면
-	MoveToEx(hDC, midX, baseY, NULL);
-	LineTo(hDC, midX + depth, baseY - depth);      // 상단 사선
-	// 우측면
-	LineTo(hDC, midX + depth, baseY + size - depth);
-	LineTo(hDC, midX, baseY + size);               // 하단 연결
-
-	//// 숫자 2
-	//baseX += gap;
-	//MoveToEx(hDC, baseX, baseY, NULL);
-	//LineTo(hDC, baseX + size, baseY);              // 앞면 상단
-	//LineTo(hDC, baseX + size, baseY + size / 2);     // 앞면 우측 상단
-	//LineTo(hDC, baseX, baseY + size / 2);            // 앞면 중앙
-	//LineTo(hDC, baseX, baseY + size);              // 앞면 좌측 하단
-	//LineTo(hDC, baseX + size, baseY + size);       // 앞면 하단
-	//// 윗면
-	//MoveToEx(hDC, baseX, baseY, NULL);
-	//LineTo(hDC, baseX + depth, baseY - depth);
-	//LineTo(hDC, baseX + size + depth, baseY - depth);
-	//LineTo(hDC, baseX + size, baseY);
-	//// 우측면
-	//MoveToEx(hDC, baseX + size + depth, baseY - depth, NULL);
-	//LineTo(hDC, baseX + size + depth, baseY + size - depth);
-	//LineTo(hDC, baseX + size, baseY + size);
-
-	//// 숫자 3
-	//baseX += gap;
-	//MoveToEx(hDC, baseX, baseY, NULL);
-	//LineTo(hDC, baseX + size, baseY);              // 앞면 상단
-	//LineTo(hDC, baseX + size, baseY + size);       // 앞면 우측
-	//LineTo(hDC, baseX, baseY + size);              // 앞면 하단
-	//MoveToEx(hDC, baseX, baseY + size / 2, NULL);
-	//LineTo(hDC, baseX + size, baseY + size / 2);     // 앞면 중앙
-	//// 윗면
-	//MoveToEx(hDC, baseX, baseY, NULL);
-	//LineTo(hDC, baseX + depth, baseY - depth);
-	//LineTo(hDC, baseX + size + depth, baseY - depth);
-	//LineTo(hDC, baseX + size, baseY);
-	//// 우측면
-	//MoveToEx(hDC, baseX + size + depth, baseY - depth, NULL);
-	//LineTo(hDC, baseX + size + depth, baseY + size - depth);
-	//LineTo(hDC, baseX + size, baseY + size);
-
-	//// 숫자 4
-	//baseX += gap;
-	//MoveToEx(hDC, baseX, baseY, NULL);
-	//LineTo(hDC, baseX, baseY + size / 2);            // 앞면 좌측
-	//LineTo(hDC, baseX + size, baseY + size / 2);     // 앞면 중앙
-	//MoveToEx(hDC, baseX + size * 2 / 3, baseY, NULL);
-	//LineTo(hDC, baseX + size * 2 / 3, baseY + size);   // 앞면 우측 수직선
-	//// 윗면
-	//MoveToEx(hDC, baseX + size * 2 / 3, baseY, NULL);
-	//LineTo(hDC, baseX + size * 2 / 3 + depth, baseY - depth);
-	//// 우측면
-	//LineTo(hDC, baseX + size * 2 / 3 + depth, baseY + size - depth);
-	//LineTo(hDC, baseX + size * 2 / 3, baseY + size);
-
-	//// 숫자 5
-	//baseX = 50;
-	//baseY += gap;
-	//MoveToEx(hDC, baseX + size, baseY, NULL);
-	//LineTo(hDC, baseX, baseY);                     // 앞면 상단
-	//LineTo(hDC, baseX, baseY + size / 2);            // 앞면 좌측 상단
-	//LineTo(hDC, baseX + size, baseY + size / 2);     // 앞면 중앙
-	//LineTo(hDC, baseX + size, baseY + size);       // 앞면 우측 하단
-	//LineTo(hDC, baseX, baseY + size);              // 앞면 하단
-	//// 윗면
-	//MoveToEx(hDC, baseX, baseY, NULL);
-	//LineTo(hDC, baseX + depth, baseY - depth);
-	//LineTo(hDC, baseX + size + depth, baseY - depth);
-	//LineTo(hDC, baseX + size, baseY);
-	//// 우측면
-	//MoveToEx(hDC, baseX + size + depth, baseY - depth, NULL);
-	//LineTo(hDC, baseX + size + depth, baseY + size - depth);
-	//LineTo(hDC, baseX + size, baseY + size);
-
-	//// 숫자 6
-	//baseX += gap;
-	//MoveToEx(hDC, baseX + size, baseY, NULL);
-	//LineTo(hDC, baseX, baseY);                     // 앞면 상단
-	//LineTo(hDC, baseX, baseY + size);              // 앞면 좌측
-	//LineTo(hDC, baseX + size, baseY + size);       // 앞면 하단
-	//LineTo(hDC, baseX + size, baseY + size / 2);     // 앞면 우측 하단
-	//LineTo(hDC, baseX, baseY + size / 2);            // 앞면 중앙
-	//// 윗면
-	//MoveToEx(hDC, baseX, baseY, NULL);
-	//LineTo(hDC, baseX + depth, baseY - depth);
-	//LineTo(hDC, baseX + size + depth, baseY - depth);
-	//LineTo(hDC, baseX + size, baseY);
-	//// 우측면
-	//MoveToEx(hDC, baseX + size + depth, baseY - depth, NULL);
-	//LineTo(hDC, baseX + size + depth, baseY + size - depth);
-	//LineTo(hDC, baseX + size, baseY + size);
-
-	//// 숫자 7
-	//baseX += gap;
-	//MoveToEx(hDC, baseX, baseY, NULL);
-	//LineTo(hDC, baseX + size, baseY);              // 앞면 상단
-	//LineTo(hDC, baseX + size / 2, baseY + size);     // 앞면 대각선
-	//// 윗면
-	//MoveToEx(hDC, baseX, baseY, NULL);
-	//LineTo(hDC, baseX + depth, baseY - depth);
-	//LineTo(hDC, baseX + size + depth, baseY - depth);
-	//LineTo(hDC, baseX + size, baseY);
-	//// 우측면
-	//MoveToEx(hDC, baseX + size + depth, baseY - depth, NULL);
-	//LineTo(hDC, baseX + size / 2 + depth, baseY + size - depth);
-	//LineTo(hDC, baseX + size / 2, baseY + size);
-
-	//// 숫자 8
-	//baseX += gap;
-	//MoveToEx(hDC, baseX, baseY, NULL);
-	//LineTo(hDC, baseX + size, baseY);              // 앞면 상단
-	//LineTo(hDC, baseX + size, baseY + size);       // 앞면 우측
-	//LineTo(hDC, baseX, baseY + size);              // 앞면 하단
-	//LineTo(hDC, baseX, baseY);                     // 앞면 좌측
-	//MoveToEx(hDC, baseX, baseY + size / 2, NULL);
-	//LineTo(hDC, baseX + size, baseY + size / 2);     // 앞면 중앙
-	//// 윗면
-	//MoveToEx(hDC, baseX, baseY, NULL);
-	//LineTo(hDC, baseX + depth, baseY - depth);
-	//LineTo(hDC, baseX + size + depth, baseY - depth);
-	//LineTo(hDC, baseX + size, baseY);
-	//// 우측면
-	//MoveToEx(hDC, baseX + size + depth, baseY - depth, NULL);
-	//LineTo(hDC, baseX + size + depth, baseY + size - depth);
-	//LineTo(hDC, baseX + size, baseY + size);
-
-	//// 숫자 9
-	//baseX += gap;
-	//MoveToEx(hDC, baseX, baseY, NULL);
-	//LineTo(hDC, baseX + size, baseY);              // 앞면 상단
-	//LineTo(hDC, baseX + size, baseY + size);       // 앞면 우측
-	//LineTo(hDC, baseX, baseY + size);              // 앞면 하단
-	//MoveToEx(hDC, baseX, baseY + size / 2, NULL);
-	//LineTo(hDC, baseX + size, baseY + size / 2);     // 앞면 중앙
-	//LineTo(hDC, baseX, baseY);                     // 앞면 좌측 상단
-	//// 윗면
-	//MoveToEx(hDC, baseX, baseY, NULL);
-	//LineTo(hDC, baseX + depth, baseY - depth);
-	//LineTo(hDC, baseX + size + depth, baseY - depth);
-	//LineTo(hDC, baseX + size, baseY);
-	//// 우측면
-	//MoveToEx(hDC, baseX + size + depth, baseY - depth, NULL);
-	//LineTo(hDC, baseX + size + depth, baseY + size - depth);
-	//LineTo(hDC, baseX + size, baseY + size);
-
-	// 리소스 해제
-	SelectObject(hDC, hOldPen);
-	DeleteObject(hPen);
 }
