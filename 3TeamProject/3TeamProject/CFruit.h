@@ -49,6 +49,7 @@ public:
 	bool Is_Active() const { return m_bActive; }
 	bool Is_Dropped() const { return m_bDropped; }
 	bool In_Box() const { return m_bInBox; }
+	bool Is_Collide() const { return m_bCollided; }
 
 	void Set_Drop(bool bDrop) { m_bDropped = bDrop; }
 	void Set_Velocity(const D3DXVECTOR3& vVelo) { m_vVelocity = vVelo; }
@@ -79,6 +80,7 @@ private:
 	bool m_bIsGround;
 	bool m_bActive;
 	bool m_bInBox;
+	bool m_bCollided;
 	COLORREF m_tColor;
 	FRUIT_TYPE m_eFruitType;
 	FRUIT_STATE m_eFruitSt;

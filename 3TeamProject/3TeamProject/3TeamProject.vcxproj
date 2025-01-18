@@ -119,6 +119,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\core\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -184,6 +185,7 @@
     <ClInclude Include="CYGItem.h" />
     <ClInclude Include="CYGObject.h" />
     <ClInclude Include="CYGPlayer.h" />
+    <ClInclude Include="CYGPunchMonster.h" />
     <ClInclude Include="CYGScene.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="framework.h" />
@@ -227,6 +229,7 @@
     <ClCompile Include="CYGItem.cpp" />
     <ClCompile Include="CYGObject.cpp" />
     <ClCompile Include="CYGPlayer.cpp" />
+    <ClCompile Include="CYGPunchMonster.cpp" />
     <ClCompile Include="CYGScene.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

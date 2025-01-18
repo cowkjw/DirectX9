@@ -39,9 +39,7 @@ private:
 	void Update_Next_FruitInfo(const vector<D3DXVECTOR3>&,const COLORREF, FRUIT_TYPE);
 private:
 	unordered_map<FRUIT_TYPE,CObjPool<CFruit>*> m_FruitPoolMap;
-	vector<CObject*> m_vecFruit;
 	CObject* m_pFruit;
-	list<CObject*> m_FruitList;
 	vector<int> m_vecScore;
 	int m_iLevel;
 	int m_iScore;

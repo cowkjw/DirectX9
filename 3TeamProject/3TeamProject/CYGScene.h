@@ -14,5 +14,9 @@ public:
 	void Key_Input() override;
 	void Create_MapObj() override;
 	void Offset() override;
+private:
+	bool m_bRound1Start;
+
+	int m_iMoveX;
 };
 
