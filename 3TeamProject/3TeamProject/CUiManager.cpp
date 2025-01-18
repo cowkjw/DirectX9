@@ -55,6 +55,54 @@ void CUiManager::RenderUi_YG(HDC hDC)
 	SelectObject(hDC, hOldPen);
 	DeleteObject(hBrush);
 	DeleteObject(hPen);
+
+	switch (_copyYGPlayer->Get_PS()) {
+	case CYGPlayer::PS_NOGUN:
+		color = RGB(0, 200, 230);
+		hBrush = CreateSolidBrush(color);
+		hPen = CreatePen(PS_SOLID, 2, RGB(0, 255, 255));
+		hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+		hOldPen = (HPEN)SelectObject(hDC, hPen);
+		RoundRect(hDC, 690, 490, 790, 560, 10, 10);
+
+		SelectObject(hDC, hOldBrush);
+		SelectObject(hDC, hOldPen);
+		DeleteObject(hBrush);
+		DeleteObject(hPen);
+		ColorCircle(hDC, 730- 15, 515, 750-15, 535,252,194,114,2);
+		ColorCircle(hDC, 730+15, 515, 750+15, 535,252,194,114,2);
+
+		break;
+	case CYGPlayer::PS_GUN:
+		color = RGB(0, 200, 230);
+		hBrush = CreateSolidBrush(color);
+		hPen = CreatePen(PS_SOLID, 2, RGB(0, 255, 255));
+		hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+		hOldPen = (HPEN)SelectObject(hDC, hPen);
+		RoundRect(hDC, 690, 490, 790, 560, 10, 10);
+
+		SelectObject(hDC, hOldBrush);
+		SelectObject(hDC, hOldPen);
+		DeleteObject(hBrush);
+		DeleteObject(hPen);
+
+		ColorRect(hDC, 740 - 25 , 525 - 15 , 740 + 25 ,525, 0,0,0,0);
+		ColorRect(hDC, 740 +10 , 525, 740 + 25, 525 +15, 0,0,0,0);
+		MoveToEx(hDC, 740, 525, nullptr);
+		LineTo(hDC, 740 +3, 525+7);
+		LineTo(hDC, 740+10, 525+7);
+
+		SetTextColor(hDC, RGB(255, 255, 255)); //글자 색
+		SetBkMode(hDC, TRANSPARENT); //글자 배경 투명
+
+		TCHAR bulletNum[64];
+		_stprintf_s(bulletNum, _T("%d"), _copyYGPlayer->Get_BulletNum());
+		RECT rect2 = { 740, 540, 780, 550 };
+		DrawText(hDC, bulletNum, _tcslen(bulletNum), &rect2, DT_RIGHT | DT_SINGLELINE | DT_VCENTER);
+
+		break;
+	}
+
 }
 
 void CUiManager::RenderUi_CY(HDC hDC)
