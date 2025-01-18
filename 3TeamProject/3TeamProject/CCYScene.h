@@ -20,5 +20,6 @@ public:
 private:
 	enum SLITHERNUM { SL_PLAYER, SL_END };
 	vector<vector<CObject>*> m_SlitherSegvec;
+	ULONGLONG	m_ullFoodTimeTicker;
 };
 

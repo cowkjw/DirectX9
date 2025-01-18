@@ -5,6 +5,7 @@ class CScrollManager
 private:
 	CScrollManager();
 	~CScrollManager();
+
 public:
 	float			Get_ScrollX() { return m_fScrollX; }
 	float			Get_ScrollY() { return m_fScrollY; }

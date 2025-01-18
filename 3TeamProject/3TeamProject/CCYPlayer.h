@@ -13,6 +13,9 @@ public:
 	void Release() override;
 	void OnCollision(CObject* _obj) override;
 
+public:
+	float Get_WormSize() { return m_fWormSize; }
+
 private:
 	void Key_Input();
 	void Increase_TailSegment();
@@ -24,5 +27,9 @@ private:
 	D3DXVECTOR3 m_vEyePoint[4];
 
 	vector<CObject*> m_TailSegvec;
+
+	float		m_fWormSize;
+	ULONGLONG	m_ullTailDeleteTicker;
+
 };
 

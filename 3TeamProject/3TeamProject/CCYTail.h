@@ -3,7 +3,7 @@
 class CCYTail : public CCYObject
 {
 public:
-	CCYTail() {}
+	CCYTail() : m_targetHead(nullptr), m_fWormSize(0){}
 	virtual ~CCYTail() {}
 public:
 	void Initialize() override;
@@ -19,5 +19,6 @@ public:
 
 private:
 	CObject* m_targetHead;
+	float	 m_fWormSize;
 };
 
