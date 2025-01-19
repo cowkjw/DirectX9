@@ -8,7 +8,7 @@
 #include "CYGPlayer.h"
 #include "CYGBox.h"
 #include "CScrollManager.h"
-#include "CYGPunchMonster.h"
+#include "CYGMonster.h"
 
 CYGScene::CYGScene():m_bRound1Start(false), m_iMoveX(0)
 {
@@ -17,8 +17,7 @@ CYGScene::CYGScene():m_bRound1Start(false), m_iMoveX(0)
 void CYGScene::Initialize()
 {
 	CScrollManager::Get_Instance()->Set_ScrollLock(4000, 4000);
-	CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CYGPlayer>::Create(80, 300, 50, 50));
-	CUiManager::Get_Instance()->Set_UiType(UI_YG);
+	CUiManager::Get_Instance()->Set_UiType(UI_END);
 
 	Create_MapObj();
 	m_iMoveX = 0;
@@ -32,7 +31,9 @@ int CYGScene::Update()
 		if (m_iMoveX == 1600) {
 			m_bRound1Start = true;
 			m_iMoveX = 0;
-			CObjectManager::Get_Instance()->Add_Object(OBJ_MONSTER, CAbstractFactory<CYGPunchMonster>::Create(720, 300, 50, 50));
+			CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CYGPlayer>::Create(80, 300, 50, 50));
+			CUiManager::Get_Instance()->Set_UiType(UI_YG);
+			CObjectManager::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CYGBox>::Create(200, 300, 70, 70));
 		}
 	}
 	Key_Input();
@@ -67,7 +68,7 @@ void CYGScene::Render(HDC hDC)
 		ColorRect(hDC, 0, 0, 800, 600, 0, 0, 0, 0);
 
 		TCHAR roundText[64];
-		_stprintf_s(roundText, _T("Round 1"));
+		_stprintf_s(roundText, _T("GameStart"));
 
 		HFONT hFont = CreateFont(
 			100,                 

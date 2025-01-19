@@ -234,8 +234,11 @@
     <ClInclude Include="CYGBulletItem.h">
       <Filter>02_Object\01_YG\01_Item</Filter>
     </ClInclude>
-    <ClInclude Include="CYGPunchMonster.h">
+    <ClInclude Include="CYGMonster.h">
       <Filter>02_Object\01_YG\02_Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="CYGBulletBox.h">
+      <Filter>02_Object\01_YG\00_MapObj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -350,8 +353,11 @@
     <ClCompile Include="CYGObject.cpp">
       <Filter>02_Object\01_YG</Filter>
     </ClCompile>
-    <ClCompile Include="CYGPunchMonster.cpp">
+    <ClCompile Include="CYGMonster.cpp">
       <Filter>02_Object\01_YG\02_Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="CYGBulletBox.cpp">
+      <Filter>02_Object\01_YG\00_MapObj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

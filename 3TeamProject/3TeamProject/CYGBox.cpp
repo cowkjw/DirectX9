@@ -6,6 +6,7 @@
 #include "CYGGunItem.h"
 #include "CAbstractFactory.h"
 #include "CScrollManager.h"
+#include "CYGMonster.h"
 
 CYGBox::CYGBox():m_HitTick(0), m_iScaleSize(0)
 {
@@ -43,6 +44,8 @@ void CYGBox::Initialize()
 int CYGBox::Update()
 {
 	if (m_iScaleSize == 0.f) {
+
+		CObjectManager::Get_Instance()->Add_Object(OBJ_MONSTER, CAbstractFactory<CYGMonster>::Create(700, 300, 50, 50));
 		CObjectManager::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CYGGunItem>::Create(m_tInfo.vPos.x, m_tInfo.vPos.y - 40, 50,30));
 		CObjectManager::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CYGBulletItem>::Create(m_tInfo.vPos.x + 20, m_tInfo.vPos.y, 30, 30));
 		CObjectManager::Get_Instance()->Add_Object(OBJ_ITEM, CAbstractFactory<CYGBulletItem>::Create(m_tInfo.vPos.x - 20, m_tInfo.vPos.y, 30, 30));
@@ -60,11 +63,11 @@ int CYGBox::Update()
 
 	for (int i = 0; i < 4; ++i) {
 		m_vOutBox[i] = m_vOriginOutBox[i];
-		m_vOutBox[i] -= {300.f, 300.f, 0.f};
+		m_vOutBox[i] -= {200.f, 300.f, 0.f};
 		D3DXVec3TransformCoord(&m_vOutBox[i], &m_vOutBox[i], &m_tInfo.matWorld);
 
 		m_vInBox[i] = m_vOriginInBox[i];
-		m_vInBox[i] -= {300.f, 300.f, 0.f};
+		m_vInBox[i] -= {200.f, 300.f, 0.f};
 		D3DXVec3TransformCoord(&m_vInBox[i], &m_vInBox[i], &m_tInfo.matWorld);
 	}
 	__super::Update_Rect();

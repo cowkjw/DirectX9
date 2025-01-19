@@ -1,10 +1,10 @@
 #pragma once
 #include "CYGObject.h"
-class CYGPunchMonster :public CYGObject
+class CYGMonster :public CYGObject
 {
 public:
-	CYGPunchMonster();
-	virtual ~CYGPunchMonster() { Release(); }
+	CYGMonster();
+	virtual ~CYGMonster() { Release(); }
 public:
 	void Initialize() override;
 	int Update() override;

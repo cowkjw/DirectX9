@@ -226,3 +226,21 @@ static BOOL ColorRoundRect(HDC hDC, int leftTopX, int leftTopY, int rightBottomX
 	DeleteObject(hPen);
 	return true;
 }
+
+
+static BOOL ColorPolygon(HDC hDC, POINT* point, int pointSize, int R, int G, int B, int penSize)
+{
+	COLORREF color = RGB(R, G, B);
+
+	HBRUSH hBrush = CreateSolidBrush(color);
+	HPEN hPen = CreatePen(PS_SOLID, penSize, RGB(0, 0, 0));
+	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+	Polygon(hDC, point, pointSize);
+
+	SelectObject(hDC, hOldBrush);
+	SelectObject(hDC, hOldPen);
+	DeleteObject(hBrush);
+	DeleteObject(hPen);
+	return true;
+}
