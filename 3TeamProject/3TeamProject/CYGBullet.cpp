@@ -83,6 +83,7 @@ void CYGBullet::OnCollision()
 	if (CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_MAP).size() > 0) {
 		CYGBox* _copyMapObj = dynamic_cast<CYGBox*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_MAP).back());
 		if (CCollisionManager::Check_Circle(m_tHitRect, _copyMapObj->Get_HitBox())) {
+			m_bDead = true;
 			_copyMapObj->OnCollision(this);
 		}
 	}

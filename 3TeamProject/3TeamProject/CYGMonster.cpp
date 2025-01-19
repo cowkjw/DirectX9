@@ -121,32 +121,31 @@ void CYGMonster::Render(HDC hDC)
 
 	ColorCircle(hDC, m_tHitRect.left, m_tHitRect.top , m_tHitRect.right, m_tHitRect.bottom, 252, 194, 114, 2);
 
-	//COLORREF color = RGB(255, 255, 255);
-	//HBRUSH hBrush = CreateSolidBrush(color);
-	//HPEN hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
-	//HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
-	//HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
-	//RoundRect(hDC, WINCX / 2 - 200, 510, WINCX / 2 - 200 + 400, 550, 10, 10);
+	COLORREF color = RGB(255, 255, 255);
+	HBRUSH hBrush = CreateSolidBrush(color);
+	HPEN hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+	HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+	RoundRect(hDC, m_tInfo.vPos.x - 50, m_tInfo.vPos.y-50, m_tInfo.vPos.x + 50, m_tInfo.vPos.y - 40, 10, 10);
 
-	//SelectObject(hDC, hOldBrush);
-	//SelectObject(hDC, hOldPen);
-	//DeleteObject(hBrush);
-	//DeleteObject(hPen);
+	SelectObject(hDC, hOldBrush);
+	SelectObject(hDC, hOldPen);
+	DeleteObject(hBrush);
+	DeleteObject(hPen);
 
-	//CYGPlayer* _copyYGPlayer = static_cast<CYGPlayer*>(CObjectManager::Get_Instance()->Get_Player());
-	//int hpWidth = (400 * _copyYGPlayer->Get_Hp()) / _copyYGPlayer->Get_MaxHp();
+	int hpWidth = 100 * m_iHp / m_iMaxHp;
 
-	//color = RGB(179, 179, 179);
-	//hBrush = CreateSolidBrush(color);
-	//hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
-	//hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
-	//hOldPen = (HPEN)SelectObject(hDC, hPen);
-	//RoundRect(hDC, WINCX / 2 - 200, 510, WINCX / 2 - 200 + hpWidth, 550, 10, 10);
+	color = RGB(179, 179, 179);
+	hBrush = CreateSolidBrush(color);
+	hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+	hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+	hOldPen = (HPEN)SelectObject(hDC, hPen);
+	RoundRect(hDC, m_tInfo.vPos.x - 50, m_tInfo.vPos.y - 50, m_tInfo.vPos.x - 50 + hpWidth, m_tInfo.vPos.y - 40, 10, 10);
 
-	//SelectObject(hDC, hOldBrush);
-	//SelectObject(hDC, hOldPen);
-	//DeleteObject(hBrush);
-	//DeleteObject(hPen);
+	SelectObject(hDC, hOldBrush);
+	SelectObject(hDC, hOldPen);
+	DeleteObject(hBrush);
+	DeleteObject(hPen);
 }
 
 void CYGMonster::Release()
