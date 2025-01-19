@@ -40,13 +40,13 @@ void CCYObject::GetRGB(COLORREF color, BYTE* r, BYTE* g, BYTE* b)
 } 
 
 // RGB 값을 조정하는 함수
-COLORREF CCYObject::AdjustRGB(COLORREF& color, int adjust)
+COLORREF CCYObject::AdjustRGB(COLORREF& color, int adjustR, int adjustG, int adjustB)
 {
     BYTE r, g, b; GetRGB(color, &r, &g, &b); 
 // 값 조정
-    r = (BYTE)max(0, min(255, r - adjust));
-    g = (BYTE)max(0, min(255, g - adjust));
-    b = (BYTE)max(0, min(255, b - adjust));
+    r = (BYTE)max(0, min(255, r - adjustR));
+    g = (BYTE)max(0, min(255, g - adjustG));
+    b = (BYTE)max(0, min(255, b - adjustB));
     color = SetRGB(r, g, b);
     return color;
 }

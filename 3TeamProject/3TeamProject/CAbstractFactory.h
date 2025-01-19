@@ -32,5 +32,13 @@ public:
 		pObj->Set_Size(_fCX, _fCY);
 		return pObj;
 	}
+	
+	static CObject* CreateCYFood(float _fX, float _fY) // 중점 & 크기
+	{
+		CObject* pObj = new T;
+		pObj->Initialize();
+		pObj->Set_Pos(_fX, _fY);
+		return pObj;
+	}
 };
 

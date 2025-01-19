@@ -12,5 +12,8 @@ public:
 	void Render(HDC hDC) override;
 	void Release() override;
 	void OnCollision(CObject* _obj) override;
+
+private:
+	COLORREF	randomcolor;
 };
 
