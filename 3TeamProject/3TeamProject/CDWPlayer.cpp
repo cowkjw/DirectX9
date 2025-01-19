@@ -22,6 +22,8 @@ void CDWPlayer::Initialize()
 	m_tInfo.vLook = { 1.f, 0.f, 0.f };
 	CDWPlayer::Initialize_OriginPoint(30, 30);
 
+
+
 }
 
 int CDWPlayer::Update()
