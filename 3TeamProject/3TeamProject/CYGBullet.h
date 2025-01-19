@@ -15,6 +15,9 @@ public:
 public:
 	void Set_Dir(D3DXVECTOR3 _look) { m_tInfo.vDir = _look; } //플레이어가 보는 방향으로 총알이 이동
 private:
+	void OnCollision();
+private:
 	int m_iReMoveTick;
+	bool m_bDead;
 };
 

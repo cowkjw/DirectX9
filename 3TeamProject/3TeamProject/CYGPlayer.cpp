@@ -8,6 +8,7 @@
 #include "CYGBulletItem.h"
 #include "CYGGunItem.h"
 #include "CYGItem.h"
+#include "CYGBulletBox.h"
 
 CYGPlayer::CYGPlayer():m_bLeftPush(false), m_iShootTick(0), m_bHaveGun(false), m_iBulletNum(0)
 {
@@ -125,10 +126,12 @@ void CYGPlayer::Render(HDC hDC)
 		ColorCircle(hDC, m_vRightNoGunHandPos.x - 10+ iScrollX, m_vRightNoGunHandPos.y - 10+ iScrollY, m_vRightNoGunHandPos.x + 10+ iScrollX, m_vRightNoGunHandPos.y + 10+ iScrollY, 252, 194, 114,2); // 오른손
 	}
 	else {
-		MoveToEx(hDC, m_vGunRectanglePoint[3].x+ iScrollX, m_vGunRectanglePoint[3].y+ iScrollY, nullptr);
-		for (int i = 0; i < 4; ++i) {
-			LineTo(hDC, m_vGunRectanglePoint[i].x+ iScrollX, m_vGunRectanglePoint[i].y+ iScrollY);
-		}
+		POINT point[4];
+		point[0] = { (long)m_vGunRectanglePoint[0].x, (long)m_vGunRectanglePoint[0].y };
+		point[1] = { (long)m_vGunRectanglePoint[1].x, (long)m_vGunRectanglePoint[1].y };
+		point[2] = { (long)m_vGunRectanglePoint[2].x, (long)m_vGunRectanglePoint[2].y };
+		point[3] = { (long)m_vGunRectanglePoint[3].x, (long)m_vGunRectanglePoint[3].y };
+		ColorPolygon(hDC, point, 4, 111,70,49, 1);
 
 		ColorCircle(hDC, m_vLeftGunHandPos.x - 10+ iScrollX, m_vLeftGunHandPos.y - 10+ iScrollY, m_vLeftGunHandPos.x + 10+ iScrollX, m_vLeftGunHandPos.y + 10+ iScrollY, 252, 194, 114, 2); // 왼손
 		ColorCircle(hDC, m_vRightGunHandPos.x - 10+ iScrollX, m_vRightGunHandPos.y - 10+ iScrollY, m_vRightGunHandPos.x + 10+ iScrollX, m_vRightGunHandPos.y + 10+ iScrollY, 252, 194, 114, 2); // 오른손
@@ -217,6 +220,10 @@ void CYGPlayer::Key_Input()
 				}
 			}
 		}
+	}
+
+	if (CKeyManager::Get_Instance()->Key_Down('R')) {
+		CObjectManager::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CYGBulletBox>::Create(300, 300, 50, 50));
 	}
 
 	if (CKeyManager::Get_Instance()->Key_Down('F')) {

@@ -12,9 +12,11 @@ public:
 	void Render(HDC hDC) override;
 	void Release() override;
 	void OnCollision(CObject* _obj) override;
-private:
+public:
+	RECT Get_HitBox() { return m_tHitRect; }
+protected:
 	void OnCollision();
-private: 
+protected: 
 	D3DXVECTOR3 m_vOutBox[4];
 	D3DXVECTOR3 m_vOriginOutBox[4];
 	D3DXVECTOR3 m_vInBox[4];

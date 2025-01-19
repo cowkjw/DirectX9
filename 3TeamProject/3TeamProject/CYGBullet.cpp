@@ -1,8 +1,14 @@
 #include "pch.h"
 #include "CYGBullet.h"
 #include "CScrollManager.h"
+#include "CObjectManager.h"
+#include "CYGPlayer.h"
+#include "CYGBox.h"
+#include "CCollisionManager.h"
+#include "CYGMonster.h"
+#include "CYGBox.h"
 
-CYGBullet::CYGBullet():m_iReMoveTick(0)
+CYGBullet::CYGBullet():m_iReMoveTick(0), m_bDead(false)
 {
 }
 
@@ -24,6 +30,9 @@ void CYGBullet::Initialize()
 int CYGBullet::Update()
 {
 	m_iReMoveTick++;
+	if (m_bDead) {
+		return OBJ_DEAD;
+	}
 
 	if (m_iReMoveTick > 100) {
 		return OBJ_DEAD;
@@ -35,13 +44,14 @@ int CYGBullet::Update()
 
 void CYGBullet::Late_Update()
 {
+	OnCollision();
 }
 
 void CYGBullet::Render(HDC hDC)
 {
 	int		iScrollX = (int)CScrollManager::Get_Instance()->Get_ScrollX();
 	int		iScrollY = (int)CScrollManager::Get_Instance()->Get_ScrollY();
-	Rectangle(hDC, m_tHitRect.left+ iScrollX, m_tHitRect.top+ iScrollY, m_tHitRect.right+ iScrollX, m_tHitRect.bottom+ iScrollY);
+	Ellipse(hDC, m_tHitRect.left+ iScrollX, m_tHitRect.top+ iScrollY, m_tHitRect.right+ iScrollX, m_tHitRect.bottom+ iScrollY);
 }
 
 void CYGBullet::Release()
@@ -50,4 +60,32 @@ void CYGBullet::Release()
 
 void CYGBullet::OnCollision(CObject* _obj)
 {
+}
+
+void CYGBullet::OnCollision()
+{
+	CYGPlayer* _copyPlayer = dynamic_cast<CYGPlayer*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYER).back());
+	if (CCollisionManager::Check_Circle(m_tHitRect, _copyPlayer->Get_HitBox())) {
+		m_bDead = true;
+		_copyPlayer->Set_Hp(-5);
+		return;
+	}
+
+	if (CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_MONSTER).size() > 0) {
+		CYGMonster* _copyMonster = dynamic_cast<CYGMonster*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_MONSTER).back());
+		if (CCollisionManager::Check_Circle(m_tHitRect, _copyMonster->Get_HitBox())) {
+			m_bDead = true;
+			_copyMonster->Set_Hp(-5);
+			return;
+		}
+	}
+
+	if (CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_MAP).size() > 0) {
+		CYGBox* _copyMapObj = dynamic_cast<CYGBox*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_MAP).back());
+		if (CCollisionManager::Check_Circle(m_tHitRect, _copyMapObj->Get_HitBox())) {
+			m_bDead = true;
+			_copyMapObj->OnCollision(this);
+		}
+	}
+
 }
