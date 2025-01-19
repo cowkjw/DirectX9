@@ -4,7 +4,7 @@ class CCYTail : public CCYObject
 {
 public:
 	CCYTail() : m_targetHead(nullptr), m_fWormSize(0){}
-	virtual ~CCYTail() {}
+	virtual ~CCYTail() { Release(); }
 public:
 	void Initialize() override;
 	int Update() override;

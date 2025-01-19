@@ -7,6 +7,7 @@
 #include "CJWScene.h"
 #include "CCYPlayer.h"
 #include "CCYMonster.h"
+#include "CCYScene.h"
 
 CUiManager* CUiManager::m_pInstance = nullptr;
 
@@ -133,6 +134,8 @@ void CUiManager::RenderUi_CY(HDC hDC)
 	HFONT OldFont = (HFONT)SelectObject(hDC, hFont1);
 	//13 21 32
 
+	list<CObject*> Sortlist;
+
 	if (!(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER).empty()))
 	{
 		TCHAR szLength[32];
@@ -140,6 +143,8 @@ void CUiManager::RenderUi_CY(HDC hDC)
 		//SetTextColor(hDC, RGB(0, 0, 0));
 		//RECT rect2 = { 10, 450, 100, 600 };
 		TextOut(hDC, 10, 550, szLength, _tcslen(szLength));
+		Sortlist.push_back(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER).front());
+
 	}
 
 	DeleteObject(hFont1);
@@ -153,33 +158,12 @@ void CUiManager::RenderUi_CY(HDC hDC)
 
 	if (!(OBJMGR->Get_ObjList_ByID(OBJ_MONSTER).empty()))
 	{
-		list<CObject*> Sortlist;
-
-		Sortlist.push_back(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER).front());
 		for (auto& pMonster : OBJMGR->Get_ObjList_ByID(OBJ_MONSTER))
 			Sortlist.push_back(pMonster);
 
 		Sortlist.sort([](CObject* pDst, CObject* pSrc){
 				return static_cast<CCYHead*>(pDst)->Get_WormLength() > static_cast<CCYHead*>(pSrc)->Get_WormLength();
 		});
-
-
-
-
-		DeleteObject(hFont1);
-		hFont1 = CreateFont(15, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
-			OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, NONANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Arial"));
-		(HFONT)SelectObject(hDC, hFont1);
-
-		auto it = Sortlist.begin();
-		int i = 0;
-		for (; i < OBJMGR->Get_ObjList_ByID(OBJ_MONSTER).size(); ++i)
-		{
-			TCHAR szLength[32];
-			_stprintf_s(szLength, _T("Anonymous length: %d"), static_cast<CCYHead*>(*it)->Get_WormLength());
-			TextOut(hDC, 600, 20 + i * 20, szLength, _tcslen(szLength));
-			++it;
-		}
 
 		//HPEN hPen = CreatePen(PS_SOLID, 3, RGB(255,255,255));
 		//HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
@@ -191,6 +175,43 @@ void CUiManager::RenderUi_CY(HDC hDC)
 		//SelectObject(hDC, hOldPen); DeleteObject(hPen);
 
 	}
+	DeleteObject(hFont1);
+	hFont1 = CreateFont(15, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+		OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, NONANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Arial"));
+	(HFONT)SelectObject(hDC, hFont1);
+
+	auto it = Sortlist.begin();
+	int i = 0;
+	for (; i < Sortlist.size(); ++i)
+	{
+		TCHAR szLength[32];
+		if (dynamic_cast<CCYPlayer*>(*it) != nullptr)
+		{
+			SetTextColor(hDC, RGB(255,100,100)); //글자 색
+			_stprintf_s(szLength, _T("#%d Player length:    %d"), i + 1, static_cast<CCYHead*>(*it)->Get_WormLength());
+		}
+		else
+		{
+			SetTextColor(hDC, RGB(150, 150, 175)); //글자 색
+			_stprintf_s(szLength, _T("#%d Anonymous:      %d"), i + 1, static_cast<CCYHead*>(*it)->Get_WormLength());
+		}
+		TextOut(hDC, 600, 50 + i * 20, szLength, _tcslen(szLength));
+		++it;
+	}
+
+
+
+	if (OBJMGR->Get_ObjList_ByID(OBJ_PLAYER).empty())
+	{
+		TCHAR szTestText[64];
+
+		// 씬매니저 겟씬으로 playerlength받아와서 출력하자
+		static_cast<CCYScene*>(CSceneManager::Get_Instance()->Get_Scene())->Get_PlayerLength();
+		_stprintf_s(szTestText, _T("Your Final Length : %d", static_cast<CCYScene*>(CSceneManager::Get_Instance()->Get_Scene())->Get_PlayerLength()));
+		SetTextColor(hDC, RGB(0, 0, 0));
+		TextOut(hDC, 300, 10, szTestText, _tcslen(szTestText));
+	}
+
 
 	SelectObject(hDC, OldFont);
 	DeleteObject(hFont1);

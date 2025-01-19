@@ -55,10 +55,9 @@ int CCYMonster::Update()
 	}
 	if (m_ullRandomTicker + 500 < GetTickCount64())
 	{
-		m_fAngle += rand() % 5 + 5 * (rand() % 2 == 0 ? 1 : -1);
+		m_fAngle += rand() % 5 * 3 + 5 * (rand() % 2 == 0 ? 1 : -1);
 		m_ullRandomTicker = GetTickCount64();
 	}
-
 
 	m_tInfo.vPos.x -= cosf(D3DXToRadian(m_fAngle)) * m_fSpeed;
 	m_tInfo.vPos.y -= sinf(D3DXToRadian(m_fAngle)) * m_fSpeed;

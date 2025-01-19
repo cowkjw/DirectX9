@@ -17,7 +17,7 @@ public:
 	void Initialize_OriginPoint(const int& _iCount, const int& _Radius, const float& _fStartAngle = 0.f);
 	COLORREF SetRGB(BYTE r, BYTE g, BYTE b);
 	void GetRGB(COLORREF color, BYTE* r, BYTE* g, BYTE* b);
-	COLORREF AdjustRGB(COLORREF& color, int adjust);
+	COLORREF AdjustRGB(COLORREF& color, int adjustR, int adjustG, int adjustB);
 	void Set_PositionVector(D3DXVECTOR3 _vPos) { m_tInfo.vPos = _vPos; }
 	void Set_DirectionVector(D3DXVECTOR3 _vDir) { m_tInfo.vDir = _vDir; }
 	D3DXVECTOR3& Get_DirectionVector() { return m_tInfo.vDir; }

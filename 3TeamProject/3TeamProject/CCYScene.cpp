@@ -11,7 +11,7 @@
 #include "CCYMonster.h"
 
 
-CCYScene::CCYScene() : m_ullFoodTimeTicker(0)
+CCYScene::CCYScene() : m_ullFoodTimeTicker(0), m_iPlayerLength(0)
 {
 }
 
@@ -26,7 +26,7 @@ int CCYScene::Update()
 {
 	Key_Input();
 	CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER), OBJMGR->Get_ObjList_ByID(OBJ_MISC));
-	if (m_ullFoodTimeTicker + rand() % 20 * 20  + 1000 < GetTickCount64())
+	if (m_ullFoodTimeTicker + rand() % 20 * 200  + 1000 < GetTickCount64())
 	{
 		CObjectManager::Get_Instance()->Add_Object(OBJ_MISC, CAbstractFactory<CCYFood>::Create());
 		m_ullFoodTimeTicker = GetTickCount64();
@@ -38,6 +38,7 @@ int CCYScene::Update()
 
 void CCYScene::Late_Update()
 {
+	m_iPlayerLength = static_cast<CCYPlayer*>(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER).front())->Get_WormLength();
 	//CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER), OBJMGR->Get_ObjList_ByID(OBJ_CYTAIL));
 	//CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_MONSTER), OBJMGR->Get_ObjList_ByID(OBJ_CYTAIL));
 	CObjectManager::Get_Instance()->Late_Update();
