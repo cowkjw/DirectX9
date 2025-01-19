@@ -23,6 +23,10 @@ CMainGame::~CMainGame()
 void CMainGame::Initialize()
 {
 	CBitManager::Get_Instance()->Insert_Bmp(L"../Assets/Back/Back.bmp", L"Back");
+	CBitManager::Get_Instance()->Insert_Bmp(L"../Assets/Image/YG.bmp", L"YG");
+	CBitManager::Get_Instance()->Insert_Bmp(L"../Assets/Image/CY.bmp", L"CY");
+	CBitManager::Get_Instance()->Insert_Bmp(L"../Assets/Image/DW.bmp", L"DW");
+	CBitManager::Get_Instance()->Insert_Bmp(L"../Assets/Image/JW.bmp", L"JW");
 
 	m_hDC = GetDC(g_hWnd);
 	CSceneManager::Get_Instance()->Set_Scene(SC_MENU);

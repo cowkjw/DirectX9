@@ -112,9 +112,9 @@ void CDWPlayer::Render(HDC hDC)
 
 	Ellipse(hDC, m_pRenderPoint[25].x - 5, m_pRenderPoint[25].y - 5, m_pRenderPoint[25].x + 5, m_pRenderPoint[25].y + 5);
 
-	TCHAR m_szBuf[100] = {};
-	swprintf_s(m_szBuf, L"플레이어 x : %.f, 플레이어 y : %.f", m_tInfo.vPos.x, m_tInfo.vPos.y);
-	TextOut(hDC, 300, 5, m_szBuf, lstrlen(m_szBuf));
+	//TCHAR m_szBuf[100] = {};
+	//swprintf_s(m_szBuf, L"플레이어 x : %.f, 플레이어 y : %.f", m_tInfo.vPos.x, m_tInfo.vPos.y);
+	//TextOut(hDC, 300, 5, m_szBuf, lstrlen(m_szBuf));
 
 
 
