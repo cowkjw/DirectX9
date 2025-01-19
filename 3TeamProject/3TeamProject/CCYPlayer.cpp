@@ -8,7 +8,7 @@
 #include "CCollisionManager.h"
 #include "CObjectManager.h"
 
-CCYPlayer::CCYPlayer() :m_fAngle(0.f), m_fWormSize(0.f), m_ullTailDeleteTicker(0.f), m_bDashing(false)
+CCYPlayer::CCYPlayer() : m_fWormSize(0.f), m_ullTailDeleteTicker(0.f), m_bDashing(false)
 {
 }
 
@@ -49,6 +49,7 @@ int CCYPlayer::Update()
 	D3DXVec3Normalize(&m_tInfo.vDir, &m_tInfo.vDir);
 	m_fTargetAngle = acosf(m_tInfo.vDir.x);
 
+	//m_tInfo.vPos -= m_tInfo.vDir * m_fSpeed;
 	if (Get_Mouse().y > m_tInfo.vPos.y)
 		m_fTargetAngle = (2 * D3DX_PI) - m_fTargetAngle;
 
@@ -106,6 +107,7 @@ int CCYPlayer::Update()
 	{
 		pTail->Update();
 	}
+
 	__super::Update_Rect();
     return 0;
 }
@@ -143,6 +145,7 @@ void CCYPlayer::Render(HDC hDC)
 	SelectObject(hDC, hOldPen); DeleteObject(hPen);
 
 
+
 	if (m_bDead)
 	{
 		TCHAR szTestText[64];
@@ -150,6 +153,13 @@ void CCYPlayer::Render(HDC hDC)
 		SetTextColor(hDC, RGB(0, 0, 0));
 		TextOut(hDC, 300, 10, szTestText, _tcslen(szTestText));
 	}
+
+	//Ellipse(hDC, m_pRenderPoint[3].x - 3.f, m_pRenderPoint[3].y - 3.f,
+	//	m_pRenderPoint[3].x + 3.f, m_pRenderPoint[3].y + 3.f);
+
+
+	//Ellipse(hDC, m_pRenderPoint[4].x - 3.f, m_pRenderPoint[4].y - 3.f,
+	//	m_pRenderPoint[4].x + 3.f, m_pRenderPoint[4].y + 3.f);
 
 }
 

@@ -6,6 +6,7 @@
 #include "CYGPlayer.h"
 #include "CJWScene.h"
 #include "CCYPlayer.h"
+#include "CCYMonster.h"
 
 CUiManager* CUiManager::m_pInstance = nullptr;
 
@@ -114,13 +115,13 @@ void CUiManager::RenderUi_CY(HDC hDC)
 
 	
 	HFONT hFont1 = CreateFont(17, 0, 0, 0, FW_SEMIBOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
-		OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, NONANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Arial"));
+		OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Arial"));
 
 
 	HFONT OldFont = (HFONT)SelectObject(hDC, hFont1);
 	//13 21 32
 
-	if (!(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYER).empty()))
+	if (!(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER).empty()))
 	{
 		TCHAR szLength[32];
 		_stprintf_s(szLength, _T("Your length: %d"), static_cast<CCYPlayer*>(GET_PLAYER)->Get_WormLength());
@@ -129,8 +130,61 @@ void CUiManager::RenderUi_CY(HDC hDC)
 		TextOut(hDC, 10, 550, szLength, _tcslen(szLength));
 	}
 
+	DeleteObject(hFont1);
+	hFont1 = CreateFont(30, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+		OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Arial"));
+	(HFONT)SelectObject(hDC, hFont1);
+	
+	TCHAR szLength[32];
+	_stprintf_s(szLength, _T("Leaderboard"));
+	TextOut(hDC, 600, 20, szLength, _tcslen(szLength));
+
+	if (!(OBJMGR->Get_ObjList_ByID(OBJ_MONSTER).empty()))
+	{
+		list<CObject*> Sortlist;
+
+		Sortlist.push_back(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER).front());
+		for (auto& pMonster : OBJMGR->Get_ObjList_ByID(OBJ_MONSTER))
+			Sortlist.push_back(pMonster);
+
+		Sortlist.sort([](CObject* pDst, CObject* pSrc){
+				return static_cast<CCYHead*>(pDst)->Get_WormLength() > static_cast<CCYHead*>(pSrc)->Get_WormLength();
+		});
+
+
+
+
+		DeleteObject(hFont1);
+		hFont1 = CreateFont(15, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+			OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, NONANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Arial"));
+		(HFONT)SelectObject(hDC, hFont1);
+
+		auto it = Sortlist.begin();
+		int i = 0;
+		for (; i < OBJMGR->Get_ObjList_ByID(OBJ_MONSTER).size(); ++i)
+		{
+			TCHAR szLength[32];
+			_stprintf_s(szLength, _T("Anonymous length: %d"), static_cast<CCYHead*>(*it)->Get_WormLength());
+			TextOut(hDC, 600, 20 + i * 20, szLength, _tcslen(szLength));
+			++it;
+		}
+
+		//HPEN hPen = CreatePen(PS_SOLID, 3, RGB(255,255,255));
+		//HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+		//MoveToEx(hDC, 590, 10, nullptr);
+		//LineTo(hDC, 780, 10);
+		//LineTo(hDC, 780, 30 + i * 20);
+		//LineTo(hDC, 590, 30 + i * 20);
+		//LineTo(hDC, 590, 10);
+		//SelectObject(hDC, hOldPen); DeleteObject(hPen);
+
+	}
+
 	SelectObject(hDC, OldFont);
 	DeleteObject(hFont1);
+
+	SetTextColor(hDC, RGB(0,0,0)); //글자 색
+	SetBkMode(hDC, OPAQUE); //글자 배경
 
 }
 
