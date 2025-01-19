@@ -2,6 +2,7 @@
 #include "CMenuScene.h"
 #include "CKeyManager.h"
 #include "CSceneManager.h"
+#include "CBitManager.h"
 
 CMenuScene::CMenuScene():m_iIndex(0)
 {
@@ -34,22 +35,15 @@ void CMenuScene::Render(HDC hDC)
     DeleteObject(hBrush);
     DeleteObject(hPen);
 
-    color = RGB(255, 255, 255);
-    hBrush = CreateSolidBrush(color);
-    hPen = CreatePen(PS_SOLID, 3, RGB(128, 128, 128));
-    hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
-    hOldPen = (HPEN)SelectObject(hDC, hPen);
+    SetTextColor(hDC, RGB(255, 255, 255));
+    HFONT hFont1 = CreateFont(50, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, NONANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Arial"));
+    HFONT hOldFont = (HFONT)SelectObject(hDC, hFont1);
+    TCHAR szLength[64];
+    _stprintf_s(szLength, _T("3 TeamProject"));
+    TextOut(hDC, 250, 100, szLength, _tcslen(szLength));
+    SelectObject(hDC, hOldFont);
+    DeleteObject(hFont1);
 
-    for (int i = 0; i < 4; ++i) {
-        if (i != m_iIndex) {
-            Rectangle(hDC, 20 + (200*i), 200, 180 + (200 * i), 400);
-        }
-    }
-
-    SelectObject(hDC, hOldBrush);
-    SelectObject(hDC, hOldPen);
-    DeleteObject(hBrush);
-    DeleteObject(hPen);
 
     color = RGB(255, 255, 255);
     hBrush = CreateSolidBrush(color);
@@ -84,6 +78,18 @@ void CMenuScene::Render(HDC hDC)
     _stprintf_s(whoMake, _T("Àå¿ø"));
     rect = { 620, 410, 780, 450 };
     DrawText(hDC, whoMake, _tcslen(whoMake), &rect, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+
+    HDC		hMemDC = CBitManager::Get_Instance()->Find_Image(L"YG");
+    GdiTransparentBlt(hDC, 11, 191, 178, 218, hMemDC, 0, 0, 347, 424, SRCCOPY);
+
+    hMemDC = CBitManager::Get_Instance()->Find_Image(L"CY");
+    GdiTransparentBlt(hDC, 211, 191, 178, 218, hMemDC, 0, 0, 295, 395, SRCCOPY);
+
+    hMemDC = CBitManager::Get_Instance()->Find_Image(L"DW");
+    GdiTransparentBlt(hDC, 411, 191, 178, 218, hMemDC, 0, 0, 292, 430, SRCCOPY);
+
+    hMemDC = CBitManager::Get_Instance()->Find_Image(L"JW");
+    GdiTransparentBlt(hDC, 611, 191, 178, 218, hMemDC, 0, 0, 429, 563, SRCCOPY);
 }
 
 void CMenuScene::Release()

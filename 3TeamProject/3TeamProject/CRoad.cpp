@@ -261,9 +261,9 @@ void CRoad::Render_Obstacles(HDC hDC)
 		x = obs.vPos.x;
 		y = obs.vPos.y;
 
-		TCHAR m_szBuf2[100] = {};
-		swprintf_s(m_szBuf2, L"장애물 스케일 크기 : %f",obs.fScale);
-		TextOut(hDC, 300, 100, m_szBuf2, lstrlen(m_szBuf2));
+		//TCHAR m_szBuf2[100] = {};
+		//swprintf_s(m_szBuf2, L"장애물 스케일 크기 : %f",obs.fScale);
+		//TextOut(hDC, 300, 100, m_szBuf2, lstrlen(m_szBuf2));
 
 
 
@@ -302,31 +302,31 @@ void CRoad::Render_Obstacles(HDC hDC)
 
 		}
 
-		if (!m_Obstacles.empty())
-		{
-			// 첫 번째 장애물
-			auto& firstObs = m_Obstacles.front(); // 첫 장애물
-			TCHAR buf[100];
-			swprintf_s(buf, L"첫 장애물 왼쪽 위 X=%.2f", firstObs.screenCorner[0].x);
-			TextOut(hDC, 300, 130, buf, lstrlen(buf));
-			swprintf_s(buf, L"첫 장애물 왼쪽 위 y=%.2f", firstObs.screenCorner[0].y);
-			TextOut(hDC, 300, 150, buf, lstrlen(buf));
+		//if (!m_Obstacles.empty())
+		//{
+		//	// 첫 번째 장애물
+		//	auto& firstObs = m_Obstacles.front(); // 첫 장애물
+		//	TCHAR buf[100];
+		//	swprintf_s(buf, L"첫 장애물 왼쪽 위 X=%.2f", firstObs.screenCorner[0].x);
+		//	TextOut(hDC, 300, 130, buf, lstrlen(buf));
+		//	swprintf_s(buf, L"첫 장애물 왼쪽 위 y=%.2f", firstObs.screenCorner[0].y);
+		//	TextOut(hDC, 300, 150, buf, lstrlen(buf));
 
-			swprintf_s(buf, L"첫 장애물 오른쪽 위 X=%.2f", firstObs.screenCorner[1].x);
-			TextOut(hDC, 300, 170, buf, lstrlen(buf));
-			swprintf_s(buf, L"첫 장애물 오른쪽 위 y=%.2f", firstObs.screenCorner[1].y);
-			TextOut(hDC, 300, 190, buf, lstrlen(buf));
+		//	swprintf_s(buf, L"첫 장애물 오른쪽 위 X=%.2f", firstObs.screenCorner[1].x);
+		//	TextOut(hDC, 300, 170, buf, lstrlen(buf));
+		//	swprintf_s(buf, L"첫 장애물 오른쪽 위 y=%.2f", firstObs.screenCorner[1].y);
+		//	TextOut(hDC, 300, 190, buf, lstrlen(buf));
 
-			swprintf_s(buf, L"첫 장애물 오른쪽 아래 X=%.2f", firstObs.screenCorner[2].x);
-			TextOut(hDC, 300, 210, buf, lstrlen(buf));
-			swprintf_s(buf, L"첫 장애물 오른쪽 아래 y=%.2f", firstObs.screenCorner[2].y);
-			TextOut(hDC, 300, 230, buf, lstrlen(buf));
+		//	swprintf_s(buf, L"첫 장애물 오른쪽 아래 X=%.2f", firstObs.screenCorner[2].x);
+		//	TextOut(hDC, 300, 210, buf, lstrlen(buf));
+		//	swprintf_s(buf, L"첫 장애물 오른쪽 아래 y=%.2f", firstObs.screenCorner[2].y);
+		//	TextOut(hDC, 300, 230, buf, lstrlen(buf));
 
-			swprintf_s(buf, L"첫 장애물 왼쪽 아래 X=%.2f", firstObs.screenCorner[3].x);
-			TextOut(hDC, 300, 250, buf, lstrlen(buf));
-			swprintf_s(buf, L"첫 장애물 왼쪽 아래 y=%.2f", firstObs.screenCorner[3].y);
-			TextOut(hDC, 300, 270, buf, lstrlen(buf));
-		}
+		//	swprintf_s(buf, L"첫 장애물 왼쪽 아래 X=%.2f", firstObs.screenCorner[3].x);
+		//	TextOut(hDC, 300, 250, buf, lstrlen(buf));
+		//	swprintf_s(buf, L"첫 장애물 왼쪽 아래 y=%.2f", firstObs.screenCorner[3].y);
+		//	TextOut(hDC, 300, 270, buf, lstrlen(buf));
+		//}
 
 		//HPEN hPen = CreatePen(PS_SOLID, 2, RGB(255, 0, 0));
 		//HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
@@ -337,9 +337,9 @@ void CRoad::Render_Obstacles(HDC hDC)
 
 
 
-		TCHAR m_szBuf6[100] = {};
-		swprintf_s(m_szBuf6, L"장애물  z 좌표 : %f", m_Obstacles[0].vPos.z);
-		TextOut(hDC, 100, 170, m_szBuf6, lstrlen(m_szBuf6));
+		//TCHAR m_szBuf6[100] = {};
+		//swprintf_s(m_szBuf6, L"장애물  z 좌표 : %f", m_Obstacles[0].vPos.z);
+		//TextOut(hDC, 100, 170, m_szBuf6, lstrlen(m_szBuf6));
 
 
 		HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hPatternBrush);
@@ -448,9 +448,9 @@ void CRoad::Render(HDC hDC)
 	}
 	Render_Obstacles(hDC);
 
-	TCHAR m_szBuf[100] = {};
-	swprintf_s(m_szBuf, L"통로 x : %.f, 통로 y : %.f", m_tInfo.vPos.x, m_tInfo.vPos.y);
-	TextOut(hDC, 300, 30, m_szBuf, lstrlen(m_szBuf));
+	//TCHAR m_szBuf[100] = {};
+	//swprintf_s(m_szBuf, L"통로 x : %.f, 통로 y : %.f", m_tInfo.vPos.x, m_tInfo.vPos.y);
+	//TextOut(hDC, 300, 30, m_szBuf, lstrlen(m_szBuf));
 }
 void CRoad::Spawn_Obstacle()
 {

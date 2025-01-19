@@ -56,10 +56,14 @@ void CUiManager::RenderUi_YG(HDC hDC)
 	DeleteObject(hBrush);
 	DeleteObject(hPen);
 
+	int hpWidth = 0;
 	CYGPlayer* _copyYGPlayer = static_cast<CYGPlayer*>(CObjectManager::Get_Instance()->Get_Player());
-	int hpWidth = (400 * _copyYGPlayer->Get_Hp()) / _copyYGPlayer->Get_MaxHp();
+	if (_copyYGPlayer->Get_Hp() > 0) {
+		hpWidth = (400 * _copyYGPlayer->Get_Hp()) / _copyYGPlayer->Get_MaxHp();
+	}
+	
 
-	color = RGB(179, 179, 179);
+	color = RGB(237, 52, 52);
 	hBrush = CreateSolidBrush(color);
 	hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
 	hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
@@ -203,13 +207,31 @@ void CUiManager::RenderUi_CY(HDC hDC)
 
 	if (OBJMGR->Get_ObjList_ByID(OBJ_PLAYER).empty())
 	{
-		TCHAR szTestText[64];
+		TCHAR szGameoverText[64];
 
-		// 씬매니저 겟씬으로 playerlength받아와서 출력하자
-		static_cast<CCYScene*>(CSceneManager::Get_Instance()->Get_Scene())->Get_PlayerLength();
-		_stprintf_s(szTestText, _T("Your Final Length : %d", static_cast<CCYScene*>(CSceneManager::Get_Instance()->Get_Scene())->Get_PlayerLength()));
-		SetTextColor(hDC, RGB(0, 0, 0));
-		TextOut(hDC, 300, 10, szTestText, _tcslen(szTestText));
+		DeleteObject(hFont1);
+		hFont1 = CreateFont(40, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, DEFAULT_CHARSET,
+			OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, VARIABLE_PITCH, TEXT("Arial"));
+		(HFONT)SelectObject(hDC, hFont1);
+
+		SetTextColor(hDC, RGB(255,255,255)); //글자 색
+		SetBkMode(hDC, TRANSPARENT); //글자 배경
+		int oldAlign = SetTextAlign(hDC, TA_CENTER);
+		HPEN hPen = CreatePen(PS_SOLID, 3, RGB(40, 49, 63));
+		HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+
+
+		HBRUSH PinkBrush = CreateSolidBrush(RGB(40, 49, 63));
+		HBRUSH OldBrush = (HBRUSH)SelectObject(hDC, PinkBrush);
+		Rectangle(hDC, 170, 260, 630, 340);
+
+		_stprintf_s(szGameoverText, _T("Your Final Length was %d"), static_cast<CCYScene*>(CSceneManager::Get_Instance()->Get_Scene())->Get_PlayerLength());
+		TextOut(hDC, 400, 280, szGameoverText, _tcslen(szGameoverText));
+		SetTextColor(hDC, RGB(0, 0, 0)); //글자 색
+		SetBkMode(hDC, OPAQUE); //글자 배경
+		SetTextAlign(hDC, oldAlign);
+		SelectObject(hDC, OldBrush); DeleteObject(PinkBrush);
+		SelectObject(hDC, hOldPen); DeleteObject(hPen);
 	}
 
 

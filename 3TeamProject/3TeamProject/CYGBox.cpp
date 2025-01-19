@@ -7,6 +7,7 @@
 #include "CAbstractFactory.h"
 #include "CScrollManager.h"
 #include "CYGMonster.h"
+#include "CSoundManager.h"
 
 CYGBox::CYGBox():m_HitTick(0), m_iScaleSize(0)
 {
@@ -137,6 +138,7 @@ void CYGBox::OnCollision(CObject* _obj)
 	if (m_HitTick > 20) {
 		m_iScaleSize -= 0.3f;
 		m_HitTick = 0;
+		CSoundManager::GetInstance()->PlayEffect("YGBoxBreak");
 	}
 }
 
@@ -160,6 +162,7 @@ void CYGBox::OnCollision()
 		if (m_HitTick > 20) {
 			m_iScaleSize -= 0.3f;
 			m_HitTick = 0;
+			CSoundManager::GetInstance()->PlayEffect("YGBoxBreak");
 		}
 	}
 }

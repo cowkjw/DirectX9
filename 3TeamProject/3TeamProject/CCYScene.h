@@ -20,9 +20,8 @@ public:
 	int Get_PlayerLength() { return m_iPlayerLength; }
 
 private:
-	enum SLITHERNUM { SL_PLAYER, SL_END };
-	vector<vector<CObject>*> m_SlitherSegvec;
 	ULONGLONG	m_ullFoodTimeTicker;
+	ULONGLONG	m_ullMonsterTimeTicker;
 	int			m_iPlayerLength;
 };
 

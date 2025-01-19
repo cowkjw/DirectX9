@@ -4,13 +4,13 @@ CSoundManager* CSoundManager::m_pInstance = nullptr;
 CSoundManager::CSoundManager() : m_System(nullptr), m_BGMChannel(nullptr) {
     if (System_Create(&m_System) != FMOD_OK)
     {
-       cerr << "FMOD »ý¼º ½ÇÆÐ" << endl;
+       cerr << "FMOD ìƒì„± ì‹¤íŒ¨" << endl;
         return;
     }
 
     if (m_System->init(512, FMOD_INIT_NORMAL, nullptr) != FMOD_OK) 
     {
-        cerr << "FMOD ÃÊ±âÈ­ ½ÇÆÐ" << endl;
+        cerr << "FMOD ì´ˆê¸°í™” ì‹¤íŒ¨" << endl;
     }
 }
 
@@ -21,7 +21,7 @@ CSoundManager::~CSoundManager()
 
 void CSoundManager::LoadSound(const string& name, const string& filePath, bool isStream, bool loop) {
     FMOD_MODE mode = FMOD_DEFAULT;
-    if (isStream)  // ½ºÆ®¸®¹Ö Çü½Ä
+    if (isStream)  // ìŠ¤íŠ¸ë¦¬ë° í˜•ì‹
     {
         mode |= FMOD_CREATESTREAM;
     }
@@ -51,7 +51,7 @@ void CSoundManager::PlayEffect(const string& name, bool loop)
 
     Channel* channel = nullptr;
 
-    // ±âÁ¸ Ã¤³Î Á¦°Å
+    // ê¸°ì¡´ ì±„ë„ ì œê±°
     auto channelIt = m_EffectChannels.find(name);
     if (channelIt != m_EffectChannels.end())
     {
@@ -59,7 +59,7 @@ void CSoundManager::PlayEffect(const string& name, bool loop)
         m_EffectChannels.erase(channelIt);
     }
 
-    // »õ Ã¤³Î »ý¼º ¹× Àç»ý
+    // ìƒˆ ì±„ë„ ìƒì„± ë° ìž¬ìƒ
     if (m_System->playSound(soundIt->second, nullptr, false, &channel) == FMOD_OK)
     {
         if (loop)
@@ -86,7 +86,7 @@ void CSoundManager::PlayBGM(const string& name, bool loop) {
         return;
     }
 
-    if (loop) // ·çÇÁ ¼³Á¤
+    if (loop) // ë£¨í”„ ì„¤ì •
     {
         m_BGMChannel->setMode(FMOD_LOOP_NORMAL);
     }
@@ -100,8 +100,8 @@ bool CSoundManager::IsSoundPlaying(const string& name)
         return false;
     }
 
-    // ÃÖ´ë Ã¤³Î ¼ö¸¸Å­ ¼øÈ¸
-    for (int i = 0; i < 512; i++)  // 512´Â init¿¡¼­ ¼³Á¤ÇÑ Ã¤³Î ¼ö
+    // ìµœëŒ€ ì±„ë„ ìˆ˜ë§Œí¼ ìˆœíšŒ
+    for (int i = 0; i < 512; i++)  // 512ëŠ” initì—ì„œ ì„¤ì •í•œ ì±„ë„ ìˆ˜
     {
         Channel* channel = nullptr;
         bool isPlaying = false;
@@ -115,13 +115,13 @@ bool CSoundManager::IsSoundPlaying(const string& name)
                 channel->isPlaying(&isPlaying);
                 if (isPlaying)
                 {
-                    return true;  // Àç»ý ÁßÀÎ Ã¤³ÎÀ» Ã£À¸¸é true ¹ÝÈ¯
+                    return true;  // ìž¬ìƒ ì¤‘ì¸ ì±„ë„ì„ ì°¾ìœ¼ë©´ true ë°˜í™˜
                 }
             }
         }
     }
 
-    return false;  // ¾î¶² Ã¤³Î¿¡¼­µµ Àç»ý ÁßÀÌÁö ¾ÊÀ¸¸é false ¹ÝÈ¯
+    return false;  // ì–´ë–¤ ì±„ë„ì—ì„œë„ ìž¬ìƒ ì¤‘ì´ì§€ ì•Šìœ¼ë©´ false ë°˜í™˜
 }
 
 void CSoundManager::StopBGM() 
@@ -137,15 +137,15 @@ void CSoundManager::StopAllSounds()
 {
     if (m_System)
     {
-        m_System->update();  // Ã¤³Îµé ¾÷µ¥ÀÌÆ®
-        ChannelGroup* masterGroup = nullptr; // ¸ðµç Ã¤³Î °¡Á®¿Ã Æ÷ÀÎÅÍ
+        m_System->update();  // ì±„ë„ë“¤ ì—…ë°ì´íŠ¸
+        ChannelGroup* masterGroup = nullptr; // ëª¨ë“  ì±„ë„ ê°€ì ¸ì˜¬ í¬ì¸í„°
         if (m_System->getMasterChannelGroup(&masterGroup) == FMOD_OK) 
         {
             masterGroup->stop();
         }
         else 
         {
-            cerr << "¸ØÃß±â ½ÇÆÐ" <<endl;
+            cerr << "ë©ˆì¶”ê¸° ì‹¤íŒ¨" <<endl;
         }
     }
 }
@@ -160,9 +160,22 @@ void CSoundManager::Update()
 
 void CSoundManager::Initialize()
 {
+   //JW
    LoadSound("WaterMelon_BGM", "../Assets/Sound/WaterMelon_BGM.mp3", true,true);
    LoadSound("DropSound", "../Assets/Sound/DropSound.mp3");
    LoadSound("MergeSound", "../Assets/Sound/MergeSound.mp3");
+   //CY
+   LoadSound("CY_BGM", "../Assets/Sound/CY_BGM.mp3", true,true);
+   LoadSound("CY_EatFood", "../Assets/Sound/Eat_food.ogg");
+   //YG
+   LoadSound("YGSurviv_BGM", "../Assets/Sound/YGSurviv_BGM.mp3", true, true);
+   LoadSound("YGHit", "../Assets/Sound/YGHit.mp3");
+   LoadSound("YGGunPickup", "../Assets/Sound/YGGunPickup.mp3");
+   LoadSound("YGfootstep", "../Assets/Sound/YGfootstep.mp3");
+   LoadSound("YGFire", "../Assets/Sound/YGFire.mp3");
+   LoadSound("YGEmptyfire", "../Assets/Sound/YGEmptyfire.mp3");
+   LoadSound("YGBulletPickup", "../Assets/Sound/YGBulletPickup.mp3");
+   LoadSound("YGBoxBreak", "../Assets/Sound/YGBoxBreak.mp3");
 }
 
 void CSoundManager::Release()

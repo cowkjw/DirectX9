@@ -12,7 +12,7 @@ void CCYFood::Initialize()
 	m_tInfo.fSizeX = m_tInfo.fSizeY = (float)(rand() % 18 + 8);
 	CCYObject::Initialize_OriginPoint(rand() % 3 + 3, (int)(m_tInfo.fSizeX / 2));
 	randomcolor = RGB(rand() % 255, rand() % 255, rand() % 255);
-
+	m_ullLivingTime = GetTickCount64();
 }
 
 int CCYFood::Update()
@@ -21,6 +21,7 @@ int CCYFood::Update()
 	{
 		return OBJ_DEAD;
 	}
+	randomcolor = RGB(rand() % 255, rand() % 255, rand() % 255);
 
 	m_fAngle += m_fSpeed;
 
@@ -43,6 +44,10 @@ int CCYFood::Update()
 
 void CCYFood::Late_Update()
 {
+	if (m_ullLivingTime + 8000 < GetTickCount64())
+	{
+		m_bDead = true;
+	}
 }
 
 void CCYFood::Render(HDC hDC)

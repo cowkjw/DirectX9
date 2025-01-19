@@ -3,6 +3,7 @@
 #include "CCYTail.h"
 #include "CCollisionManager.h"
 #include "CObjectManager.h"
+#include "CCYFood.h"
 
 void CCYMonster::Initialize()
 {
@@ -36,7 +37,8 @@ void CCYMonster::Initialize()
 
 
 
-	m_fSpeed = rand()%3 * 1.2 + 1;
+	//m_fSpeed = rand()%3 * 1.5 + 1;
+	m_fSpeed = 2;
 	m_tInfo.vLook = { 1.f, 0.f, 0.f };
 	CCYObject::Initialize_OriginPoint(12, 16);
 	m_WormColor = RGB(rand()%235 + 20, rand() % 235 + 20, rand() % 235 + 20);
@@ -44,6 +46,7 @@ void CCYMonster::Initialize()
 	{
 		Increase_TailSegment();
 	}
+	m_tInfo.fSizeX = m_tInfo.fSizeY = 35;
 	//m_fAngle = rand() % 365;
 }
 
@@ -53,9 +56,9 @@ int CCYMonster::Update()
 	{
 		return OBJ_DEAD;
 	}
-	if (m_ullRandomTicker + 500 < GetTickCount64())
+	if (m_ullRandomTicker + 200 < GetTickCount64())
 	{
-		m_fAngle += rand() % 5 * 3 + 5 * (rand() % 2 == 0 ? 1 : -1);
+		m_fAngle += ((rand() % 5 + 5) * 3) * (rand() % 2 == 0 ? 1 : -1);
 		m_ullRandomTicker = GetTickCount64();
 	}
 
@@ -128,6 +131,10 @@ void CCYMonster::Release()
 
 void CCYMonster::OnCollision(CObject* _obj)
 {
+	if (dynamic_cast<CCYFood*>(_obj) != nullptr)
+	{
+		Increase_TailSegment();
+	}
 }
 
 void CCYMonster::Increase_TailSegment()

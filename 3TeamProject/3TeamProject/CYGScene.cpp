@@ -9,6 +9,7 @@
 #include "CYGBox.h"
 #include "CScrollManager.h"
 #include "CYGMonster.h"
+#include "CSoundManager.h"
 
 CYGScene::CYGScene():m_bRound1Start(false), m_iMoveX(0)
 {
@@ -16,6 +17,7 @@ CYGScene::CYGScene():m_bRound1Start(false), m_iMoveX(0)
 
 void CYGScene::Initialize()
 {
+	CSoundManager::GetInstance()->PlayBGM("YGSurviv_BGM");
 	CScrollManager::Get_Instance()->Set_ScrollLock(4000, 4000);
 	CUiManager::Get_Instance()->Set_UiType(UI_END);
 

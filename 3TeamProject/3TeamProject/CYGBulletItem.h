@@ -6,6 +6,7 @@ public:
 	CYGBulletItem();
 	virtual ~CYGBulletItem();
 public:
+	int Update();
 	void Render(HDC hDC);
 };
 

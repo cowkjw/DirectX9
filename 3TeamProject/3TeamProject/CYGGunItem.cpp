@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CYGGunItem.h"
 #include "CScrollManager.h"
+#include "CSoundManager.h"
 
 CYGGunItem::CYGGunItem()
 {
@@ -10,6 +11,16 @@ CYGGunItem::CYGGunItem()
 CYGGunItem::~CYGGunItem()
 {
 	
+}
+
+int CYGGunItem::Update()
+{
+	if (m_bDead) {
+		CSoundManager::GetInstance()->PlayEffect("YGGunPickup");
+		return OBJ_DEAD;
+	}
+	__super::Update_Rect();
+	return 0;
 }
 
 void CYGGunItem::Render(HDC hDC)

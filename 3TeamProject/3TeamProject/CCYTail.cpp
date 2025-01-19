@@ -15,7 +15,7 @@ void CCYTail::Initialize()
 	m_tInfo.vPos = m_targetObj->Get_Info().vPos;
 	m_fSpeed = 2.f;
 	m_tInfo.vLook = { 1.f, 0.f, 0.f };
-	m_tInfo.fSizeX = m_tInfo.fSizeY = 40;
+	m_tInfo.fSizeX = m_tInfo.fSizeY = 30;
 	CCYObject::Initialize_OriginPoint(12, 12);
 	m_WormColor = static_cast<CCYObject*>(m_targetHead)->Get_WormColor();
 }

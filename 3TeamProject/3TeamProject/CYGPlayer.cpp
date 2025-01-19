@@ -9,8 +9,9 @@
 #include "CYGGunItem.h"
 #include "CYGItem.h"
 #include "CYGBulletBox.h"
+#include "CSoundManager.h"
 
-CYGPlayer::CYGPlayer():m_bLeftPush(false), m_iShootTick(0), m_bHaveGun(false), m_iBulletNum(0)
+CYGPlayer::CYGPlayer():m_bLeftPush(false), m_iShootTick(0), m_bHaveGun(false), m_iBulletNum(0), m_footStepTick(0)
 {
 }
 
@@ -57,6 +58,7 @@ void CYGPlayer::Initialize()
 
 int CYGPlayer::Update()
 {
+	m_footStepTick++;
 	m_CollisionBox = { 0,0,0,0 };
 	m_iShootTick++;
 	m_tInfo.vLook = Get_Mouse() - m_tInfo.vPos;
@@ -163,24 +165,40 @@ void CYGPlayer::OnCollision(CObject* _obj)
 void CYGPlayer::Key_Input()
 {
 	if (CKeyManager::Get_Instance()->Key_Pressing('W')) {
+		if (m_footStepTick > 10) {
+			CSoundManager::GetInstance()->PlayEffect("YGfootstep");
+			m_footStepTick = 0;
+		}
 		m_tInfo.vDir = { 0.f, -1.f, 0.f };
 		m_tInfo.vPos += m_tInfo.vDir * m_fSpeed;
 		m_vOriginPos += m_tInfo.vDir * m_fSpeed;
 	}
 
 	if (CKeyManager::Get_Instance()->Key_Pressing('S')) {
+		if (m_footStepTick > 10) {
+			CSoundManager::GetInstance()->PlayEffect("YGfootstep");
+			m_footStepTick = 0;
+		}
 		m_tInfo.vDir = { 0.f, 1.f, 0.f };
 		m_tInfo.vPos += m_tInfo.vDir * m_fSpeed;
 		m_vOriginPos += m_tInfo.vDir * m_fSpeed;
 	}
 
 	if (CKeyManager::Get_Instance()->Key_Pressing('A')) {
+		if (m_footStepTick > 10) {
+			CSoundManager::GetInstance()->PlayEffect("YGfootstep");
+			m_footStepTick = 0;
+		}
 		m_tInfo.vDir = { -1.f, 0.f, 0.f };
 		m_tInfo.vPos += m_tInfo.vDir * m_fSpeed;
 		m_vOriginPos += m_tInfo.vDir * m_fSpeed;
 	}
 
 	if (CKeyManager::Get_Instance()->Key_Pressing('D')) {
+		if (m_footStepTick > 10) {
+			CSoundManager::GetInstance()->PlayEffect("YGfootstep");
+			m_footStepTick = 0;
+		}
 		m_tInfo.vDir = { 1.f, 0.f, 0.f };
 		m_tInfo.vPos += m_tInfo.vDir * m_fSpeed;
 		m_vOriginPos += m_tInfo.vDir * m_fSpeed;
@@ -217,6 +235,10 @@ void CYGPlayer::Key_Input()
 					CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYERBULLET, CAbstractFactory<CYGBullet>::Create(m_vBulletSpawn.x, m_vBulletSpawn.y));
 					static_cast<CYGBullet*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYERBULLET).back())->Set_Dir(m_tInfo.vLook);
 					m_iShootTick = 0;
+					CSoundManager::GetInstance()->PlayEffect("YGFire");
+				}
+				else {
+					CSoundManager::GetInstance()->PlayEffect("YGEmptyfire");
 				}
 			}
 		}

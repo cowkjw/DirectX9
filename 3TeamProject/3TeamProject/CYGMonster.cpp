@@ -135,7 +135,7 @@ void CYGMonster::Render(HDC hDC)
 
 	int hpWidth = 100 * m_iHp / m_iMaxHp;
 
-	color = RGB(179, 179, 179);
+	color = RGB(65, 105, 225);
 	hBrush = CreateSolidBrush(color);
 	hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
 	hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
