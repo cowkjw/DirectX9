@@ -7,6 +7,7 @@
 #include "CCollisionManager.h"
 #include "CYGMonster.h"
 #include "CYGBox.h"
+#include "CSoundManager.h"
 
 CYGBullet::CYGBullet():m_iReMoveTick(0), m_bDead(false)
 {
@@ -68,6 +69,7 @@ void CYGBullet::OnCollision()
 	if (CCollisionManager::Check_Circle(m_tHitRect, _copyPlayer->Get_HitBox())) {
 		m_bDead = true;
 		_copyPlayer->Set_Hp(-5);
+		CSoundManager::GetInstance()->PlayEffect("YGHit");
 		return;
 	}
 
@@ -76,6 +78,7 @@ void CYGBullet::OnCollision()
 		if (CCollisionManager::Check_Circle(m_tHitRect, _copyMonster->Get_HitBox())) {
 			m_bDead = true;
 			_copyMonster->Set_Hp(-5);
+			CSoundManager::GetInstance()->PlayEffect("YGHit");
 			return;
 		}
 	}

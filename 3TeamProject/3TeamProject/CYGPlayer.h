@@ -56,5 +56,6 @@ private:
 	bool m_bHaveGun;
 	int m_iShootTick;
 	int m_iBulletNum;
+	int m_footStepTick;
 };
 
