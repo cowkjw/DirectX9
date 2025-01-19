@@ -9,7 +9,7 @@
 #include "CSoundManager.h"
 #include <time.h>
 
-CJWScene::CJWScene() :m_pFruit(nullptr), m_iLevel(0), m_bCreated(false), m_bGameOver(false), m_iScore(0),
+CJWScene::CJWScene() :m_pFruit(nullptr), m_iLevel(0), m_bCreated(false), m_bGameClear(false), m_fDropLenDebug(0.f), m_bCanWarning(false), m_bGameOver(false), m_iScore(0),
 m_dwDropDelay(0ULL), m_dwDroppedTime(0ULL), m_tNextFruitInfo{}
 {
 	for (int i = 0; i < (int)FRUIT_TYPE::FT_END; i++)
@@ -30,6 +30,8 @@ void CJWScene::Initialize()
 	CUiManager::Get_Instance()->Set_UiType(UI_JW);
 	srand(unsigned int(time(nullptr)));
 	m_bGameOver = false;
+	m_bCanWarning = false;
+	m_bGameClear = false;
 	m_dwDropDelay = 1000ULL;
 	m_dwDroppedTime = GetTickCount64();
 	m_bCreated = true;
@@ -62,15 +64,22 @@ void CJWScene::Initialize()
 int CJWScene::Update()
 {
 	Key_Input();
-	if (!m_bGameOver)
+
+	if (!m_bGameClear&&m_iLevel == 8)
+	{
+		m_bGameClear = true;
+	}
+
+	if (!m_bGameOver&&!m_bGameClear)
 	{
 		auto& fruitList = CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYER);
 		CCollisionManager::JW_Collision_Circle(fruitList, fruitList);
 		Create_MapObj();
 		Merge_Fruit();
 		BoxLine_Collision();
-		CObjectManager::Get_Instance()->Update();
 	}
+		Find_Proximate_Fruit();
+		CObjectManager::Get_Instance()->Update();
 	return 0;
 }
 
@@ -111,6 +120,11 @@ void CJWScene::Render(HDC hDC)
 		SetTextColor(hDC, RGB(0, 0, 0));
 		TextOut(hDC, 50, 70, szDebugGameOver, _tcslen(szDebugGameOver));
 
+		TCHAR szDebugWarn[64];
+		_stprintf_s(szDebugWarn, _T("떨어진 경우 : %f"), m_fDropLenDebug);
+		SetTextColor(hDC, RGB(0, 0, 0));
+		TextOut(hDC, 50, 100, szDebugWarn, _tcslen(szDebugWarn));
+
 		HPEN hPen = CreatePen(PS_SOLID, 5, RGB(255, 0, 0));
 		HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
 		// 선 그리기
@@ -121,6 +135,53 @@ void CJWScene::Render(HDC hDC)
 		SelectObject(hDC, hOldPen);
 		DeleteObject(hPen);
 	}
+
+	
+	if (m_bCanWarning)
+	{
+		//HPEN hWarningPen = CreatePen(PS_SOLID, 3, RGB(255, 0, 0));  // 빨간색 경고선
+		//HPEN hOldPen = (HPEN)SelectObject(hDC, hWarningPen);
+
+		//MoveToEx(hDC, 100, 70, nullptr);
+		//LineTo(hDC, 700, 70);
+
+		//SelectObject(hDC, hOldPen);
+		//DeleteObject(hWarningPen);
+
+		 // 무지개색 배열 (빨강, 주황, 노랑, 초록, 파랑, 남색, 보라)
+		vector<COLORREF> vecRainbow = {
+			RGB(255, 0, 0),    // 빨강
+			RGB(255, 165, 0),  // 주황
+			RGB(255, 255, 0),  // 노랑
+			RGB(0, 255, 0),    // 초록
+			RGB(0, 0, 255),    // 파랑
+			RGB(75, 0, 130),   // 남색
+			RGB(148, 0, 211)   // 보라
+		};
+
+		int startX = 70;   // 시작 X 좌표
+		int endX = 720;     // 끝 X 좌표
+		int y = 70;         // Y 좌표
+		int segmentLength = (endX - startX) / (int)vecRainbow.size();  // 각 색상의 선 길이
+
+		HPEN hOldPen = nullptr;
+
+		for (int i = 0; i < (int)vecRainbow.size(); ++i)
+		{
+			// 색상별 펜 생성
+			HPEN hPen = CreatePen(PS_SOLID, 3, vecRainbow[i]);
+			hOldPen = (HPEN)SelectObject(hDC, hPen);
+
+			// 선 그리기
+			MoveToEx(hDC, startX + i * segmentLength, y, nullptr);
+			LineTo(hDC, startX + (i + 1) * segmentLength, y);
+
+			// 펜 삭제
+			SelectObject(hDC, hOldPen);
+			DeleteObject(hPen);
+		}
+	}
+
 	SelectObject(hDC, oldBrush);
 	DeleteObject(ivoryBrush);
 	CObjectManager::Get_Instance()->Render(hDC);
@@ -324,6 +385,102 @@ void CJWScene::Render_Box(HDC hDC)
 	DeleteObject(hPen);
 	DeleteObject(lightPurpleBrush);
 	DeleteObject(darkPurpleBrush);
+}
+
+void CJWScene::Find_Proximate_Fruit()
+{
+	auto& fruitList = CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYER);
+	if (fruitList.size() == 1) return;
+	CFruit* pNearFruit = nullptr; // 가장 가까운 과일
+	CFruit* pDropFruit = nullptr; // 가장 떨어뜨릴 과일
+
+	float fNearDist = numeric_limits<float>::max();
+
+	for (const auto& fruit : fruitList)
+	{
+		if (!fruit) continue;
+		CFruit* pTmpFruit = dynamic_cast<CFruit*>(fruit);
+		if (!pTmpFruit) continue;
+
+		if (!pTmpFruit->Is_Dropped())
+		{
+			pDropFruit = pTmpFruit;
+			break;  // 찾았으면 바로 빠져나가기
+		}
+	}
+
+	if (!pDropFruit) return;
+
+	// 떨어진 과일들 중에서 가장 가까운 과일 찾기
+	for (const auto& fruit : fruitList)
+	{
+		if (!fruit) continue;
+		CFruit* pTmpFruit = dynamic_cast<CFruit*>(fruit);
+		if (!pTmpFruit || !pTmpFruit->Is_Dropped()||pTmpFruit==pDropFruit) continue;
+
+		D3DXVECTOR3 vDir = fruit->Get_Info().vPos - pDropFruit->Get_Info().vPos;
+		float fDist = D3DXVec3Length(&vDir);
+		if (fDist < fNearDist)
+		{
+			pNearFruit = pTmpFruit;
+			fNearDist = fDist;
+		}
+	}
+
+	if (!pNearFruit|| !pNearFruit->In_Box()) return;
+
+	//float fLen = pNearFruit->Get_Info().vPos.y - (pNearFruit->Get_Radius() * pNearFruit->Get_Scale().y
+	//	+pDropFruit->Get_Radius()*2* pDropFruit->Get_Scale().y);
+	//m_fDropLenDebug = fLen;
+	//if (fLen <= 70.f)  // y값이 70보다 작으면 라인 위로 벗어남
+	//{
+	//	m_bCanWarning = true;
+	//}
+	//else
+	//{
+	//	m_bCanWarning = false;
+	//}
+	D3DXVECTOR3 vDir = pNearFruit->Get_Info().vPos - pDropFruit->Get_Info().vPos;
+	float fDist = D3DXVec3Length(&vDir); // 두 중심 간 거리
+
+	// 2. 두 원의 반지름 합 계산
+	float fRadiusSum = (pNearFruit->Get_Radius() * pNearFruit->Get_Scale().y) +
+		(pDropFruit->Get_Radius() * pDropFruit->Get_Scale().y);
+
+	// 3. 충돌 예상 여부 확인
+	m_fDropLenDebug = fDist; // 디버깅용 거리 확인
+	if (fDist <= fRadiusSum + 70.f) // 거리 조건 + 여유 거리
+	{
+		m_bCanWarning = true; // 충돌 경고
+	}
+	else
+	{
+		m_bCanWarning = false; // 충돌 없음
+	}
+
+}
+
+void CJWScene::Blink_Line()
+{
+	//static DWORD dwBlinkTime = GetTickCount64();
+	//static bool bShow = true;
+
+	//if (m_bCanWarning)
+	//{
+	//	// 250ms마다 깜빡임 상태 전환
+	//	if (GetTickCount64() - dwBlinkTime >= 250)
+	//	{
+	//		bShow = !bShow;
+	//		dwBlinkTime = GetTickCount64();
+	//	}
+	//}
+	//else
+	//{
+	//	bShow = false;
+	//	dwBlinkTime = GetTickCount64();
+	//}
+
+	// 경고선 상태를 멤버 변수로 저장
 }
 
 void CJWScene::Update_Next_FruitInfo(const vector<D3DXVECTOR3>& vecRenderPoints, const COLORREF tColor, FRUIT_TYPE eType)
