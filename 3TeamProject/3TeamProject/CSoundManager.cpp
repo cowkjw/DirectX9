@@ -160,9 +160,21 @@ void CSoundManager::Update()
 
 void CSoundManager::Initialize()
 {
+   //JW
    LoadSound("WaterMelon_BGM", "../Assets/Sound/WaterMelon_BGM.mp3", true,true);
    LoadSound("DropSound", "../Assets/Sound/DropSound.mp3");
    LoadSound("MergeSound", "../Assets/Sound/MergeSound.mp3");
+
+   //YG
+   LoadSound("YGSurviv_BGM", "../Assets/Sound/YGSurviv_BGM.mp3", true, true);
+   LoadSound("YGHit", "../Assets/Sound/YGHit.mp3");
+   LoadSound("YGGunPickup", "../Assets/Sound/YGGunPickup.mp3");
+   LoadSound("YGfootstep", "../Assets/Sound/YGfootstep.mp3");
+   LoadSound("YGFire", "../Assets/Sound/YGFire.mp3");
+   LoadSound("YGEmptyfire", "../Assets/Sound/YGEmptyfire.mp3");
+   LoadSound("YGBulletPickup", "../Assets/Sound/YGBulletPickup.mp3");
+   LoadSound("YGBoxBreak", "../Assets/Sound/YGBoxBreak.mp3");
+
 }
 
 void CSoundManager::Release()

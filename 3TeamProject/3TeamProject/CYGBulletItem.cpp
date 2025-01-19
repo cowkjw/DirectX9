@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CYGBulletItem.h"
 #include "CScrollManager.h"
+#include "CSoundManager.h"
 
 CYGBulletItem::CYGBulletItem()
 {
@@ -10,6 +11,15 @@ CYGBulletItem::CYGBulletItem()
 CYGBulletItem::~CYGBulletItem()
 {
 	
+}
+int CYGBulletItem::Update()
+{
+	if (m_bDead) {
+		CSoundManager::GetInstance()->PlayEffect("YGBulletPickup");
+		return OBJ_DEAD;
+	}
+	__super::Update_Rect();
+	return 0;
 }
 
 void CYGBulletItem::Render(HDC hDC)
