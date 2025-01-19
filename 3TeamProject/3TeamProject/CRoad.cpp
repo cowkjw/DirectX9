@@ -17,7 +17,8 @@ CRoad::CRoad():
 	m_dwPrevSpawnTime(0),
 	m_fTargetAngle(0.f),
 	m_fTargetX(0.f),
-	m_pPlayer(nullptr)
+	m_pPlayer(nullptr),
+	m_fPlayerStartY(0.f)
 
 {
 	ZeroMemory(&hBmp, sizeof(hBmp));
@@ -66,10 +67,10 @@ void CRoad::Initialize()
 	
 	m_bJumping = false;
 	m_fJumpSpeed = 0.f;
-	m_fGravity = 1.f;     
+	m_fGravity = 0.4f;     
 	m_fJumpOffsetY = 0.f;
 
-	 hBmp = (HBITMAP)LoadImage(
+	hBmp = (HBITMAP)LoadImage(
 		nullptr,
 		L"../Assets/Back/Space.bmp",
 		IMAGE_BITMAP,
@@ -77,6 +78,7 @@ void CRoad::Initialize()
 		0,
 		LR_LOADFROMFILE
 	);
+m_fPlayerStartY = m_pPlayer->Get_Info().vPos.y;
 
 	hPatternBrush = CreatePatternBrush(hBmp);
 
@@ -89,16 +91,24 @@ int CRoad::Update()
 
 	if (m_bJumping)
 	{
-		
-		m_fJumpOffsetY += m_fJumpSpeed;  // 통로의 y오프셋 증가
-		m_fJumpSpeed -= m_fGravity;    // 중력만큼 속도 감소
+		m_fJumpOffsetY += m_fJumpSpeed;  // Y축 오프셋 증가
+		m_fJumpSpeed -= m_fGravity;    // 중력 적용
 
-		//  바닥에 도달하면(= 점프Offset이 0 이하)
-		if (m_fJumpOffsetY <= 0.f)
+		if (m_fJumpOffsetY <= 0.f) // 바닥에 도달했을 때
 		{
-			m_fJumpOffsetY = 0.f;   // 바닥 고정
-			m_fJumpSpeed = 0.f;   
-			m_bJumping = false; 
+			m_fJumpOffsetY = 0.f;
+			m_fJumpSpeed = 0.f;
+			m_bJumping = false;
+
+			D3DXVECTOR3 playerPos = m_pPlayer->Get_Info().vPos;
+			playerPos.y = m_fPlayerStartY;
+			m_pPlayer->Set_Pos(playerPos.x, playerPos.y);
+		}
+		else
+		{
+			D3DXVECTOR3 playerPos = m_pPlayer->Get_Info().vPos;
+			playerPos.y = m_fPlayerStartY - m_fJumpOffsetY;
+			m_pPlayer->Set_Pos(playerPos.x, playerPos.y);
 		}
 	}
 
@@ -255,6 +265,10 @@ void CRoad::Render_Obstacles(HDC hDC)
 		swprintf_s(m_szBuf2, L"장애물 스케일 크기 : %f",obs.fScale);
 		TextOut(hDC, 300, 100, m_szBuf2, lstrlen(m_szBuf2));
 
+
+
+		
+
 		D3DXMatrixTranslation(&matTrans, x, y, obs.vPos.z);
 
 		matWorld = matScale * matRot * matTrans;
@@ -262,27 +276,70 @@ void CRoad::Render_Obstacles(HDC hDC)
 		for (int i = 0; i < 4; ++i)
 		{
 			D3DXVec3TransformCoord(&obs.worldCorner[i], &localCorner[i], &matWorld);
+
 		}
+
+		float screenX=0.f;
+		float screenY=0.f;
+
 
 		POINT pt[4];
 		for (int i = 0; i < 4; ++i)
 		{
-			// 1점(worldCorner[i])이 카메라로부터 얼마나 떨어져 있는가?
 			float distance = cameraZ + obs.worldCorner[i].z;
-
-			// 원근 비율(factor) 계산
 			float factor = (cameraZ / distance);
 
 			float screenX = centerX + obs.worldCorner[i].x * factor;
 			float screenY = centerY - obs.worldCorner[i].y * factor;
 
+			// 스크린 좌표 저장
 			pt[i].x = (LONG)screenX;
 			pt[i].y = (LONG)screenY;
+
+			// 충돌용 스크린 좌표도 저장
+			obs.screenCorner[i].x = screenX;
+			obs.screenCorner[i].y = screenY;
+
 		}
 
+		if (!m_Obstacles.empty())
+		{
+			// 첫 번째 장애물
+			auto& firstObs = m_Obstacles.front(); // 첫 장애물
+			TCHAR buf[100];
+			swprintf_s(buf, L"첫 장애물 왼쪽 위 X=%.2f", firstObs.screenCorner[0].x);
+			TextOut(hDC, 300, 130, buf, lstrlen(buf));
+			swprintf_s(buf, L"첫 장애물 왼쪽 위 y=%.2f", firstObs.screenCorner[0].y);
+			TextOut(hDC, 300, 150, buf, lstrlen(buf));
+
+			swprintf_s(buf, L"첫 장애물 오른쪽 위 X=%.2f", firstObs.screenCorner[1].x);
+			TextOut(hDC, 300, 170, buf, lstrlen(buf));
+			swprintf_s(buf, L"첫 장애물 오른쪽 위 y=%.2f", firstObs.screenCorner[1].y);
+			TextOut(hDC, 300, 190, buf, lstrlen(buf));
+
+			swprintf_s(buf, L"첫 장애물 오른쪽 아래 X=%.2f", firstObs.screenCorner[2].x);
+			TextOut(hDC, 300, 210, buf, lstrlen(buf));
+			swprintf_s(buf, L"첫 장애물 오른쪽 아래 y=%.2f", firstObs.screenCorner[2].y);
+			TextOut(hDC, 300, 230, buf, lstrlen(buf));
+
+			swprintf_s(buf, L"첫 장애물 왼쪽 아래 X=%.2f", firstObs.screenCorner[3].x);
+			TextOut(hDC, 300, 250, buf, lstrlen(buf));
+			swprintf_s(buf, L"첫 장애물 왼쪽 아래 y=%.2f", firstObs.screenCorner[3].y);
+			TextOut(hDC, 300, 270, buf, lstrlen(buf));
+		}
 
 		//HPEN hPen = CreatePen(PS_SOLID, 2, RGB(255, 0, 0));
 		//HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+
+
+
+
+
+
+
+		TCHAR m_szBuf6[100] = {};
+		swprintf_s(m_szBuf6, L"장애물  z 좌표 : %f", m_Obstacles[0].vPos.z);
+		TextOut(hDC, 100, 170, m_szBuf6, lstrlen(m_szBuf6));
 
 
 		HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hPatternBrush);
@@ -416,6 +473,8 @@ void CRoad::Spawn_Obstacle()
 void CRoad::Key_Input()
 {
 
+
+	static float fPlayer_Y = 0.f;
 	if (GetAsyncKeyState('A'))
 	{
 		// 통로를 왼쪽으로
@@ -432,7 +491,11 @@ void CRoad::Key_Input()
 			m_bRight_Rotation = true;
 		}*/
 	}
-
+	if (CKeyManager::Get_Instance()->Key_Down(VK_SPACE) && !m_bJumping)
+	{
+		m_bJumping = true;
+		m_fJumpSpeed = 20.f;  // 점프 초기 속도
+	}
 	else if (GetAsyncKeyState('D'))
 	{
 	    // 통로를 오른쪽으로

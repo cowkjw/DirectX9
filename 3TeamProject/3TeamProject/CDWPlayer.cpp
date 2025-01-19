@@ -56,9 +56,37 @@ int CDWPlayer::Update()
 				m_pPlayer_ScaleX = 2.f;
 				m_pPlayer_ScaleY = 2.f;
 				m_pPlayer_ScaleZ = 2.f;	
+				break;
 			}
+			else
+			{
+				m_pPlayer_ScaleX = 1.f;
+				m_pPlayer_ScaleY = 1.f;
+				m_pPlayer_ScaleZ = 1.f;
+			}
+			
+		
 		}
 	}
+
+	float cameraZ = 500.f;
+	float centerX = 400.f;
+	float centerY = 300.f;
+
+	// (3) 월드 좌표 → 스크린 좌표
+	for (int i = 0; i < (int)m_vPointvec.size(); ++i)
+	{
+		float distance = cameraZ + m_vPointvec[i].z;
+		float factor = (cameraZ / distance);
+
+		float screenX = centerX + (m_vPointvec[i].x * factor);
+		float screenY = centerY - (m_vPointvec[i].y * factor);
+		// y는 보통 위가 - 이므로 centerY - (...)
+
+		m_screenCorner[i].x = (LONG)screenX;
+		m_screenCorner[i].y = (LONG)screenY;
+	}
+
 
 	//__super::Update_Rect();
 	return 0;
