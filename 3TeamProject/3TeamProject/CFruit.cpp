@@ -4,7 +4,7 @@
 #include "CSoundManager.h"
 
 CFruit::CFruit() : m_fMass(0.f), m_fRadius(0.f), m_fAngle(0.f), m_fRollingSpeed(0.f), m_fMergeAnimRatio(0.f), m_tColor(0UL), m_eFruitType(FRUIT_TYPE::FT_END)
-, m_bDropped(false), m_vVelocity(D3DXVECTOR3(0.f, 0.f, 0.f)), m_bIsGround(false), m_bInBox(false), m_eFruitSt(FRUIT_STATE::IDLE),
+, m_bDropped(false), m_vVelocity(D3DXVECTOR3(0.f, 0.f, 0.f)), m_bIsGround(false), m_bCollided(false),m_bInBox(false), m_eFruitSt(FRUIT_STATE::IDLE),
 m_bActive(true), m_dwCanMergeCool(0ULL), m_dwMergedTime(0ULL)
 {
 	m_tInfo.vPos = { 400.f,60.f,0.f };
@@ -12,7 +12,7 @@ m_bActive(true), m_dwCanMergeCool(0ULL), m_dwMergedTime(0ULL)
 
 CFruit::CFruit(FRUIT_TYPE eFruitType, float fMass) : m_eFruitType(eFruitType), m_fMass(fMass), m_bInBox(false), m_bActive(true),
 m_tColor(0UL), m_fAngle(0.f), m_fRollingSpeed(0.f), m_fRadius(0.f), m_fMergeAnimRatio(0.f), m_eFruitSt(FRUIT_STATE::IDLE),
-m_bDropped(false), m_vVelocity(D3DXVECTOR3(0.f, 0.f, 0.f)), m_bIsGround(false), m_dwCanMergeCool(0ULL), m_dwMergedTime(0ULL)
+m_bDropped(false), m_vVelocity(D3DXVECTOR3(0.f, 0.f, 0.f)), m_bIsGround(false), m_bCollided(false), m_dwCanMergeCool(0ULL), m_dwMergedTime(0ULL)
 {
 	m_tInfo.vPos = { 400.f,60.f,0.f };
 }
@@ -96,7 +96,7 @@ int CFruit::Update()
 			m_tInfo.vPos.y = 550.f - m_fRadius * m_vScale.y;
 
 			// 반발력을 penetration에 비례하게 적용
-			float restitution = 0.2f;
+			float restitution = 0.6f;
 			float velocityScale = fPenetration / fMaxPenetration;
 			m_vVelocity.y = -abs(m_vVelocity.y) * restitution * velocityScale;
 			m_vVelocity.x *= 0.5f; // 바닥 마찰
@@ -280,6 +280,7 @@ void CFruit::OnCollision(CObject* _obj)
 		m_vVelocity += (fImpulse / m_fMass) * vDir;
 		pFruit->Set_Velocity(pFruit->Get_Velocity() - (fImpulse / pFruit->Get_Mass()) * vDir);
 	}
+	m_bCollided = true;
 }
 
 void CFruit::Set_LinePassed(bool bPassed)
@@ -302,6 +303,7 @@ void CFruit::Reset()
 	m_bDropped = false;
 	m_bInBox = false;
 	m_bIsGround = false;
+	m_bCollided = false;
 	m_bActive = true;
 	m_fSpeed = 3.f;
 	m_fMergeAnimRatio = 0.7f;
@@ -324,6 +326,7 @@ void CFruit::Set_Merged_Fruit()
 	m_bInBox = true;
 	m_bIsGround = true;
 	m_bActive = true;
+	m_bCollided = false;
 	m_fSpeed = 3.f;
 	m_fMergeAnimRatio = 0.7f;
 	m_dwMergedTime = GetTickCount64();
@@ -489,34 +492,34 @@ void CFruit::Set_Color()
 	switch (m_eFruitType)
 	{
 	case FRUIT_TYPE::CHERRY:
-		m_tColor = RGB(150, 0, 0);    // 진한 붉은색
+		m_tColor = RGB(145, 0, 35);     // 더 진한 체리레드
 		break;
 	case FRUIT_TYPE::ORANGE:
-		m_tColor = RGB(255, 165, 0);  // 기존 주황색
+		m_tColor = RGB(255, 140, 0);    // 선명한 오렌지
 		break;
 	case FRUIT_TYPE::LEMON:
-		m_tColor = RGB(200, 200, 0);  // 기존 노란색
+		m_tColor = RGB(255, 231, 0);    // 밝은 레몬 옐로우
 		break;
 	case FRUIT_TYPE::APPLE:
-		m_tColor = RGB(200, 0, 0);    // 기존 빨간색
+		m_tColor = RGB(255, 0, 0);      // 순수한 레드
 		break;
 	case FRUIT_TYPE::PEACH:
-		m_tColor = RGB(255, 218, 185); // 복숭아색
+		m_tColor = RGB(255, 229, 180);  // 밝은 피치
 		break;
 	case FRUIT_TYPE::PINEAPPLE:
-		m_tColor = RGB(255, 223, 0);   // 골든옐로우
+		m_tColor = RGB(255, 186, 0);    // 황금빛 노란색
 		break;
 	case FRUIT_TYPE::MELON:
-		m_tColor = RGB(152, 251, 152); // 연한 녹색
+		m_tColor = RGB(120, 255, 140);  // 밝은 연두색
 		break;
 	case FRUIT_TYPE::PUMPKIN:
-		m_tColor = RGB(255, 140, 0);   // 진한 주황색
+		m_tColor = RGB(255, 100, 0);    // 진한 주황색
 		break;
 	case FRUIT_TYPE::WATERMELON:
-		m_tColor = RGB(0, 200, 0);    // 기존 초록색
+		m_tColor = RGB(0, 180, 0);      // 짙은 녹색
 		break;
 	default:
-		m_tColor = RGB(200, 200, 200); // 기본 회색
+		m_tColor = RGB(160, 160, 160);  // 회색
 		break;
 	}
 }
