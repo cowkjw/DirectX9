@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CCollisionManager.h"
+#include "CDWPlayer.h"
 
 void CCollisionManager::Collision_Circle(list<CObject*> _Dst, list<CObject*> _Src)
 {
@@ -41,6 +42,7 @@ void CCollisionManager::JW_Collision_Circle(list<CObject*> _Dst, list<CObject*> 
             {
                 continue;
             }
+
             if (JW_Check_Circle(Dst, Src))
             {
                 Dst->OnCollision(Src);
@@ -49,7 +51,6 @@ void CCollisionManager::JW_Collision_Circle(list<CObject*> _Dst, list<CObject*> 
         }
     }
 }
-
 bool CCollisionManager::JW_Check_Circle(CObject* _Dst, CObject* _Src)
 {
     CFruit* pFruit1 = dynamic_cast<CFruit*>(_Dst);
@@ -65,4 +66,21 @@ bool CCollisionManager::JW_Check_Circle(CObject* _Dst, CObject* _Src)
     return fDist <= fObj1RadiMultiScale + fObj2RadiMultiScale;
 }
 
+bool CCollisionManager::DW_Check_Coll(CObject* _Dst, CRoad::SObstacle* _Src)
+{
+
+   if (!_Dst) return false;
+
+   if (!_Src) return false;
+    CRoad::SObstacle* pObs = dynamic_cast<CRoad::SObstacle*>(_Src);
+
+    for (int i = 0; i < 4; i++)
+    {
+        pObs->worldCorner[i];
+    }
+    
+         
+
+    return false;
+}
 

@@ -7,6 +7,7 @@
 #include "CAbstractFactory.h"
 #include "CDWPlayer.h"
 #include "CRoad.h"
+#include "CBitManager.h"
 
 CDWScene::CDWScene()
 {
@@ -14,6 +15,8 @@ CDWScene::CDWScene()
 
 void CDWScene::Initialize()
 {
+	CBitManager::Get_Instance()->Insert_Bmp(L"../Assets/Back/Space.bmp", L"Space");
+
 	CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CDWPlayer>::Create(300, 400, 100, 100));
 	CObjectManager::Get_Instance()->Add_Object(OBJ_DW_ROAD, CAbstractFactory<CRoad>::Create(300, 400, 100, 100));
 
@@ -35,6 +38,19 @@ void CDWScene::Late_Update()
 void CDWScene::Render(HDC hDC)
 {
 	Rectangle(hDC, -100, -100, 900, 700);
+	HDC		hMemDC = CBitManager::Get_Instance()->Find_Image(L"Space");
+
+	GdiTransparentBlt(hDC, 0, 
+		0,
+		WINCX, 
+		WINCY, 
+		hMemDC, 
+		0, 
+		0, 
+		800, 
+		600, 
+		SRCCOPY);
+
 
 	CObjectManager::Get_Instance()->Render(hDC);
 	if (g_bDevmode) 
