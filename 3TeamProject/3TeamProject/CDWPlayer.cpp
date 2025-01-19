@@ -27,71 +27,99 @@ void CDWPlayer::Initialize()
 	m_pPlayer_ScaleY=1.f;
 	m_pPlayer_ScaleZ=1.f;
 	
-
+	m_bFalling = false; 
+	m_fFallSpeed = 0.f; // 낙하 속도
+	m_fFallDepth = 50.f; // 구덩이에 빠지는 깊이
 }
+
 
 int CDWPlayer::Update()
 {
-	//Key_Input();
+ 
+    if (m_bFalling)
+    {
+      
+        static float rotationSpeed = D3DXToRadian(10.f); // 초당 10도 회전
+        m_fAngle += rotationSpeed;
 
-	D3DXMatrixScaling(&matScale, m_pPlayer_ScaleX, m_pPlayer_ScaleY, m_pPlayer_ScaleZ); // 1번
-	D3DXMatrixTranslation(&matTrans, m_tInfo.vPos.x, m_tInfo.vPos.y, 0.f);
-	m_tInfo.matWorld = matScale * matTrans; // 2번 월드행렬
-	for (int i = 0; i < m_vOriginPointvec.size(); ++i)
-	{
-		D3DXVec3TransformCoord(&m_vPointvec[i], &m_vOriginPointvec[i], &m_tInfo.matWorld);
-		m_pRenderPoint[i].x = m_vPointvec[i].x;
-		m_pRenderPoint[i].y = m_vPointvec[i].y;
-	}
-	
-	if (CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_DW_ROAD).empty() == false)
-	{
-		auto sOb = CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_DW_ROAD).front();
-		auto& sOb_vevStruct = dynamic_cast<CRoad*>(sOb)->Get_obs();
+        m_tInfo.vPos.y += m_fFallSpeed;
+        m_fFallSpeed += 0.5f; // 중력 효과
 
-		for (auto& sOb_Struct : sOb_vevStruct)
-		{
-			if (CCollisionManager::DW_Check_Coll(this, &sOb_Struct))
-			{
-				m_pPlayer_ScaleX = 2.f;
-				m_pPlayer_ScaleY = 2.f;
-				m_pPlayer_ScaleZ = 2.f;	
-				break;
-			}
-			else
-			{
-				m_pPlayer_ScaleX = 1.f;
-				m_pPlayer_ScaleY = 1.f;
-				m_pPlayer_ScaleZ = 1.f;
-			}
-			
-		
-		}
-	}
+        m_pPlayer_ScaleX -= 0.02f; // 점점 작아짐
+        m_pPlayer_ScaleY -= 0.02f;
+        m_pPlayer_ScaleZ -= 0.02f;
+         
 
-	float cameraZ = 500.f;
-	float centerX = 400.f;
-	float centerY = 300.f;
+        // 스케일 작아지면 삭제..
+        if (m_pPlayer_ScaleX <= 0.1f || m_pPlayer_ScaleY <= 0.1f)
+        {
+            m_pPlayer_ScaleX = 0.f;
+            m_pPlayer_ScaleY = 0.f;
+            m_pPlayer_ScaleZ = 0.f;
 
-	// (3) 월드 좌표 → 스크린 좌표
-	for (int i = 0; i < (int)m_vPointvec.size(); ++i)
-	{
-		float distance = cameraZ + m_vPointvec[i].z;
-		float factor = (cameraZ / distance);
+       
+            m_bFalling = false;
+            m_fFallSpeed = 0.f;
+            m_fAngle = 0.f;
+            m_tInfo.vPos.y = 500.f; // 원래 위치로 복구
 
-		float screenX = centerX + (m_vPointvec[i].x * factor);
-		float screenY = centerY - (m_vPointvec[i].y * factor);
-		// y는 보통 위가 - 이므로 centerY - (...)
+        }
+    }
+    if (!CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_DW_ROAD).empty())
+    {
+        auto sOb = CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_DW_ROAD).front();
+        auto& sOb_vevStruct = dynamic_cast<CRoad*>(sOb)->Get_obs();
 
-		m_screenCorner[i].x = (LONG)screenX;
-		m_screenCorner[i].y = (LONG)screenY;
-	}
+        for (auto& sOb_Struct : sOb_vevStruct)
+        {
+            if (CCollisionManager::DW_Check_Coll(this, &sOb_Struct))
+            {
+                if (!m_bFalling) 
+                {
+                    m_bFalling = true;
+                    m_fFallSpeed = 0.f; 
+                    m_fAngle = 0.f; 
+                }
+                break;
+            }
+        }
+    }
 
 
-	//__super::Update_Rect();
-	return 0;
+    D3DXMatrixScaling(&matScale, m_pPlayer_ScaleX, m_pPlayer_ScaleY, m_pPlayer_ScaleZ);
+    D3DXMatrixRotationZ(&matRotZ, m_fAngle); 
+    D3DXMatrixTranslation(&matTrans, m_tInfo.vPos.x, m_tInfo.vPos.y, 0.f);
+    m_tInfo.matWorld = matScale * matRotZ * matTrans; 
 
+    for (int i = 0; i < m_vOriginPointvec.size(); ++i)
+    {
+        D3DXVec3TransformCoord(&m_vPointvec[i], &m_vOriginPointvec[i], &m_tInfo.matWorld);
+        m_pRenderPoint[i].x = m_vPointvec[i].x;
+        m_pRenderPoint[i].y = m_vPointvec[i].y;
+    }
+
+    // 화면 좌표 변환
+    float cameraZ = 500.f;
+    float centerX = 400.f;
+    float centerY = 300.f;
+
+    for (int i = 0; i < (int)m_vPointvec.size(); ++i)
+    {
+        float distance = cameraZ + m_vPointvec[i].z;
+        float factor = (cameraZ / distance);
+
+        float screenX = centerX + (m_vPointvec[i].x * factor);
+        float screenY = centerY - (m_vPointvec[i].y * factor);
+
+        m_screenCorner[i].x = (LONG)screenX;
+        m_screenCorner[i].y = (LONG)screenY;
+    }
+
+    return 0;
 }
+
+
+
 void CDWPlayer::Late_Update()
 {
 	

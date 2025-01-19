@@ -29,6 +29,14 @@ private:
 	float m_pPlayer_ScaleX;
 	float m_pPlayer_ScaleY;
 	float m_pPlayer_ScaleZ;
+
+	float m_fPlayer_Scale;
+	
+
+	bool m_bFalling;
+	float m_fFallSpeed; // 낙하 속도
+	float m_fFallDepth; // 구덩이에 빠지는 깊이
+
 };
 
 
