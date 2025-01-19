@@ -38,7 +38,10 @@ int CCYScene::Update()
 
 void CCYScene::Late_Update()
 {
-	m_iPlayerLength = static_cast<CCYPlayer*>(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER).front())->Get_WormLength();
+	if (!OBJMGR->Get_ObjList_ByID(OBJ_PLAYER).empty())
+	{
+		m_iPlayerLength = static_cast<CCYPlayer*>(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER).front())->Get_WormLength();
+	}
 	//CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER), OBJMGR->Get_ObjList_ByID(OBJ_CYTAIL));
 	//CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_MONSTER), OBJMGR->Get_ObjList_ByID(OBJ_CYTAIL));
 	CObjectManager::Get_Instance()->Late_Update();
@@ -65,6 +68,14 @@ void CCYScene::Render(HDC hDC)
 		_stprintf_s(szWhoScene, _T("Ã¤¿µ"));
 		SetTextColor(hDC, RGB(0, 0, 0));
 		TextOut(hDC, 300, 10, szWhoScene, _tcslen(szWhoScene));
+
+		//TCHAR szGameoverText[64];
+
+		//_stprintf_s(szGameoverText, _T("Your Final Length : %d"), m_iPlayerLength);
+		//SetTextColor(hDC, RGB(0, 0, 0));
+		//TextOut(hDC, 300, 200, szGameoverText, _tcslen(szGameoverText));
+
+
 	}
 	CUiManager::Get_Instance()->Render(hDC);
 }

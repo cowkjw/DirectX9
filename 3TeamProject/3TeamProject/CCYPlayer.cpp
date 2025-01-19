@@ -38,7 +38,7 @@ int CCYPlayer::Update()
 {
 	if (m_bDead)
 	{
-		return OBJ_NOEVENT;
+		return OBJ_DEAD;
 	}
 
 
@@ -87,7 +87,8 @@ int CCYPlayer::Update()
 	/// 월드매트릭스
 	D3DXMatrixTranslation(&matTrans, m_tInfo.vPos.x, m_tInfo.vPos.y, 0.f);
 	D3DXMatrixRotationZ(&matRotZ, m_fAngle);
-	m_fWormSize = 1.f + m_TailSeglist.size() * 0.001f;
+	m_fWormSize = 1.f + m_TailSeglist.size() * 0.005f;
+	m_tInfo.fSizeX = m_fWormSize * m_tInfo.fSizeY;
 	D3DXMatrixScaling(&matScale, m_fWormSize, m_fWormSize, 0);
 	
 	//D3DXMATRIX testMatrix;
@@ -97,10 +98,6 @@ int CCYPlayer::Update()
 
 	m_tInfo.matWorld = matScale * matRotZ * matTrans;
 	//m_tInfo.matWorld = matRotZ;
-
-
-
-
 
 
 
@@ -157,14 +154,6 @@ void CCYPlayer::Render(HDC hDC)
 
 	SelectObject(hDC, OldBrush); DeleteObject(PinkBrush);
 	SelectObject(hDC, hOldPen); DeleteObject(hPen);
-
-	if (m_bDead)
-	{
-		TCHAR szTestText[64];
-		_stprintf_s(szTestText, _T("Your Final Length : %d", m_));
-		SetTextColor(hDC, RGB(0, 0, 0));
-		TextOut(hDC, 300, 10, szTestText, _tcslen(szTestText));
-	}
 
 	//Ellipse(hDC, m_pRenderPoint[0].x - 3.f, m_pRenderPoint[0].y - 3.f,
 	//			 m_pRenderPoint[0].x + 3.f, m_pRenderPoint[0].y + 3.f);
