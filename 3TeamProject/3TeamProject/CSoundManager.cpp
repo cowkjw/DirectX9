@@ -163,6 +163,8 @@ void CSoundManager::Initialize()
    LoadSound("WaterMelon_BGM", "../Assets/Sound/WaterMelon_BGM.mp3", true,true);
    LoadSound("DropSound", "../Assets/Sound/DropSound.mp3");
    LoadSound("MergeSound", "../Assets/Sound/MergeSound.mp3");
+   LoadSound("CY_BGM", "../Assets/Sound/CY_BGM.mp3", true,true);
+   LoadSound("CY_EatFood", "../Assets/Sound/Eat_food.ogg");
 }
 
 void CSoundManager::Release()

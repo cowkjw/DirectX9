@@ -3,7 +3,7 @@
 class CCYFood : public CCYObject
 {
 public:
-	CCYFood() {}
+	CCYFood() : m_ullLivingTime(0){}
 	virtual ~CCYFood() { Release(); }
 public:
 	void Initialize() override;
@@ -15,5 +15,6 @@ public:
 
 private:
 	COLORREF	randomcolor;
+	ULONGLONG	m_ullLivingTime;
 };
 

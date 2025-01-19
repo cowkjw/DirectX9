@@ -9,27 +9,35 @@
 #include "CCYFood.h"
 #include "CCollisionManager.h"
 #include "CCYMonster.h"
+#include "CSoundManager.h"
 
 
-CCYScene::CCYScene() : m_ullFoodTimeTicker(0), m_iPlayerLength(0)
+CCYScene::CCYScene() : m_ullFoodTimeTicker(0), m_iPlayerLength(0), m_ullMonsterTimeTicker(0)
 {
 }
 
 void CCYScene::Initialize()
 {
 	CObjectManager::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CCYPlayer>::Create(300, 400, 35, 35));
-	//m_SlitherSegvec.push_back(static_cast<CCYPlayer*>(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER).front())->Get_)
 	CUiManager::Get_Instance()->Set_UiType(UI_CY);
+	CSoundManager::GetInstance()->PlayBGM("CY_BGM");
+	srand((unsigned int)time(NULL));
 }
 
 int CCYScene::Update()
 {
 	Key_Input();
 	CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_PLAYER), OBJMGR->Get_ObjList_ByID(OBJ_MISC));
+	CCollisionManager::Collision_Circle(OBJMGR->Get_ObjList_ByID(OBJ_MONSTER), OBJMGR->Get_ObjList_ByID(OBJ_MISC));
 	if (m_ullFoodTimeTicker + rand() % 20 * 200  + 1000 < GetTickCount64())
 	{
 		CObjectManager::Get_Instance()->Add_Object(OBJ_MISC, CAbstractFactory<CCYFood>::Create());
 		m_ullFoodTimeTicker = GetTickCount64();
+	}
+	if (m_ullMonsterTimeTicker + 2000 < GetTickCount64())
+	{
+		CObjectManager::Get_Instance()->Add_Object(OBJ_MONSTER, CAbstractFactory<CCYMonster>::Create());
+		m_ullMonsterTimeTicker = GetTickCount64();
 	}
 
 	CObjectManager::Get_Instance()->Update();
@@ -84,6 +92,7 @@ void CCYScene::Release()
 {
 	CObjectManager::Get_Instance()->Delete_ALL();
 	CObjectManager::Get_Instance()->RenderList_Clear();
+	CSoundManager::GetInstance()->StopAllSounds();
 }
 
 void CCYScene::Key_Input()
