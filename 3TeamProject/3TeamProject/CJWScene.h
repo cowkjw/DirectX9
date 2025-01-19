@@ -29,6 +29,7 @@ public:
 	int Get_Score() const { return m_iScore; }
 	int Get_Level() const { return m_iLevel; }
 	bool Get_GameOver() const { return m_bGameOver; }
+	bool Get_GameClear() const { return m_bGameClear; }
 	auto& Get_NextFruit_Info() { return m_tNextFruitInfo; }
 	
 private:
@@ -47,6 +48,7 @@ private:
 	int m_iScore;
 	float m_fDropLenDebug;
 	bool m_bGameOver;
+	bool m_bGameClear;
 	bool m_bCanWarning;
 	bool m_bCreated;
 	DWORD64 m_dwDroppedTime;

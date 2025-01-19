@@ -244,7 +244,7 @@ void CUiManager::RenderUi_JW(HDC hDC)
 		DrawText(hDC, szLevelText, _tcslen(szLevelText), &rect3, DT_RIGHT | DT_SINGLELINE | DT_VCENTER); //가운데 중앙 정렬
 	
 
-		if (pScene->Get_GameOver())
+		if (pScene->Get_GameOver()||pScene->Get_GameClear())
 		{
 
 		HFONT hGameOverFont = CreateFont(
@@ -257,8 +257,7 @@ void CUiManager::RenderUi_JW(HDC hDC)
 			CLIP_DEFAULT_PRECIS,
 			DEFAULT_QUALITY,
 			DEFAULT_PITCH | FF_SWISS,
-			L"Eulyoo1945-SemiBold"
-		);
+			L"Eulyoo1945-SemiBold");
 
 		// GAME OVER 텍스트 중앙 배치를 위한 RECT
 		RECT gameOverRect = { 0, 0, 800, 600 };
@@ -267,7 +266,8 @@ void CUiManager::RenderUi_JW(HDC hDC)
 
 		// GAME OVER 텍스트 그리기
 		SelectObject(hDC, hGameOverFont);
-		TCHAR szGameOver[] = _T("GAME OVER");
+		TCHAR szGameOver[64];
+		_tcscpy_s(szGameOver, pScene->Get_GameClear() ? _T("GAME CLEAR") : _T("GAME OVER"));
 		DrawText(hDC, szGameOver, _tcslen(szGameOver), &gameOverRect,
 			DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 

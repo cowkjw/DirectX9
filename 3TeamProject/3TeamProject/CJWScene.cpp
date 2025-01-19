@@ -9,7 +9,7 @@
 #include "CSoundManager.h"
 #include <time.h>
 
-CJWScene::CJWScene() :m_pFruit(nullptr), m_iLevel(0), m_bCreated(false), m_fDropLenDebug(0.f), m_bCanWarning(false), m_bGameOver(false), m_iScore(0),
+CJWScene::CJWScene() :m_pFruit(nullptr), m_iLevel(0), m_bCreated(false), m_bGameClear(false), m_fDropLenDebug(0.f), m_bCanWarning(false), m_bGameOver(false), m_iScore(0),
 m_dwDropDelay(0ULL), m_dwDroppedTime(0ULL), m_tNextFruitInfo{}
 {
 	for (int i = 0; i < (int)FRUIT_TYPE::FT_END; i++)
@@ -31,6 +31,7 @@ void CJWScene::Initialize()
 	srand(unsigned int(time(nullptr)));
 	m_bGameOver = false;
 	m_bCanWarning = false;
+	m_bGameClear = false;
 	m_dwDropDelay = 1000ULL;
 	m_dwDroppedTime = GetTickCount64();
 	m_bCreated = true;
@@ -63,16 +64,22 @@ void CJWScene::Initialize()
 int CJWScene::Update()
 {
 	Key_Input();
-	if (!m_bGameOver)
+
+	if (!m_bGameClear&&m_iLevel == 8)
+	{
+		m_bGameClear = true;
+	}
+
+	if (!m_bGameOver&&!m_bGameClear)
 	{
 		auto& fruitList = CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYER);
 		CCollisionManager::JW_Collision_Circle(fruitList, fruitList);
 		Create_MapObj();
 		Merge_Fruit();
 		BoxLine_Collision();
+	}
 		Find_Proximate_Fruit();
 		CObjectManager::Get_Instance()->Update();
-	}
 	return 0;
 }
 
@@ -113,7 +120,10 @@ void CJWScene::Render(HDC hDC)
 		SetTextColor(hDC, RGB(0, 0, 0));
 		TextOut(hDC, 50, 70, szDebugGameOver, _tcslen(szDebugGameOver));
 
-	
+		TCHAR szDebugWarn[64];
+		_stprintf_s(szDebugWarn, _T("떨어진 경우 : %f"), m_fDropLenDebug);
+		SetTextColor(hDC, RGB(0, 0, 0));
+		TextOut(hDC, 50, 100, szDebugWarn, _tcslen(szDebugWarn));
 
 		HPEN hPen = CreatePen(PS_SOLID, 5, RGB(255, 0, 0));
 		HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
@@ -126,10 +136,7 @@ void CJWScene::Render(HDC hDC)
 		DeleteObject(hPen);
 	}
 
-	TCHAR szDebugWarn[64];
-	_stprintf_s(szDebugWarn, _T("떨어진 경우 : %f"), m_fDropLenDebug);
-	SetTextColor(hDC, RGB(0, 0, 0));
-	TextOut(hDC, 50, 100, szDebugWarn, _tcslen(szDebugWarn));
+	
 	if (m_bCanWarning)
 	{
 		//HPEN hWarningPen = CreatePen(PS_SOLID, 3, RGB(255, 0, 0));  // 빨간색 경고선
