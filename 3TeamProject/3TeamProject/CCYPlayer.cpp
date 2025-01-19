@@ -8,7 +8,7 @@
 #include "CCollisionManager.h"
 #include "CObjectManager.h"
 
-CCYPlayer::CCYPlayer() : m_fWormSize(0.f), m_ullTailDeleteTicker(0.f), m_bDashing(false)
+CCYPlayer::CCYPlayer() : m_fWormSize(0.f), m_ullTailDeleteTicker(0.f), m_bDashing(false), m_iDeadTimeFrame(0)
 {
 }
 
@@ -36,10 +36,10 @@ void CCYPlayer::Initialize()
 
 int CCYPlayer::Update()
 {
-	//if (m_bDead)
-	//{
-	//	return OBJ_DEAD;
-	//}
+	if (m_bDead)
+	{
+		return OBJ_NOEVENT;
+	}
 
 
 	Key_Input();
@@ -89,8 +89,22 @@ int CCYPlayer::Update()
 	D3DXMatrixRotationZ(&matRotZ, m_fAngle);
 	m_fWormSize = 1.f + m_TailSeglist.size() * 0.001f;
 	D3DXMatrixScaling(&matScale, m_fWormSize, m_fWormSize, 0);
+	
+	//D3DXMATRIX testMatrix;
+
+	//D3DXMatrixIdentity(&testMatrix);
+
 
 	m_tInfo.matWorld = matScale * matRotZ * matTrans;
+	//m_tInfo.matWorld = matRotZ;
+
+
+
+
+
+
+
+
 	//D3DXVec3TransformNormal(&m_tInfo.vDir, &m_tInfo.vDir, &m_tInfo.matWorld);
 	//m_tInfo.vPos -= m_tInfo.vDir * m_fSpeed;
 
@@ -144,23 +158,16 @@ void CCYPlayer::Render(HDC hDC)
 	SelectObject(hDC, OldBrush); DeleteObject(PinkBrush);
 	SelectObject(hDC, hOldPen); DeleteObject(hPen);
 
-
-
 	if (m_bDead)
 	{
 		TCHAR szTestText[64];
-		_stprintf_s(szTestText, _T("Á×À½"));
+		_stprintf_s(szTestText, _T("Your Final Length : %d", m_));
 		SetTextColor(hDC, RGB(0, 0, 0));
 		TextOut(hDC, 300, 10, szTestText, _tcslen(szTestText));
 	}
 
-	//Ellipse(hDC, m_pRenderPoint[3].x - 3.f, m_pRenderPoint[3].y - 3.f,
-	//	m_pRenderPoint[3].x + 3.f, m_pRenderPoint[3].y + 3.f);
-
-
-	//Ellipse(hDC, m_pRenderPoint[4].x - 3.f, m_pRenderPoint[4].y - 3.f,
-	//	m_pRenderPoint[4].x + 3.f, m_pRenderPoint[4].y + 3.f);
-
+	//Ellipse(hDC, m_pRenderPoint[0].x - 3.f, m_pRenderPoint[0].y - 3.f,
+	//			 m_pRenderPoint[0].x + 3.f, m_pRenderPoint[0].y + 3.f);
 }
 
 void CCYPlayer::Release()
@@ -212,18 +219,18 @@ void CCYPlayer::Key_Input()
 	if (GetAsyncKeyState(VK_LSHIFT))
 	{
 		m_fSpeed = 4.f;
-		if (m_ullTailDeleteTicker + 100 < GetTickCount64())
+		if (m_ullTailDeleteTicker + 300 < GetTickCount64())
 		{
 			if (m_TailSeglist.empty())
 				return;
-			static_cast<CCYObject*>(m_TailSeglist.back())->Set_Dead();
+			Safe_Delete<CObject*>(m_TailSeglist.back());
 			m_TailSeglist.pop_back();
 			m_ullTailDeleteTicker = GetTickCount64();
 		}
 		if (m_bDashing == false)
 		{
 			m_bDashing = true;
-			AdjustRGB(m_WormColor, -20);
+			AdjustRGB(m_WormColor, 0, -30, -30);
 		}
 	}
 	else
@@ -231,7 +238,7 @@ void CCYPlayer::Key_Input()
 		if (m_bDashing == true)
 		{
 			m_bDashing = false;
-			AdjustRGB(m_WormColor, +20);
+			AdjustRGB(m_WormColor, 0, 30, 30);
 
 		}
 		m_fSpeed = 2.f;

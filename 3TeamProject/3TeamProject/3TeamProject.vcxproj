@@ -157,7 +157,6 @@
     <ClInclude Include="CCYObject.h" />
     <ClInclude Include="CCYPlayer.h" />
     <ClInclude Include="CCYScene.h" />
-    <ClInclude Include="CCYSegment.h" />
     <ClInclude Include="CCYTail.h" />
     <ClInclude Include="CDWObject.h" />
     <ClInclude Include="CDWPlayer.h" />
@@ -203,7 +202,6 @@
     <ClCompile Include="CCYObject.cpp" />
     <ClCompile Include="CCYPlayer.cpp" />
     <ClCompile Include="CCYScene.cpp" />
-    <ClCompile Include="CCYSegment.cpp" />
     <ClCompile Include="CCYTail.cpp" />
     <ClCompile Include="CDWObject.cpp" />
     <ClCompile Include="CDWPlayer.cpp" />

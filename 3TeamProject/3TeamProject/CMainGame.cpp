@@ -27,12 +27,10 @@ void CMainGame::Initialize()
 	m_hDC = GetDC(g_hWnd);
 	CSceneManager::Get_Instance()->Set_Scene(SC_MENU);
 }
-
 void CMainGame::Update()
 {
 	CSceneManager::Get_Instance()->Update();
 }
-
 void CMainGame::Late_Update()
 {
 	CSceneManager::Get_Instance()->Late_Update();

@@ -19,13 +19,11 @@ public:
 private:
 	void Key_Input();
 	void Increase_TailSegment();
+
 private:
-
-
-
 	float		m_fWormSize;
 	ULONGLONG	m_ullTailDeleteTicker;
 	bool		m_bDashing;
-
+	int			m_iDeadTimeFrame;
 };
 

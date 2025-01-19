@@ -11,6 +11,8 @@ void CCYFood::Initialize()
 	m_tInfo.vLook = { 1.f, 0.f, 0.f };
 	m_tInfo.fSizeX = m_tInfo.fSizeY = (float)(rand() % 18 + 8);
 	CCYObject::Initialize_OriginPoint(rand() % 3 + 3, (int)(m_tInfo.fSizeX / 2));
+	randomcolor = RGB(rand() % 255, rand() % 255, rand() % 255);
+
 }
 
 int CCYFood::Update()
@@ -48,7 +50,6 @@ void CCYFood::Render(HDC hDC)
 	if (g_bDevmode) {
 		HitCircle(hDC, m_tHitRect, 0, 0);
 	}
-	auto randomcolor = RGB(rand() % 255, rand() % 255, rand() % 255);
 	HPEN hPen = CreatePen(PS_SOLID, 3,randomcolor);
 	HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
 

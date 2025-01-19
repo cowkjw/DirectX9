@@ -4,6 +4,8 @@
 #include "CCollisionManager.h"
 #include "CCYPlayer.h"
 #include "CObjectManager.h"
+#include "CAbstractFactory.h"
+#include "CCYFood.h"
 
 void CCYTail::Initialize()
 {
@@ -21,6 +23,7 @@ void CCYTail::Initialize()
 int CCYTail::Update()
 {
 	m_fSpeed = m_targetHead->Get_Speed();
+	m_WormColor = static_cast<CCYObject*>(m_targetHead)->Get_WormColor();
 
 	D3DXMatrixTranslation(&matTrans, m_tInfo.vPos.x, m_tInfo.vPos.y, 0.f);
 	if (dynamic_cast<CCYPlayer*>(m_targetHead) == nullptr)
@@ -84,6 +87,7 @@ void CCYTail::Render(HDC hDC)
 
 void CCYTail::Release()
 {
+	CObjectManager::Get_Instance()->Add_Object(OBJ_MISC, CAbstractFactory<CCYFood>::CreateCYFood(m_tInfo.vPos.x, m_tInfo.vPos.y));
 }
 
 void CCYTail::OnCollision(CObject* _obj)

@@ -3,6 +3,9 @@
 #include "CKeyManager.h"
 #include "pch.h"
 #include "CCYObject.h"
+#include "CCollisionManager.h"
+#include "CRoad.h"
+#include "CObjectManager.h"
 
 CDWPlayer::CDWPlayer()
 {
@@ -15,14 +18,15 @@ void CDWPlayer::Initialize()
 	m_eRender = RENDER_GAMEOBJECT;
 
 
-
-
 	m_tInfo.vPos = { 400.f, 500.f, 0.f };
 	m_fSpeed = 2.f;
 	m_tInfo.vLook = { 1.f, 0.f, 0.f };
 	CDWPlayer::Initialize_OriginPoint(30, 30);
 
-
+	m_pPlayer_ScaleX=1.f;
+	m_pPlayer_ScaleY=1.f;
+	m_pPlayer_ScaleZ=1.f;
+	
 
 }
 
@@ -30,26 +34,40 @@ int CDWPlayer::Update()
 {
 	//Key_Input();
 
-
+	D3DXMatrixScaling(&matScale, m_pPlayer_ScaleX, m_pPlayer_ScaleY, m_pPlayer_ScaleZ); // 1번
 	D3DXMatrixTranslation(&matTrans, m_tInfo.vPos.x, m_tInfo.vPos.y, 0.f);
-
-
-	m_tInfo.matWorld =  matTrans;
+	m_tInfo.matWorld = matScale * matTrans; // 2번 월드행렬
 	for (int i = 0; i < m_vOriginPointvec.size(); ++i)
 	{
 		D3DXVec3TransformCoord(&m_vPointvec[i], &m_vOriginPointvec[i], &m_tInfo.matWorld);
 		m_pRenderPoint[i].x = m_vPointvec[i].x;
 		m_pRenderPoint[i].y = m_vPointvec[i].y;
 	}
+	
+	if (CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_DW_ROAD).empty() == false)
+	{
+		auto sOb = CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_DW_ROAD).front();
+		auto& sOb_vevStruct = dynamic_cast<CRoad*>(sOb)->Get_obs();
+
+		for (auto& sOb_Struct : sOb_vevStruct)
+		{
+			if (CCollisionManager::DW_Check_Coll(this, &sOb_Struct))
+			{
+				m_pPlayer_ScaleX = 2.f;
+				m_pPlayer_ScaleY = 2.f;
+				m_pPlayer_ScaleZ = 2.f;	
+			}
+		}
+	}
 
 	//__super::Update_Rect();
 	return 0;
-}
 
+}
 void CDWPlayer::Late_Update()
 {
+	
 }
-
 void CDWPlayer::Render(HDC hDC)
 {
 	if (g_bDevmode) 
@@ -62,16 +80,18 @@ void CDWPlayer::Render(HDC hDC)
 	Polygon(hDC, m_pRenderPoint, m_vOriginPointvec.size());
 	SelectObject(hDC, OldBrush); DeleteObject(PinkBrush);
 
+	Ellipse(hDC, m_pRenderPoint[20].x - 5, m_pRenderPoint[20].y - 5, m_pRenderPoint[20].x + 5, m_pRenderPoint[20].y + 5);
+
+	Ellipse(hDC, m_pRenderPoint[25].x - 5, m_pRenderPoint[25].y - 5, m_pRenderPoint[25].x + 5, m_pRenderPoint[25].y + 5);
 
 	TCHAR m_szBuf[100] = {};
 	swprintf_s(m_szBuf, L"플레이어 x : %.f, 플레이어 y : %.f", m_tInfo.vPos.x, m_tInfo.vPos.y);
 	TextOut(hDC, 300, 5, m_szBuf, lstrlen(m_szBuf));
 
-	
+
 
 
 }
-
 void CDWPlayer::Release()
 {
 }

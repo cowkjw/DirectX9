@@ -89,14 +89,40 @@ bool CCollisionManager::DW_Check_Coll(CObject* _Dst, CRoad::SObstacle* _Src)
 {
 
    if (!_Dst) return false;
-
+   
    if (!_Src) return false;
-    CRoad::SObstacle* pObs = dynamic_cast<CRoad::SObstacle*>(_Src);
+  
+   float px = _Dst->Get_Info().vPos.x;
+   float py = _Dst->Get_Info().vPos.y;
 
-    for (int i = 0; i < 4; i++)
-    {
-        pObs->worldCorner[i];
-    }
+   // 2) 장애물 worldCorner 4개
+   float x0 = _Src->worldCorner[0].x;
+   float y0 = _Src->worldCorner[0].y;
+
+   float x1 = _Src->worldCorner[1].x;
+   float y1 = _Src->worldCorner[1].y;
+
+   float x2 = _Src->worldCorner[2].x;
+   float y2 = _Src->worldCorner[2].y;
+
+   float x3 = _Src->worldCorner[3].x;
+   float y3 = _Src->worldCorner[3].y;
+
+   // 3) min/max X, Y 계산
+   float minX = min(min(x0, x1), min(x2, x3));
+   float maxX = max(max(x0, x1), max(x2, x3));
+   float minY = min(min(y0, y1), min(y2, y3));
+   float maxY = max(max(y0, y1), max(y2, y3));
+
+   // 4) 플레이어가 minX ~ maxX, minY ~ maxY 범위 안에 있으면 충돌
+   if (px >= minX && px <= maxX &&
+       py >= minY && py <= maxY)
+   {
+       return true;  // 충돌
+   }
+
+   return false;      // 범위 밖
+  
     
          
 

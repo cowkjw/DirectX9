@@ -17,9 +17,12 @@ public:
 	void Create_MapObj() override;
 	void Offset() override;
 
+	int Get_PlayerLength() { return m_iPlayerLength; }
+
 private:
 	enum SLITHERNUM { SL_PLAYER, SL_END };
 	vector<vector<CObject>*> m_SlitherSegvec;
 	ULONGLONG	m_ullFoodTimeTicker;
+	int			m_iPlayerLength;
 };
 
