@@ -12,6 +12,7 @@ public:
 		float       fWidth; // 장애물의 가로크기
 		float       fHeight;// 장애물의 세로크기
 		D3DXVECTOR3 worldCorner[4];
+		D3DXVECTOR3 screenCorner[4];
 		float       fAngle; 
 		float       fScale; // 스케일(배율)
 	};
@@ -22,7 +23,6 @@ public:
 	void Initialize() override;
 	int Update() override;
 	void Key_Input();
-	void Player_With_Obs_Call();
 	void Late_Update() override;
 	void Render(HDC hDC) override;
 	void Release() override;
@@ -33,7 +33,6 @@ public:
 	void Spawn_Obstacle();
 	void Render_Obstacles(HDC hDC);
     /////////////////////////////////////
-
 
 	auto& Get_obs()
 	{
@@ -68,7 +67,7 @@ private:
 	float m_fJumpOffsetY;   
 	float m_fTargetAngle;
 	float m_fTargetX;
-
+	float m_fPlayerStartY;
 	
 };
 

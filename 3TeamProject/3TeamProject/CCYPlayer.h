@@ -25,5 +25,7 @@ private:
 	ULONGLONG	m_ullTailDeleteTicker;
 	bool		m_bDashing;
 	int			m_iDeadTimeFrame;
+
+	
 };
 

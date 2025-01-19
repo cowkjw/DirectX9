@@ -82,50 +82,40 @@ bool CCollisionManager::JW_Check_Circle(CObject* _Dst, CObject* _Src)
 
     float fDist = hypotf(pFruit2->Get_Info().vPos.x - pFruit1->Get_Info().vPos.x
         , pFruit2->Get_Info().vPos.y - pFruit1->Get_Info().vPos.y);
+
     return fDist <= fObj1RadiMultiScale + fObj2RadiMultiScale;
 }
 
 bool CCollisionManager::DW_Check_Coll(CObject* _Dst, CRoad::SObstacle* _Src)
 {
+    if (!_Dst || !_Src)
+        return false;
 
-   if (!_Dst) return false;
-   
-   if (!_Src) return false;
-  
-   float px = _Dst->Get_Info().vPos.x;
-   float py = _Dst->Get_Info().vPos.y;
+    // 멀리 있는 장애물 무시
+    if (_Src->vPos.z > 600.f)
+        return false;
 
-   // 2) 장애물 worldCorner 4개
-   float x0 = _Src->worldCorner[0].x;
-   float y0 = _Src->worldCorner[0].y;
+    auto pPlayer = dynamic_cast<CDWPlayer*>(_Dst);
+    auto* pObsScr = _Src->screenCorner;    // 장애물 스크린 좌표
 
-   float x1 = _Src->worldCorner[1].x;
-   float y1 = _Src->worldCorner[1].y;
 
-   float x2 = _Src->worldCorner[2].x;
-   float y2 = _Src->worldCorner[2].y;
+    const float paddingX = 10.f;  // 충돌 x축 반경임
+    const float paddingY = 1.f;   // 충돌 y축 반경임
 
-   float x3 = _Src->worldCorner[3].x;
-   float y3 = _Src->worldCorner[3].y;
+    float minX = min(min(pObsScr[0].x, pObsScr[1].x), min(pObsScr[2].x, pObsScr[3].x)) - paddingX;
+    float maxX = max(max(pObsScr[0].x, pObsScr[1].x), max(pObsScr[2].x, pObsScr[3].x)) + paddingX;
+    float minY = min(min(pObsScr[0].y, pObsScr[1].y), min(pObsScr[2].y, pObsScr[3].y)) - paddingY;
+    float maxY = max(max(pObsScr[0].y, pObsScr[1].y), max(pObsScr[2].y, pObsScr[3].y)) + paddingY;
 
-   // 3) min/max X, Y 계산
-   float minX = min(min(x0, x1), min(x2, x3));
-   float maxX = max(max(x0, x1), max(x2, x3));
-   float minY = min(min(y0, y1), min(y2, y3));
-   float maxY = max(max(y0, y1), max(y2, y3));
+    float PlayerX = pPlayer->Get_RenderPoint()->x;
+    float PlayerY = pPlayer->Get_RenderPoint()->y;
 
-   // 4) 플레이어가 minX ~ maxX, minY ~ maxY 범위 안에 있으면 충돌
-   if (px >= minX && px <= maxX &&
-       py >= minY && py <= maxY)
-   {
-       return true;  // 충돌
-   }
-
-   return false;      // 범위 밖
-  
-    
-         
+    // 충돌 확인
+    if (PlayerX >= minX && PlayerX <= maxX &&
+        PlayerY >= minY && PlayerY <= maxY)
+    {
+        return true;
+    }
 
     return false;
 }
-
