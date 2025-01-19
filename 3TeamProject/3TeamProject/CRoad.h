@@ -22,6 +22,7 @@ public:
 	void Initialize() override;
 	int Update() override;
 	void Key_Input();
+	void Player_With_Obs_Call();
 	void Late_Update() override;
 	void Render(HDC hDC) override;
 	void Release() override;
@@ -32,9 +33,11 @@ public:
 	void Spawn_Obstacle();
 	void Render_Obstacles(HDC hDC);
     /////////////////////////////////////
-	auto Get_VecPoints()
+
+
+	auto& Get_obs()
 	{
-		return  m_vecPoints;
+		return  m_Obstacles;
 	}
 	
 
@@ -54,7 +57,7 @@ private:
 	bool m_bFirst_Check;
 	bool  m_bJumping;
 	vector<POINT*> m_vecPoints; // 벡터안에 포인트라는 4개짜리배열을`	
-	vector<SObstacle> m_Obstacles;
+	vector<SObstacle> m_Obstacles; // 장애물 구조체 보관
 	CObject* m_pPlayer;
 	DWORD m_dwPrevSpawnTime; // 스폰 조절할 타이머
 	HBITMAP hBmp;

@@ -18,9 +18,12 @@ public:
 
 private:
 	
-	D3DXVECTOR3 transformedCorners[4]; // 행렬곱당해버릴 벡터
-	D3DXVECTOR3 m_vCorner[4];
+	D3DXVECTOR3 transformedCorners[2]; // 행렬곱당해버릴 벡터
+	D3DXVECTOR3 m_vCorner[2];
 
+	float m_pPlayer_ScaleX;
+	float m_pPlayer_ScaleY;
+	float m_pPlayer_ScaleZ;
 };
 
 
