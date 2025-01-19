@@ -14,5 +14,7 @@ public:
 	void Key_Input() override;
 	void Create_MapObj() override;
 	void Offset() override;
+private:
+	int m_iIndex;
 };
 
