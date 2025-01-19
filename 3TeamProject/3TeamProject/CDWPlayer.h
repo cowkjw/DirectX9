@@ -15,6 +15,8 @@ public:
 	void Render(HDC hDC) override;
 	void Release() override;
 	void OnCollision(CObject* _obj) override;
+	void DrawOutlinedText(HDC hDC, int x, int y, int align, COLORREF outlineColor, COLORREF textColor, HFONT hFont, const TCHAR* text);
+	void DrawOutlinedText(HDC hDC, int x, int y, const TCHAR* text, COLORREF outlineColor, COLORREF textColor, HFONT hFont);
 	auto Get_ScreenCorner()
 	{
 		return m_screenCorner;
@@ -36,7 +38,7 @@ private:
 	bool m_bFalling;
 	float m_fFallSpeed; // ³«ÇÏ ¼Óµµ
 	float m_fFallDepth; // ±¸µ¢ÀÌ¿¡ ºüÁö´Â ±íÀÌ
-
+	bool m_bPlayer_Exist_Check;
 };
 
 

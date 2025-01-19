@@ -25,6 +25,7 @@ public:
 	void Key_Input();
 	void Late_Update() override;
 	void Render(HDC hDC) override;
+	void DrawOutlinedText(HDC hDC, int x, int y, const TCHAR* text, COLORREF outlineColor, COLORREF textColor, HFONT hFont);
 	void Release() override;
 	void OnCollision(CObject* _obj) override;
     void Wall_Update();
@@ -53,6 +54,7 @@ private:
 	static bool m_bRight_Rotation;
 	static bool m_bTop_Rotation;
 	static bool m_bBottom_Rotation;
+
 	bool m_bFirst_Check;
 	bool  m_bJumping;
 	vector<POINT*> m_vecPoints; // 벡터안에 포인트라는 4개짜리배열을`	
@@ -68,6 +70,13 @@ private:
 	float m_fTargetAngle;
 	float m_fTargetX;
 	float m_fPlayerStartY;
+	float m_fCheck_Rotation_Angle;
 	
+
+	bool m_bRelease_Check;
+
+	ULONGLONG g_ullPlayTime;
+	ULONG64 ullSecond;
+
 };
 
