@@ -40,7 +40,7 @@ void CCYMonster::Initialize()
 	m_tInfo.vLook = { 1.f, 0.f, 0.f };
 	CCYObject::Initialize_OriginPoint(12, 16);
 	m_WormColor = RGB(rand()%235 + 20, rand() % 235 + 20, rand() % 235 + 20);
-	for (int i = 0; i < rand() % 30 + 30; ++i)
+	for (int i = 0; i < rand() % 150 + 30; ++i)
 	{
 		Increase_TailSegment();
 	}
