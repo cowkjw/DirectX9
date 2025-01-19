@@ -5,6 +5,8 @@
 #include "CYGPlayer.h"
 #include "CYGBox.h"
 #include "CCollisionManager.h"
+#include "CYGMonster.h"
+#include "CYGBox.h"
 
 CYGBullet::CYGBullet():m_iReMoveTick(0), m_bDead(false)
 {
@@ -62,12 +64,27 @@ void CYGBullet::OnCollision(CObject* _obj)
 
 void CYGBullet::OnCollision()
 {
-	CYGPlayer* _copyPlayer = static_cast<CYGPlayer*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYER).back());
+	CYGPlayer* _copyPlayer = dynamic_cast<CYGPlayer*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYER).back());
 	if (CCollisionManager::Check_Circle(m_tHitRect, _copyPlayer->Get_HitBox())) {
 		m_bDead = true;
 		_copyPlayer->Set_Hp(-5);
+		return;
 	}
 
+	if (CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_MONSTER).size() > 0) {
+		CYGMonster* _copyMonster = dynamic_cast<CYGMonster*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_MONSTER).back());
+		if (CCollisionManager::Check_Circle(m_tHitRect, _copyMonster->Get_HitBox())) {
+			m_bDead = true;
+			_copyMonster->Set_Hp(-5);
+			return;
+		}
+	}
 
+	if (CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_MAP).size() > 0) {
+		CYGBox* _copyMapObj = dynamic_cast<CYGBox*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_MAP).back());
+		if (CCollisionManager::Check_Circle(m_tHitRect, _copyMapObj->Get_HitBox())) {
+			_copyMapObj->OnCollision(this);
+		}
+	}
 
 }

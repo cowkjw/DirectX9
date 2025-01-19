@@ -36,10 +36,16 @@ void CYGMonster::Initialize()
 
 	m_tInfo.vDir = { 0.f, 1.f, 0.f };
 	m_fSpeed = 2.f;
+
+	m_iHp = 50;
+	m_iMaxHp = m_iHp;
 }
 
 int CYGMonster::Update()
 {
+	if (m_iHp <= 0) {
+		return OBJ_DEAD;
+	}
 	m_iShootTick++;
 	if (m_iShootTick > 20) {
 		CObjectManager::Get_Instance()->Add_Object(OBJ_MONSTERBULLET, CAbstractFactory<CYGBullet>::Create(m_vBulletSpawn.x, m_vBulletSpawn.y));
@@ -114,6 +120,33 @@ void CYGMonster::Render(HDC hDC)
 	ColorCircle(hDC, m_vRightGunHandPos.x - 10 , m_vRightGunHandPos.y - 10 , m_vRightGunHandPos.x + 10 , m_vRightGunHandPos.y + 10 , 252, 194, 114, 2); // ¿À¸¥¼Õ
 
 	ColorCircle(hDC, m_tHitRect.left, m_tHitRect.top , m_tHitRect.right, m_tHitRect.bottom, 252, 194, 114, 2);
+
+	//COLORREF color = RGB(255, 255, 255);
+	//HBRUSH hBrush = CreateSolidBrush(color);
+	//HPEN hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+	//HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+	//HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+	//RoundRect(hDC, WINCX / 2 - 200, 510, WINCX / 2 - 200 + 400, 550, 10, 10);
+
+	//SelectObject(hDC, hOldBrush);
+	//SelectObject(hDC, hOldPen);
+	//DeleteObject(hBrush);
+	//DeleteObject(hPen);
+
+	//CYGPlayer* _copyYGPlayer = static_cast<CYGPlayer*>(CObjectManager::Get_Instance()->Get_Player());
+	//int hpWidth = (400 * _copyYGPlayer->Get_Hp()) / _copyYGPlayer->Get_MaxHp();
+
+	//color = RGB(179, 179, 179);
+	//hBrush = CreateSolidBrush(color);
+	//hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+	//hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+	//hOldPen = (HPEN)SelectObject(hDC, hPen);
+	//RoundRect(hDC, WINCX / 2 - 200, 510, WINCX / 2 - 200 + hpWidth, 550, 10, 10);
+
+	//SelectObject(hDC, hOldBrush);
+	//SelectObject(hDC, hOldPen);
+	//DeleteObject(hBrush);
+	//DeleteObject(hPen);
 }
 
 void CYGMonster::Release()

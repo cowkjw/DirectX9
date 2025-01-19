@@ -12,6 +12,10 @@ public:
 	void Render(HDC hDC) override;
 	void Release() override;
 	void OnCollision(CObject* _obj) override;
+public:
+	RECT Get_HitBox() { return m_tHitRect; }
+public:
+	void Set_Hp(int _i) { m_iHp += _i; }
 private:
 	//ÃÑ ¼Õ¿¡ 
 	D3DXVECTOR3 m_vLeftGunHandPos;

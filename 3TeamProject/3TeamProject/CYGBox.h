@@ -12,6 +12,8 @@ public:
 	void Render(HDC hDC) override;
 	void Release() override;
 	void OnCollision(CObject* _obj) override;
+public:
+	RECT Get_HitBox() { return m_tHitRect; }
 protected:
 	void OnCollision();
 protected: 

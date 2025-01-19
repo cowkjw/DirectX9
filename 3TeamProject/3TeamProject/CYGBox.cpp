@@ -134,6 +134,10 @@ void CYGBox::Release()
 
 void CYGBox::OnCollision(CObject* _obj)
 {
+	if (m_HitTick > 20) {
+		m_iScaleSize -= 0.3f;
+		m_HitTick = 0;
+	}
 }
 
 void CYGBox::OnCollision()
