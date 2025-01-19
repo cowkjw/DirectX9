@@ -218,11 +218,12 @@ void CYGPlayer::Key_Input()
 					static_cast<CYGBullet*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYERBULLET).back())->Set_Dir(m_tInfo.vLook);
 					m_iShootTick = 0;
 				}
-				else {
-					CObjectManager::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CYGBulletBox>::Create(250, 300, 50, 50));
-				}
 			}
 		}
+	}
+
+	if (CKeyManager::Get_Instance()->Key_Down('R')) {
+		CObjectManager::Get_Instance()->Add_Object(OBJ_MAP, CAbstractFactory<CYGBulletBox>::Create(300, 300, 50, 50));
 	}
 
 	if (CKeyManager::Get_Instance()->Key_Down('F')) {

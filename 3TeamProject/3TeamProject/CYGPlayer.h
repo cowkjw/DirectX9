@@ -21,6 +21,8 @@ public:
 	RECT Get_HitBox() { return m_tHitRect; }
 	PLAYERSTATE Get_PS() { return m_PlayerState; }
 	int Get_BulletNum() { return m_iBulletNum; }
+public:
+	void Set_Hp(int _i) { m_iHp += _i; }
 private:
 	void Key_Input();
 private:

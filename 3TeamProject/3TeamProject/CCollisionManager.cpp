@@ -30,6 +30,25 @@ bool CCollisionManager::Check_Circle(CObject* _Dst, CObject* _Src)
     return fRadius >= fDiagonal;
 }
 
+bool CCollisionManager::Check_Circle(RECT _Dst, RECT _Src)
+{
+    float _DstSize = _Dst.right - _Dst.left;
+    float _SrcSize = _Src.right - _Src.left;
+    float fRadius = (_DstSize + _SrcSize) * 0.5f;
+
+    float _DstX = (_Dst.right + _Dst.left) * 0.5f;
+    float _DstY = (_Dst.top + _Dst.bottom) * 0.5f;
+    float _SrcX = (_Src.right + _Src.left) * 0.5f;
+    float _SrcY = (_Src.top + _Src.bottom) * 0.5f;
+
+    float fWidth = abs(_DstX- _SrcX);
+    float fHeight = abs(_DstY - _SrcY);
+
+    float fDiagonal = powf((fWidth * fWidth + fHeight * fHeight), 0.5f);
+
+    return fRadius >= fDiagonal;
+}
+
 
 void CCollisionManager::JW_Collision_Circle(list<CObject*> _Dst, list<CObject*> _Src)
 {

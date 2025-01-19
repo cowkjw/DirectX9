@@ -27,11 +27,11 @@ int CYGBulletBox::Update()
 
 	for (int i = 0; i < 4; ++i) {
 		m_vOutBox[i] = m_vOriginOutBox[i];
-		m_vOutBox[i] -= {200.f, 300.f, 0.f};
+		m_vOutBox[i] -= {300.f, 300.f, 0.f};
 		D3DXVec3TransformCoord(&m_vOutBox[i], &m_vOutBox[i], &m_tInfo.matWorld);
 
 		m_vInBox[i] = m_vOriginInBox[i];
-		m_vInBox[i] -= {200.f, 300.f, 0.f};
+		m_vInBox[i] -= {300.f, 300.f, 0.f};
 		D3DXVec3TransformCoord(&m_vInBox[i], &m_vInBox[i], &m_tInfo.matWorld);
 	}
 	__super::Update_Rect();

@@ -1,8 +1,12 @@
 #include "pch.h"
 #include "CYGBullet.h"
 #include "CScrollManager.h"
+#include "CObjectManager.h"
+#include "CYGPlayer.h"
+#include "CYGBox.h"
+#include "CCollisionManager.h"
 
-CYGBullet::CYGBullet():m_iReMoveTick(0)
+CYGBullet::CYGBullet():m_iReMoveTick(0), m_bDead(false)
 {
 }
 
@@ -24,6 +28,9 @@ void CYGBullet::Initialize()
 int CYGBullet::Update()
 {
 	m_iReMoveTick++;
+	if (m_bDead) {
+		return OBJ_DEAD;
+	}
 
 	if (m_iReMoveTick > 100) {
 		return OBJ_DEAD;
@@ -35,13 +42,14 @@ int CYGBullet::Update()
 
 void CYGBullet::Late_Update()
 {
+	OnCollision();
 }
 
 void CYGBullet::Render(HDC hDC)
 {
 	int		iScrollX = (int)CScrollManager::Get_Instance()->Get_ScrollX();
 	int		iScrollY = (int)CScrollManager::Get_Instance()->Get_ScrollY();
-	Rectangle(hDC, m_tHitRect.left+ iScrollX, m_tHitRect.top+ iScrollY, m_tHitRect.right+ iScrollX, m_tHitRect.bottom+ iScrollY);
+	Ellipse(hDC, m_tHitRect.left+ iScrollX, m_tHitRect.top+ iScrollY, m_tHitRect.right+ iScrollX, m_tHitRect.bottom+ iScrollY);
 }
 
 void CYGBullet::Release()
@@ -50,4 +58,16 @@ void CYGBullet::Release()
 
 void CYGBullet::OnCollision(CObject* _obj)
 {
+}
+
+void CYGBullet::OnCollision()
+{
+	CYGPlayer* _copyPlayer = static_cast<CYGPlayer*>(CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_PLAYER).back());
+	if (CCollisionManager::Check_Circle(m_tHitRect, _copyPlayer->Get_HitBox())) {
+		m_bDead = true;
+		_copyPlayer->Set_Hp(-5);
+	}
+
+
+
 }
