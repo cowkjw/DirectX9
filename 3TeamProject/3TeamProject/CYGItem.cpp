@@ -16,10 +16,7 @@ void CYGItem::Initialize()
 
 int CYGItem::Update()
 {
-	if (m_bDead) {
-		return OBJ_DEAD;
-	}
-    __super::Update_Rect();
+
     return 0;
 }
 

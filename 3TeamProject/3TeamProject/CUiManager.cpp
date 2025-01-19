@@ -56,10 +56,14 @@ void CUiManager::RenderUi_YG(HDC hDC)
 	DeleteObject(hBrush);
 	DeleteObject(hPen);
 
+	int hpWidth = 0;
 	CYGPlayer* _copyYGPlayer = static_cast<CYGPlayer*>(CObjectManager::Get_Instance()->Get_Player());
-	int hpWidth = (400 * _copyYGPlayer->Get_Hp()) / _copyYGPlayer->Get_MaxHp();
+	if (_copyYGPlayer->Get_Hp() > 0) {
+		hpWidth = (400 * _copyYGPlayer->Get_Hp()) / _copyYGPlayer->Get_MaxHp();
+	}
+	
 
-	color = RGB(179, 179, 179);
+	color = RGB(237, 52, 52);
 	hBrush = CreateSolidBrush(color);
 	hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
 	hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
