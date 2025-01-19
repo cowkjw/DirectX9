@@ -365,14 +365,22 @@ void CFruit::Update_Matrix()
 		D3DXMatrixScaling(&m_matScale, m_vScale.x * m_fMergeAnimRatio, m_vScale.y * m_fMergeAnimRatio, m_vScale.z * m_fMergeAnimRatio);
 	D3DXMatrixRotationZ(&m_matRotZ, D3DXToRadian(m_fAngle));
 	D3DXMatrixTranslation(&m_matTrans, m_tInfo.vPos.x, m_tInfo.vPos.y, m_tInfo.vPos.z);
+	m_tInfo.matWorld = m_matScale * m_matRotZ * m_matTrans;
+		D3DXVec3TransformCoordArray(
+			&m_vecRenderPoints[0],     // 출력 벡터 배열의 시작 주소
+			sizeof(D3DXVECTOR3),       // 출력 벡터 간의 바이트 간격
+			&m_vecLocalPoints[0],      // 입력 벡터 배열의 시작 주소
+			sizeof(D3DXVECTOR3),       // 입력 벡터 간의 바이트 간격
+			&m_tInfo.matWorld,         // 변환 행렬
+			(UINT)m_vecRenderPoints.size()   // 변환할 벡터의 개수
+		);
+	//for (int i = 0; i < (int)m_vecRenderPoints.size(); i++)
+	//{
+	//	m_tInfo.matWorld = m_matScale * m_matRotZ * m_matTrans;
 
-	for (int i = 0; i < (int)m_vecRenderPoints.size(); i++)
-	{
-		m_tInfo.matWorld = m_matScale * m_matRotZ * m_matTrans;
-
-		// 해당 점 변환
-		D3DXVec3TransformCoord(&m_vecRenderPoints[i], &m_vecLocalPoints[i], &m_tInfo.matWorld);
-	}
+	//	// 해당 점 변환
+	//	D3DXVec3TransformCoord(&m_vecRenderPoints[i], &m_vecLocalPoints[i], &m_tInfo.matWorld);
+	//}
 }
 
 void CFruit::Set_Scale()
