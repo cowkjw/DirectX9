@@ -8,6 +8,7 @@
 #include "CObjectManager.h"
 
 CDWPlayer::CDWPlayer()
+    :m_bPlayer_Exist_Check(false)
 {
 }
 
@@ -27,71 +28,100 @@ void CDWPlayer::Initialize()
 	m_pPlayer_ScaleY=1.f;
 	m_pPlayer_ScaleZ=1.f;
 	
-
+	m_bFalling = false; 
+	m_fFallSpeed = 0.f; // 낙하 속도
+	m_fFallDepth = 50.f; // 구덩이에 빠지는 깊이
+    
 }
+
 
 int CDWPlayer::Update()
 {
-	//Key_Input();
+ 
+    if (m_bFalling)
+    {
+      
+        static float rotationSpeed = D3DXToRadian(10.f); // 초당 10도 회전
+        m_fAngle += rotationSpeed;
 
-	D3DXMatrixScaling(&matScale, m_pPlayer_ScaleX, m_pPlayer_ScaleY, m_pPlayer_ScaleZ); // 1번
-	D3DXMatrixTranslation(&matTrans, m_tInfo.vPos.x, m_tInfo.vPos.y, 0.f);
-	m_tInfo.matWorld = matScale * matTrans; // 2번 월드행렬
-	for (int i = 0; i < m_vOriginPointvec.size(); ++i)
-	{
-		D3DXVec3TransformCoord(&m_vPointvec[i], &m_vOriginPointvec[i], &m_tInfo.matWorld);
-		m_pRenderPoint[i].x = m_vPointvec[i].x;
-		m_pRenderPoint[i].y = m_vPointvec[i].y;
-	}
-	
-	if (CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_DW_ROAD).empty() == false)
-	{
-		auto sOb = CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_DW_ROAD).front();
-		auto& sOb_vevStruct = dynamic_cast<CRoad*>(sOb)->Get_obs();
+        m_tInfo.vPos.y += m_fFallSpeed;
+        m_fFallSpeed += 0.5f; // 중력 효과
 
-		for (auto& sOb_Struct : sOb_vevStruct)
-		{
-			if (CCollisionManager::DW_Check_Coll(this, &sOb_Struct))
-			{
-				m_pPlayer_ScaleX = 2.f;
-				m_pPlayer_ScaleY = 2.f;
-				m_pPlayer_ScaleZ = 2.f;	
-				break;
-			}
-			else
-			{
-				m_pPlayer_ScaleX = 1.f;
-				m_pPlayer_ScaleY = 1.f;
-				m_pPlayer_ScaleZ = 1.f;
-			}
-			
-		
-		}
-	}
+        m_pPlayer_ScaleX -= 0.02f; // 점점 작아짐
+        m_pPlayer_ScaleY -= 0.02f;
+        m_pPlayer_ScaleZ -= 0.02f;
+         
 
-	float cameraZ = 500.f;
-	float centerX = 400.f;
-	float centerY = 300.f;
+        // 스케일 작아지면 삭제..
+        if (m_pPlayer_ScaleX <= 0.1f || m_pPlayer_ScaleY <= 0.1f)
+        {
+            m_pPlayer_ScaleX = 0.f;
+            m_pPlayer_ScaleY = 0.f;
+            m_pPlayer_ScaleZ = 0.f;
 
-	// (3) 월드 좌표 → 스크린 좌표
-	for (int i = 0; i < (int)m_vPointvec.size(); ++i)
-	{
-		float distance = cameraZ + m_vPointvec[i].z;
-		float factor = (cameraZ / distance);
+       
+            m_bFalling = false;
+            m_fFallSpeed = 0.f;
+            m_fAngle = 0.f;
+            m_tInfo.vPos.y = 500.f; // 원래 위치로 복구
+            m_bPlayer_Exist_Check = true;
+        }
+    }
+    if (!CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_DW_ROAD).empty())
+    {
+        auto sOb = CObjectManager::Get_Instance()->Get_ObjList_ByID(OBJ_DW_ROAD).front();
+        auto& sOb_vevStruct = dynamic_cast<CRoad*>(sOb)->Get_obs();
 
-		float screenX = centerX + (m_vPointvec[i].x * factor);
-		float screenY = centerY - (m_vPointvec[i].y * factor);
-		// y는 보통 위가 - 이므로 centerY - (...)
-
-		m_screenCorner[i].x = (LONG)screenX;
-		m_screenCorner[i].y = (LONG)screenY;
-	}
+        for (auto& sOb_Struct : sOb_vevStruct)
+        {
+            if (CCollisionManager::DW_Check_Coll(this, &sOb_Struct))
+            {
+                if (!m_bFalling) 
+                {
+                    m_bFalling = true;
+                    m_fFallSpeed = 0.f; 
+                    m_fAngle = 0.f; 
+                }
+                break;
+            }
+        }
+    }
 
 
-	//__super::Update_Rect();
-	return 0;
+    D3DXMatrixScaling(&matScale, m_pPlayer_ScaleX, m_pPlayer_ScaleY, m_pPlayer_ScaleZ);
+    D3DXMatrixRotationZ(&matRotZ, m_fAngle); 
+    D3DXMatrixTranslation(&matTrans, m_tInfo.vPos.x, m_tInfo.vPos.y, 0.f);
+    m_tInfo.matWorld = matScale * matRotZ * matTrans; 
 
+    for (int i = 0; i < m_vOriginPointvec.size(); ++i)
+    {
+        D3DXVec3TransformCoord(&m_vPointvec[i], &m_vOriginPointvec[i], &m_tInfo.matWorld);
+        m_pRenderPoint[i].x = m_vPointvec[i].x;
+        m_pRenderPoint[i].y = m_vPointvec[i].y;
+    }
+
+    // 화면 좌표 변환
+    float cameraZ = 500.f;
+    float centerX = 400.f;
+    float centerY = 300.f;
+
+    for (int i = 0; i < (int)m_vPointvec.size(); ++i)
+    {
+        float distance = cameraZ + m_vPointvec[i].z;
+        float factor = (cameraZ / distance);
+
+        float screenX = centerX + (m_vPointvec[i].x * factor);
+        float screenY = centerY - (m_vPointvec[i].y * factor);
+
+        m_screenCorner[i].x = (LONG)screenX;
+        m_screenCorner[i].y = (LONG)screenY;
+    }
+
+    return 0;
 }
+
+
+
 void CDWPlayer::Late_Update()
 {
 	
@@ -108,16 +138,34 @@ void CDWPlayer::Render(HDC hDC)
 	Polygon(hDC, m_pRenderPoint, m_vOriginPointvec.size());
 	SelectObject(hDC, OldBrush); DeleteObject(PinkBrush);
 
-	Ellipse(hDC, m_pRenderPoint[20].x - 5, m_pRenderPoint[20].y - 5, m_pRenderPoint[20].x + 5, m_pRenderPoint[20].y + 5);
+    if (!m_bPlayer_Exist_Check)
+    {
+        Ellipse(hDC, m_pRenderPoint[4].x - 5, m_pRenderPoint[4].y - 5, m_pRenderPoint[4].x + 5, m_pRenderPoint[4].y + 5);
 
-	Ellipse(hDC, m_pRenderPoint[25].x - 5, m_pRenderPoint[25].y - 5, m_pRenderPoint[25].x + 5, m_pRenderPoint[25].y + 5);
+        Ellipse(hDC, m_pRenderPoint[10].x - 5, m_pRenderPoint[10].y - 5, m_pRenderPoint[10].x + 5, m_pRenderPoint[10].y + 5);
+    }
 
-	//TCHAR m_szBuf[100] = {};
-	//swprintf_s(m_szBuf, L"플레이어 x : %.f, 플레이어 y : %.f", m_tInfo.vPos.x, m_tInfo.vPos.y);
-	//TextOut(hDC, 300, 5, m_szBuf, lstrlen(m_szBuf));
+    /*
+	TCHAR m_szBuf[100] = {};
+	swprintf_s(m_szBuf, L"플레이어 x : %.f, 플레이어 y : %.f", m_tInfo.vPos.x, m_tInfo.vPos.y);
+	TextOut(hDC, 300, 5, m_szBuf, lstrlen(m_szBuf));
+     */
+    HFONT hFont2 = CreateFont(
+        72, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE,
+        DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+        DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, L"SoyaPixel"
+    );
+   
+    if (m_bPlayer_Exist_Check)
+    {
+        // 글꼴 생성
+      
 
+        DrawOutlinedText(hDC, 305, 100, L"게임오버", RGB(0, 0, 0), RGB(255, 255, 255), hFont2);
 
-
+       
+    }
+    DeleteObject(hFont2);
 
 }
 void CDWPlayer::Release()
@@ -126,6 +174,60 @@ void CDWPlayer::Release()
 
 void CDWPlayer::OnCollision(CObject* _obj)
 {
+}
+
+void CDWPlayer::DrawOutlinedText(HDC hDC, int x, int y, int align, COLORREF outlineColor, COLORREF textColor, HFONT hFont, const TCHAR* text)
+{
+    HFONT hOldFont = (HFONT)SelectObject(hDC, hFont);
+
+    SetBkMode(hDC, TRANSPARENT);
+    SetTextColor(hDC, outlineColor);
+
+
+    for (int offsetX = -1; offsetX <= 1; ++offsetX)
+    {
+        for (int offsetY = -1; offsetY <= 1; ++offsetY)
+        {
+            if (offsetX != 0 || offsetY != 0)
+            {
+                TextOut(hDC, x + offsetX, y + offsetY, text, lstrlen(text));
+            }
+        }
+    }
+
+    SetTextColor(hDC, textColor);
+    TextOut(hDC, x, y, text, lstrlen(text));
+
+    SelectObject(hDC, hOldFont);
+}
+void  CDWPlayer::DrawOutlinedText(HDC hDC, int x, int y, const TCHAR* text, COLORREF outlineColor, COLORREF textColor, HFONT hFont)
+{
+
+    HFONT hOldFont = (HFONT)SelectObject(hDC, hFont);
+
+
+    SetBkMode(hDC, TRANSPARENT);
+
+
+    SetTextColor(hDC, outlineColor);
+    for (int offsetX = -1; offsetX <= 1; ++offsetX)
+    {
+        for (int offsetY = -1; offsetY <= 1; ++offsetY)
+        {
+            if (offsetX != 0 || offsetY != 0)
+            {
+                TextOut(hDC, x + offsetX, y + offsetY, text, (int)_tcslen(text));
+            }
+        }
+    }
+
+
+    SetTextColor(hDC, textColor);
+
+    TextOut(hDC, x, y, text, (int)_tcslen(text));
+
+
+    SelectObject(hDC, hOldFont);
 }
 
 void CDWPlayer::Key_Input()

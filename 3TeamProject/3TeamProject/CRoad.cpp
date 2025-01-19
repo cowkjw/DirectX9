@@ -18,7 +18,10 @@ CRoad::CRoad():
 	m_fTargetAngle(0.f),
 	m_fTargetX(0.f),
 	m_pPlayer(nullptr),
-	m_fPlayerStartY(0.f)
+	m_fPlayerStartY(0.f),
+	m_fCheck_Rotation_Angle(0.f),
+	m_bRelease_Check(false)
+
 
 {
 	ZeroMemory(&hBmp, sizeof(hBmp));
@@ -64,10 +67,11 @@ void CRoad::Initialize()
 	float halfWidth = 50.f;
 
 	m_dwPrevSpawnTime = GetTickCount64();
+	g_ullPlayTime = GetTickCount64();
 	
 	m_bJumping = false;
 	m_fJumpSpeed = 0.f;
-	m_fGravity = 0.4f;     
+	m_fGravity = 0.6f;     
 	m_fJumpOffsetY = 0.f;
 
 	hBmp = (HBITMAP)LoadImage(
@@ -82,10 +86,18 @@ m_fPlayerStartY = m_pPlayer->Get_Info().vPos.y;
 
 	hPatternBrush = CreatePatternBrush(hBmp);
 
+	m_bLeft_Rotation = false;
+	m_bRight_Rotation = false;
+	m_bTop_Rotation = false;
+	m_bBottom_Rotation = false;
+
+	ullSecond = 0.f;
 }
 
 int CRoad::Update()
 {
+	if (m_vecPoints.empty() == true)
+		return 0;
 
 	Key_Input();
 
@@ -112,19 +124,16 @@ int CRoad::Update()
 		}
 	}
 
-	DWORD dwCurTime = GetTickCount64();
-	if (dwCurTime - m_dwPrevSpawnTime >= 3000)
-	{	
-		Spawn_Obstacle();
-		m_dwPrevSpawnTime = dwCurTime;
-	}
-	if (abs(m_fTargetAngle - m_fAngle) > D3DXToRadian(1.f))
-	{
-		if (m_fTargetAngle > m_fAngle)
-			m_fAngle += D3DXToRadian(5.f);
-		else if (m_fTargetAngle < m_fAngle)
-			m_fAngle -= D3DXToRadian(5.f);
 
+
+
+
+	if (abs(m_fTargetAngle - m_fAngle) > D3DXToRadian(1.f)) // 절대값 씌우기
+	{
+		if ((m_fTargetAngle > m_fAngle)) // 목표각도 
+			m_fAngle += D3DXToRadian(5.f);
+		else if ((m_fTargetAngle < m_fAngle))
+			m_fAngle -= D3DXToRadian(5.f);
 	}
 
 	float finalY = m_tInfo.vPos.y + m_fJumpOffsetY;
@@ -149,12 +158,11 @@ int CRoad::Update()
 		0.f
 	};
 
-	float rotationAngle = m_fAngle;
+	float rotationAngle = m_fAngle; // 카메라 앵글 넣고
 
 	for (int i = 0; i < 4; i++)
 	{
 		D3DXVECTOR3 relativePoint = { Sosil[i].x - sosilCenter.x, Sosil[i].y - sosilCenter.y, 0.f };
-
 		float rotatedX = relativePoint.x * cos(rotationAngle) - relativePoint.y * sin(rotationAngle);
 		float rotatedY = relativePoint.x * sin(rotationAngle) + relativePoint.y * cos(rotationAngle);
 
@@ -176,6 +184,12 @@ int CRoad::Update()
 
 	Wall_Update();
 	Update_Obstacles();
+	DWORD dwCurTime = GetTickCount64();
+	if (dwCurTime - m_dwPrevSpawnTime >= 1000)
+	{
+		Spawn_Obstacle();
+		m_dwPrevSpawnTime = dwCurTime;
+	}
 	//__super::Update_Rect();
 	return 0;
 
@@ -183,6 +197,9 @@ int CRoad::Update()
 
 void CRoad::Update_Obstacles()
 {
+	if (m_vecPoints.empty() == true)
+		return;
+
 	// 장애물이 z축으로 (카메라 쪽으로) 계속 다가오게 만들고...
 	float fSpeed = 10.f;  
 	for (auto& obs : m_Obstacles)
@@ -201,7 +218,9 @@ void CRoad::Update_Obstacles()
 }
 void CRoad::Render_Obstacles(HDC hDC)
 {
-	
+	if (m_vecPoints.empty() == true)
+		return;
+
 	float fCameraX = m_tInfo.vPos.x; // 얘가 카메라의 x축
 
 	float fScaleFactor = 0.002f;
@@ -229,10 +248,10 @@ void CRoad::Render_Obstacles(HDC hDC)
 		//사다리꼴 모양 잡는거고
 		D3DXVECTOR3 localCorner[4] =
 		{
-			{ -30.f, -20.f, 0.f },  //왼쪽위
-			{ +30.f, -20.f, 0.f },  // 오른쪽위
-			{ +20.f, +20.f, 0.f },  // 오른쪽 아래
-			{ -20.f, +20.f, 0.f },  // 왼쪽 아래
+			{ -60.f, -20.f, 0.f },  //왼쪽위
+			{ +60.f, -20.f, 0.f },  // 오른쪽위
+			{ +60.f, +20.f, 0.f },  // 오른쪽 아래
+			{ -60.f, +20.f, 0.f },  // 왼쪽 아래
 		};
 		D3DXMATRIX matScale, matRot, matTrans, matWorld;
 
@@ -246,20 +265,57 @@ void CRoad::Render_Obstacles(HDC hDC)
 
 		float x = 0.f;
 		float y = 0.f;
-
-		/*if (m_bLeft_Rotation)
+		if ((m_fCheck_Rotation_Angle = D3DXToDegree(m_fTargetAngle)==-90.f)) // 장애물이 오른쪽 벽으로
 		{
-			 x = -obs.vPos.y;
-			 y = obs.vPos.x;
+			x = -obs.vPos.y;
+			y = obs.vPos.x;
+
+			obs.fAngle = D3DXToRadian(90.f); // 90도 회전
+		}
+		else if (m_fCheck_Rotation_Angle = D3DXToDegree(m_fTargetAngle)==-180.f) // 장애물이 오른쪽 벽으로 이동한상태에서
+		{                                                                        // 또 오른쪽으로 
+			x = -obs.vPos.x; 
+			y = -obs.vPos.y;
+			obs.fAngle = D3DXToRadian(180.f); // 180도 회전
+		}
+		else if (m_fCheck_Rotation_Angle = D3DXToDegree(m_fTargetAngle) == -270.f) // 장애물이 오른쪽 벽으로 이동한상태에서
+		{																		   // 오른쪽에서 오른쪽
+			y = -obs.vPos.x;
+			x = obs.vPos.y;
+			obs.fAngle = D3DXToRadian(270.f);
+
+		}
+		else  // 다시 바닥
+		{
+			x = obs.vPos.x;
+			y = obs.vPos.y;
+			obs.fAngle = D3DXToRadian(0.f);
+	
+			m_fTargetAngle = D3DXToRadian(0.f);
+		}
+
+
+		if ((m_fCheck_Rotation_Angle = D3DXToDegree(m_fTargetAngle) == 90.f)) // 장애물이 오른쪽 벽으로
+		{
+			x = -obs.vPos.y;
+			y = obs.vPos.x;
+
+			obs.fAngle = D3DXToRadian(-90.f); // 90도 회전
+		}
+		/*if (m_bRight_Rotation)
+		{
+			x = -obs.vPos.y;
+			y = obs.vPos.x;
+
+			obs.fAngle = D3DXToRadian(90.f);
 		}
 		else
 		{
-		
 
-		}*/
-
-		x = obs.vPos.x;
-		y = obs.vPos.y;
+			x = obs.vPos.x;
+			y = obs.vPos.y;
+		}
+		*/
 
 		//TCHAR m_szBuf2[100] = {};
 		//swprintf_s(m_szBuf2, L"장애물 스케일 크기 : %f",obs.fScale);
@@ -302,45 +358,46 @@ void CRoad::Render_Obstacles(HDC hDC)
 
 		}
 
-		//if (!m_Obstacles.empty())
-		//{
-		//	// 첫 번째 장애물
-		//	auto& firstObs = m_Obstacles.front(); // 첫 장애물
-		//	TCHAR buf[100];
-		//	swprintf_s(buf, L"첫 장애물 왼쪽 위 X=%.2f", firstObs.screenCorner[0].x);
-		//	TextOut(hDC, 300, 130, buf, lstrlen(buf));
-		//	swprintf_s(buf, L"첫 장애물 왼쪽 위 y=%.2f", firstObs.screenCorner[0].y);
-		//	TextOut(hDC, 300, 150, buf, lstrlen(buf));
+		/*
+		if (!m_Obstacles.empty())
+		{
+			// 첫 번째 장애물
+			auto& firstObs = m_Obstacles.front(); // 첫 장애물
+			TCHAR buf[100];
+			swprintf_s(buf, L"첫 장애물 왼쪽 위 X=%.2f", firstObs.screenCorner[0].x);
+			TextOut(hDC, 300, 130, buf, lstrlen(buf));
+			swprintf_s(buf, L"첫 장애물 왼쪽 위 y=%.2f", firstObs.screenCorner[0].y);
+			TextOut(hDC, 300, 150, buf, lstrlen(buf));
 
-		//	swprintf_s(buf, L"첫 장애물 오른쪽 위 X=%.2f", firstObs.screenCorner[1].x);
-		//	TextOut(hDC, 300, 170, buf, lstrlen(buf));
-		//	swprintf_s(buf, L"첫 장애물 오른쪽 위 y=%.2f", firstObs.screenCorner[1].y);
-		//	TextOut(hDC, 300, 190, buf, lstrlen(buf));
+			swprintf_s(buf, L"첫 장애물 오른쪽 위 X=%.2f", firstObs.screenCorner[1].x);
+			TextOut(hDC, 300, 170, buf, lstrlen(buf));
+			swprintf_s(buf, L"첫 장애물 오른쪽 위 y=%.2f", firstObs.screenCorner[1].y);
+			TextOut(hDC, 300, 190, buf, lstrlen(buf));
 
-		//	swprintf_s(buf, L"첫 장애물 오른쪽 아래 X=%.2f", firstObs.screenCorner[2].x);
-		//	TextOut(hDC, 300, 210, buf, lstrlen(buf));
-		//	swprintf_s(buf, L"첫 장애물 오른쪽 아래 y=%.2f", firstObs.screenCorner[2].y);
-		//	TextOut(hDC, 300, 230, buf, lstrlen(buf));
+			swprintf_s(buf, L"첫 장애물 오른쪽 아래 X=%.2f", firstObs.screenCorner[2].x);
+			TextOut(hDC, 300, 210, buf, lstrlen(buf));
+			swprintf_s(buf, L"첫 장애물 오른쪽 아래 y=%.2f", firstObs.screenCorner[2].y);
+			TextOut(hDC, 300, 230, buf, lstrlen(buf));
 
-		//	swprintf_s(buf, L"첫 장애물 왼쪽 아래 X=%.2f", firstObs.screenCorner[3].x);
-		//	TextOut(hDC, 300, 250, buf, lstrlen(buf));
-		//	swprintf_s(buf, L"첫 장애물 왼쪽 아래 y=%.2f", firstObs.screenCorner[3].y);
-		//	TextOut(hDC, 300, 270, buf, lstrlen(buf));
-		//}
+			swprintf_s(buf, L"첫 장애물 왼쪽 아래 X=%.2f", firstObs.screenCorner[3].x);
+			TextOut(hDC, 300, 250, buf, lstrlen(buf));
+			swprintf_s(buf, L"첫 장애물 왼쪽 아래 y=%.2f", firstObs.screenCorner[3].y);
+			TextOut(hDC, 300, 270, buf, lstrlen(buf));
+		}
 
-		//HPEN hPen = CreatePen(PS_SOLID, 2, RGB(255, 0, 0));
-		//HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+		HPEN hPen = CreatePen(PS_SOLID, 2, RGB(255, 0, 0));
+		HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
 
-
-
-
-
+		*/
 
 
-		//TCHAR m_szBuf6[100] = {};
-		//swprintf_s(m_szBuf6, L"장애물  z 좌표 : %f", m_Obstacles[0].vPos.z);
-		//TextOut(hDC, 100, 170, m_szBuf6, lstrlen(m_szBuf6));
 
+
+		/*
+		TCHAR m_szBuf6[100] = {};
+		swprintf_s(m_szBuf6, L"장애물  z 좌표 : %f", m_Obstacles[0].vPos.z);
+		TextOut(hDC, 100, 170, m_szBuf6, lstrlen(m_szBuf6));
+		*/
 
 		HBRUSH hOldBrush = (HBRUSH)SelectObject(hDC, hPatternBrush);
 
@@ -354,10 +411,12 @@ void CRoad::Render_Obstacles(HDC hDC)
 	
 	}
 }
+
 void CRoad::Render(HDC hDC)
 {
 	// 카메라 화면
-
+	if (m_vecPoints.empty() == true)
+		return;
 	MoveToEx(hDC, transformedCorners[0].x, transformedCorners[0].y, nullptr);
 	LineTo(hDC, transformedCorners[1].x, transformedCorners[1].y);
 	LineTo(hDC, transformedCorners[2].x, transformedCorners[2].y);
@@ -380,6 +439,7 @@ void CRoad::Render(HDC hDC)
 	// 처음 기준 왼쪽 면
 	HBRUSH GrayBrush = CreateSolidBrush(RGB(128, 128, 128));
 	HBRUSH OldBrush = (HBRUSH)SelectObject(hDC, GrayBrush);
+
 
 	Polygon(hDC, m_vecPoints[0], 4);
 
@@ -448,48 +508,121 @@ void CRoad::Render(HDC hDC)
 	}
 	Render_Obstacles(hDC);
 
-	//TCHAR m_szBuf[100] = {};
-	//swprintf_s(m_szBuf, L"통로 x : %.f, 통로 y : %.f", m_tInfo.vPos.x, m_tInfo.vPos.y);
-	//TextOut(hDC, 300, 30, m_szBuf, lstrlen(m_szBuf));
+	/*
+	TCHAR m_szBuf[100] = {};
+	swprintf_s(m_szBuf, L"통로 x : %.f, 통로 y : %.f", m_tInfo.vPos.x, m_tInfo.vPos.y);
+	TextOut(hDC, 300, 30, m_szBuf, lstrlen(m_szBuf));
+	*/
+
+	TCHAR m_szGameTime[100] = {};
+	ULONG64 ullCurTime = GetTickCount64() - g_ullPlayTime;
+	ULONG64 ullTime = ullCurTime / 1000;
+	 ullSecond = ullTime % 60;
+	swprintf_s(m_szGameTime, L" Time: %d ", (int)ullSecond);
+	TextOut(hDC, 350, 550, m_szGameTime, lstrlen(m_szGameTime));
+
+	HFONT hFont2 = CreateFont(
+		72, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE,
+		DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+		DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, L"SoyaPixel"
+	);
+
+
+	if (ullSecond > 30)
+	{
+		DrawOutlinedText(hDC, 205, 100, L"게임클리어!!!!!!!!!", RGB(0, 0, 0), RGB(255, 255, 255), hFont2);
+		m_Obstacles.clear();
+	}
+	DeleteObject(hFont2);
+}
+void CRoad::DrawOutlinedText(HDC hDC, int x, int y, const TCHAR* text, COLORREF outlineColor, COLORREF textColor, HFONT hFont)
+{
+	HFONT hOldFont = (HFONT)SelectObject(hDC, hFont);
+
+
+	SetBkMode(hDC, TRANSPARENT);
+
+
+	SetTextColor(hDC, outlineColor);
+	for (int offsetX = -1; offsetX <= 1; ++offsetX)
+	{
+		for (int offsetY = -1; offsetY <= 1; ++offsetY)
+		{
+			if (offsetX != 0 || offsetY != 0)
+			{
+				TextOut(hDC, x + offsetX, y + offsetY, text, (int)_tcslen(text));
+			}
+		}
+	}
+
+
+	SetTextColor(hDC, textColor);
+
+	TextOut(hDC, x, y, text, (int)_tcslen(text));
+
+
+	SelectObject(hDC, hOldFont);
 }
 void CRoad::Spawn_Obstacle()
 {
+	if (m_vecPoints.empty() == true)
+		return;
 	SObstacle obs;
 
-	float fCameraX  = m_tInfo.vPos.x; // 얘가 카메라의 x축
+	// 랜덤으로 면 선택 (0: 왼쪽, 1: 오른쪽, 2: 위쪽, 3: 아래쪽)
+	int randomSide = rand() % 4;
 
-	float fScaleFactor = 0.01f;
+	// Z축 고정 (장애물이 플레이어 쪽으로 다가오게 설정)
+	obs.vPos.z = 5000.f;
 
-	// 랜덤한 X 위치, Z는 2000 정도? 
-	// 여기 왼쪽벽은 -400,0
-	obs.vPos = D3DXVECTOR3( 0.f, -400.f, 5000.f); 
-	obs.fAngle = D3DXToRadian(0.f);
-	obs.fScale = 1.0f*(fScaleFactor*fCameraX);
+	// 장애물의 기본 크기 및 회전 초기화
 	obs.fWidth = 60.f;
 	obs.fHeight = 80.f;
+	obs.fAngle = D3DXToRadian(0.f);
+	obs.fScale = 1.0f;
 
+	// 각 면에 대한 위치 및 회전 설정
+	switch (randomSide)
+	{
+	case 0: // 왼쪽
+		obs.vPos.x = -400.f;                   // 왼쪽 벽 X 위치
+		obs.vPos.y = static_cast<float>(rand() % 600 - 300); // -300 ~ +300 범위에서 Y 위치 랜덤
+		obs.fAngle = D3DXToRadian(90.f);       // 회전 각도 (Z축 기준)
+		break;
+
+	case 1: // 오른쪽
+		obs.vPos.x = 400.f;                    // 오른쪽 벽 X 위치
+		obs.vPos.y = static_cast<float>(rand() % 600 - 300); // -300 ~ +300 범위에서 Y 위치 랜덤
+		obs.fAngle = D3DXToRadian(-90.f);      // 회전 각도
+		break;
+
+	case 2: // 위쪽
+		obs.vPos.x = static_cast<float>(rand() % 600 - 300); // -300 ~ +300 범위에서 X 위치 랜덤
+		obs.vPos.y = -400.f;                  // 위쪽 벽 Y 위치
+		obs.fAngle = D3DXToRadian(180.f);     // 회전 각도
+		break;
+
+	case 3: // 아래쪽
+		obs.vPos.x = static_cast<float>(rand() % 600 - 300); // -300 ~ +300 범위에서 X 위치 랜덤
+		obs.vPos.y = 400.f;                   // 아래쪽 벽 Y 위치
+		obs.fAngle = D3DXToRadian(0.f);       // 회전 각도
+		break;
+	}
+
+	// 생성된 장애물 추가
 	m_Obstacles.push_back(obs);
 }
+
 void CRoad::Key_Input()
 {
-
-
+	if (m_vecPoints.empty() == true)
+		return;
 	static float fPlayer_Y = 0.f;
 	if (GetAsyncKeyState('A'))
 	{
 		// 통로를 왼쪽으로
 		D3DXVECTOR3 fixedLeftDir = { +20.f, 0.f, 0.f };
 		m_tInfo.vPos += fixedLeftDir; 
-
-		// 나중에 첫충돌만 270좌표로 바꾸든
-		// 처음 통로 위치좌표를 바꾸든 할 예정
-		/*if (m_pPlayer->Get_Info().vPos.x < 320)
-		{
-			m_bLeft_Rotation = !m_bLeft_Rotation;
-			m_fTargetAngle += D3DXToRadian(90.f); 
-			m_tInfo.vPos = { 0.f, 0.f, 0.f };
-			m_bRight_Rotation = true;
-		}*/
 	}
 	if (CKeyManager::Get_Instance()->Key_Down(VK_SPACE) && !m_bJumping)
 	{
@@ -501,83 +634,65 @@ void CRoad::Key_Input()
 	    // 통로를 오른쪽으로
 		D3DXVECTOR3 fixedRightDir = { -20.f, 0.f, 0.f };
 		m_tInfo.vPos += fixedRightDir; 
-
-		/*if (m_pPlayer->Get_Info().vPos.x > 640)
-		{
-			m_bRight_Rotation = !m_bRight_Rotation;
-			m_fTargetAngle += D3DXToRadian(-90.f);
-			m_tInfo.vPos = { 0.f, 0.f, 0.f };
-			m_bRight_Rotation = true;
-		}*/
-	
 	}
-
-	// 화면 기준 위로
 	if (GetAsyncKeyState(VK_UP))
-	{
-		
+	{	
 		D3DXVECTOR3 fixedDownDir = { 0.f, 40.f, 0.f };
 		m_tInfo.vPos += fixedDownDir;
 	}
 	if (GetAsyncKeyState('P'))
 	{
-
 		D3DXVECTOR3 fixedDownDir = { 400.f, -900.f, 0.f };
 		m_tInfo.vPos = fixedDownDir;
 	}
-	//  화면 기준 아래로
 	else if (GetAsyncKeyState(VK_DOWN))
 	{
 		D3DXVECTOR3 fixedUpDir = { 0.f, -40.f, 0.f };
 		m_tInfo.vPos += fixedUpDir;
 	}
-	m_bRight_Rotation = false;
-	m_bTop_Rotation = false;
-	m_bBottom_Rotation = false;
 
 	// 왼쪽 방향으로 90도 회전
-	if (CKeyManager::Get_Instance()->Key_Down(VK_LEFT))
+	if (CKeyManager::Get_Instance()->Key_Down(VK_LEFT)) // 왼쪽 회전
 	{
-		m_bRight_Rotation = !m_bRight_Rotation;
-		m_fTargetAngle -= D3DXToRadian(90.f);	
 
-		if (!m_bLeft_Rotation) // 왼쪽으로 한번도 돈적이 없으면
-		{
-			m_bLeft_Rotation = true;
-			//if (!m_bTop_Rotation&&m_bLeft_Rotation) // 바닥이 왼쪽벽이고 거기서 또 왼쪽벽으로 돌았을때
-			//{
-			//	
-		    //}
-
-		}
-	}
-	if (m_tInfo.vPos.x > 1900)
-	{
-		m_bRight_Rotation = !m_bRight_Rotation;
 		m_fTargetAngle -= D3DXToRadian(90.f);
+	}
+	if (m_tInfo.vPos.x > 1900) // 왼쪽 벽 선에 닿으면
+	{
+		m_fTargetAngle -= D3DXToRadian(90.f);
+		//float m_fdgree = D3DXToDegree(m_fTargetAngle); 각도 확인용
 		m_tInfo.vPos.x = -1140;
+		//if (!m_bLeft_Rotation) // 처음 왼쪽으로 회전
+		//{
+		//	m_bLeft_Rotation = true;
+		//}
+		//else if (!m_bTop_Rotation) // 왼쪽에서 다시 왼쪽 -> 천장
+		//{
+		//	m_bTop_Rotation = true;
+		//}
+		//else if (!m_bRight_Rotation&&!m_bTop_Rotation) // 천장에서 다시 왼쪽 -> 오른쪽벽
+		//{
 
-		static float m_Move = 20.f;
-
-		
-		//m_tInfo.vPos.x += m_Move;
-
-		//if (m_tInfo.vPos.x > 610)
-			
-		
+		//	m_bRight_Rotation = true;
+		//
+		//}
+		//else if (m_bLeft_Rotation&&m_bTop_Rotation&&m_bRight_Rotation) // 왼쪽벽, 천장 , 오른쪽 벽 모두 돌았을때
+		//{
+		//	
+		//	m_bTop_Rotation = false;
+		//	m_bLeft_Rotation = false;
+		//	m_bBottom_Rotation = false;
+		//}
 	}
 	// 오른쪽 방향으로 90도 회전
 	if (CKeyManager::Get_Instance()->Key_Down(VK_RIGHT))
 	{
-		m_bLeft_Rotation = !m_bLeft_Rotation;
-		m_fTargetAngle += D3DXToRadian(-90.f);
+		m_fTargetAngle += D3DXToRadian(90.f);
 	}
-	if (m_tInfo.vPos.x < -1140)
+	if (m_tInfo.vPos.x < -1140) // 오른쪽 벽 선에 닿으면
 	{
-		m_bRight_Rotation = !m_bRight_Rotation;
 		m_fTargetAngle -= D3DXToRadian(-90.f);
 		m_tInfo.vPos.x = 1900;
-
 	}
 
 	if (CKeyManager::Get_Instance()->Key_Down(VK_SPACE) && !m_bJumping)
@@ -588,6 +703,9 @@ void CRoad::Key_Input()
 }
 void CRoad::Wall_Update()
 {
+
+	if (m_vecPoints.empty() == true)
+		return;
 	m_vecPoints[0][0] = { (long)transformedCorners[0].x, (long)transformedCorners[0].y };
 	m_vecPoints[0][1] = { (long)rotatedSosil[0].x, (long)rotatedSosil[0].y };
 	m_vecPoints[0][2] = { (long)rotatedSosil[3].x, (long)rotatedSosil[3].y };
@@ -614,8 +732,6 @@ void CRoad::Wall_Update()
 	m_vecPoints[4][2] = { (long)rotatedSosil[2].x, (long)rotatedSosil[2].y };
 	m_vecPoints[4][3] = { (long)rotatedSosil[3].x, (long)rotatedSosil[3].y };
 
-
-
 }
 
 //
@@ -630,6 +746,8 @@ void CRoad::Late_Update()
 
 void CRoad::Release()
 {
+	if (m_vecPoints.empty() == true)
+		return;
 	for (auto& pointArray : m_vecPoints)
 	{
 		delete[] pointArray;
